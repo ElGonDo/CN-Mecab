@@ -2,7 +2,6 @@ import 'package:cnmecab/paginas/Guardados.dart';
 import 'package:cnmecab/paginas/PaginaHome.dart';
 import 'package:cnmecab/paginas/PaginaUsers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/icons.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,10 +25,6 @@ class _MyAppState extends State<MyApp> {
       title: 'Material App',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 0, 0, 0),
-          title: const Text('CN MECAB'),
-        ),
         body: _paginas[_paginaActual],
         bottomNavigationBar: BottomNavigationBar(
           onTap: (index) {
