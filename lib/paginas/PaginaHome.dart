@@ -7,7 +7,7 @@ class Paginahome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Center(child: Text('CN MECABs')),
+        title: Center(child: Text('CN MECAB')),
         actions: [
           IconButton(
             onPressed: () {},
