@@ -7,13 +7,38 @@ class Paginahome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Center(child: Text('CN MECAB')),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.account_circle),
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            Text('CN MECAB'),
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            DrawerHeader(
+              child: Text(
+                'Menú',
+                style: TextStyle(fontSize: 20),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('Cerrar Sesión'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('Cuenta'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('Más'),
+              onTap: () {},
             ),
           ],
         ),
