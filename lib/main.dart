@@ -26,20 +26,32 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: _paginas[_paginaActual],
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (index) {
-            setState(() {
-              _paginaActual = index;
-            });
-          },
-          currentIndex: _paginaActual,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.file_upload_outlined), label: "Agregar"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined), label: "Buscar"),
-          ],
+        bottomNavigationBar: Theme(
+          data: ThemeData(
+            canvasColor: Colors.black, // Fondo negro del menú
+          ),
+          child: BottomNavigationBar(
+            onTap: (index) {
+              if (index == 3) {
+                // Lógica para manejar la acción de "Guardados"
+              } else {
+                setState(() {
+                  _paginaActual = index;
+                });
+              }
+            },
+            currentIndex: _paginaActual,
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.file_upload_outlined), label: "Agregar"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.search_outlined), label: "Buscar"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.save_outlined),
+                  label: "Guardados"), // Cambio de flecha por "Guardados"
+            ],
+          ),
         ),
       ),
     );
