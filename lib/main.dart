@@ -1,4 +1,4 @@
-import 'package:cnmecab/paginas/Guardados.dart';
+import 'package:cnmecab/paginas/Busqueda.dart';
 import 'package:cnmecab/paginas/PaginaHome.dart';
 import 'package:cnmecab/paginas/MyHomePage.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   List<Widget> _paginas = [
     Paginahome(),
     MyHomePage(),
-    Guardados(),
+    Busqueda(),
   ];
 
   @override

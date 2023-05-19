@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
 
-class Paginahome extends StatelessWidget {
+class Paginahome extends StatefulWidget {
   @override
+  _PaginahomeState createState() => _PaginahomeState();
+}
+
+class _PaginahomeState extends State<Paginahome> {
+  String currentPage = 'Para ti';
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -10,7 +16,9 @@ class Paginahome extends StatelessWidget {
         title: Center(child: Text('CN MECAB')),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Acción al presionar el icono de usuario
+            },
             icon: Icon(Icons.account_circle),
           ),
         ],
@@ -22,22 +30,23 @@ class Paginahome extends StatelessWidget {
             DrawerHeader(
               child: Text(
                 'Menú',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.black,
               ),
             ),
             ListTile(
-              title: Text('Cerrar Sesión'),
+              title:
+                  Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
               onTap: () {},
             ),
             ListTile(
-              title: Text('Cuenta'),
+              title: Text('Cuenta', style: TextStyle(color: Colors.black)),
               onTap: () {},
             ),
             ListTile(
-              title: Text('Más'),
+              title: Text('Más', style: TextStyle(color: Colors.black)),
               onTap: () {},
             ),
           ],
@@ -53,77 +62,109 @@ class Paginahome extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar el botón "Para ti"
+                    setState(() {
+                      currentPage = 'Para ti';
+                    });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 255, 255),
+                    primary:
+                        currentPage == 'Para ti' ? Colors.red : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
                   child: Text(
                     'Para ti',
                     style: TextStyle(
-                        fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+                      fontSize: 15,
+                      color: currentPage == 'Para ti'
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar el botón "Películas"
+                    setState(() {
+                      currentPage = 'Películas';
+                    });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 255, 255),
+                    primary:
+                        currentPage == 'Películas' ? Colors.red : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
                   child: Text(
-                    'Peliculas',
+                    'Películas',
                     style: TextStyle(
-                        fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+                      fontSize: 15,
+                      color: currentPage == 'Películas'
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar el botón "Series"
+                    setState(() {
+                      currentPage = 'Series';
+                    });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    primary:
+                        currentPage == 'Series' ? Colors.red : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
                   child: Text(
                     'Series',
                     style: TextStyle(
-                        fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+                      fontSize: 15,
+                      color:
+                          currentPage == 'Series' ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar el botón "Libros"
+                    setState(() {
+                      currentPage = 'Libros';
+                    });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    primary:
+                        currentPage == 'Libros' ? Colors.red : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
                   child: Text(
                     'Libros',
                     style: TextStyle(
-                        fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+                      fontSize: 15,
+                      color:
+                          currentPage == 'Libros' ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar el botón "Animes"
+                    setState(() {
+                      currentPage = 'Animes';
+                    });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    primary:
+                        currentPage == 'Animes' ? Colors.red : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
                   child: Text(
                     'Animes',
                     style: TextStyle(
-                        fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+                      fontSize: 15,
+                      color:
+                          currentPage == 'Animes' ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -134,41 +175,52 @@ class Paginahome extends StatelessWidget {
             child: ListView.builder(
               itemCount: 10,
               itemBuilder: (context, index) {
-                return Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage:
-                              NetworkImage('https://via.placeholder.com/150'),
+                if (currentPage == 'Para ti') {
+                  return Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ListTile(
+                          leading: CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage:
+                                NetworkImage('https://via.placeholder.com/150'),
+                          ),
+                          title: Text('Universal Studio'),
+                          subtitle: Text('Presentamos Rapidos y Furiosos X'),
                         ),
-                        title: Text('Universal Studio'),
-                        subtitle: Text('Presentamos Rapidos y Furiosos X'),
+                        Image.network('https://via.placeholder.com/350'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.thumb_up),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.comment),
+                            ),
+                            Spacer(),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.share),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Card(
+                    child: Center(
+                      child: Text(
+                        'Página de $currentPage',
+                        style: TextStyle(fontSize: 20),
                       ),
-                      Image.network('https://via.placeholder.com/350'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.thumb_up),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.comment),
-                          ),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.share),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                    ),
+                  );
+                }
               },
             ),
           ),
