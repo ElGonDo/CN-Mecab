@@ -12,14 +12,35 @@ class _PaginahomeState extends State<Paginahome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Center(child: Text('CN MECAB')),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        title: Center(
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'CN',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text: ' MECAB',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         actions: [
-          IconButton(
-            onPressed: () {
-              // Acción al presionar el icono de usuario
-            },
-            icon: Icon(Icons.account_circle),
+          Icon(
+            Icons.account_circle,
+            color: Colors.white,
           ),
         ],
       ),
