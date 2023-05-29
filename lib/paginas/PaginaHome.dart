@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/icons.dart';
 
 class Paginahome extends StatefulWidget {
   @override
@@ -8,6 +7,7 @@ class Paginahome extends StatefulWidget {
 
 class _PaginahomeState extends State<Paginahome> {
   String currentPage = 'Para ti';
+  bool isDarkModeEnabled = false;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +38,14 @@ class _PaginahomeState extends State<Paginahome> {
           ),
         ),
         actions: [
-          Icon(
-            Icons.account_circle,
-            color: Colors.white,
+          IconButton(
+            icon: Icon(
+              Icons.account_circle,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // Acción para mostrar el perfil
+            },
           ),
         ],
       ),
@@ -48,27 +53,61 @@ class _PaginahomeState extends State<Paginahome> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              child: Text(
-                'Menú',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                'Nombre de Usuario',
+                style: TextStyle(color: Colors.black),
+              ),
+              accountEmail: null,
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                ),
               ),
               decoration: BoxDecoration(
                 color: Colors.black,
               ),
             ),
             ListTile(
-              title:
-                  Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
-              onTap: () {},
-            ),
-            ListTile(
               title: Text('Cuenta', style: TextStyle(color: Colors.black)),
               onTap: () {},
             ),
             ListTile(
-              title: Text('Más', style: TextStyle(color: Colors.black)),
-              onTap: () {},
+              title:
+                  Text('Cambiar Tema', style: TextStyle(color: Colors.black)),
+              onTap: () {
+                setState(() {
+                  isDarkModeEnabled = !isDarkModeEnabled;
+                  // Aplicar tema oscuro o claro según el estado
+                  if (isDarkModeEnabled) {
+                    // Configurar tema oscuro
+                    // ...
+                    // Por ejemplo:
+                    // ThemeMode.dark
+                  } else {
+                    // Configurar tema claro
+                    // ...
+                    // Por ejemplo:
+                    // ThemeMode.light
+                  }
+                });
+              },
+            ),
+            ListTile(
+              title: Text('Políticas de Seguridad',
+                  style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para mostrar las políticas de seguridad
+              },
+            ),
+            ListTile(
+              title:
+                  Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para cerrar sesión
+              },
             ),
           ],
         ),
@@ -174,8 +213,9 @@ class _PaginahomeState extends State<Paginahome> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary:
-                        currentPage == 'Animes' ? Colors.red : Colors.white,
+                    primary: currentPage == 'Animes'
+                        ? Color.fromARGB(255, 255, 17, 0)
+                        : Colors.white,
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
@@ -194,7 +234,7 @@ class _PaginahomeState extends State<Paginahome> {
           SizedBox(height: 20.0),
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 if (currentPage == 'Para ti') {
                   return Card(
@@ -232,15 +272,48 @@ class _PaginahomeState extends State<Paginahome> {
                       ],
                     ),
                   );
-                } else {
+                } else if (currentPage == 'Películas') {
+                  // Código para la página de películas
                   return Card(
                     child: Center(
                       child: Text(
-                        'Página de $currentPage',
+                        'Página de Películas',
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
                   );
+                } else if (currentPage == 'Series') {
+                  // Código para la página de series
+                  return Card(
+                    child: Center(
+                      child: Text(
+                        'Página de Series',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  );
+                } else if (currentPage == 'Libros') {
+                  // Código para la página de libros
+                  return Card(
+                    child: Center(
+                      child: Text(
+                        'Página de Libros',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  );
+                } else if (currentPage == 'Animes') {
+                  // Código para la página de animes
+                  return Card(
+                    child: Center(
+                      child: Text(
+                        'Página de Animes',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
                 }
               },
             ),
