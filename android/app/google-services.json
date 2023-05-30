@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "731619838643",
+    "project_id": "cn-mecab-3c43c",
+    "storage_bucket": "cn-mecab-3c43c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731619838643:android:9243bf119e421bca177ec6",
+        "android_client_info": {
+          "package_name": "com.example.cnmecab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731619838643-np3stcnt4j86qnttp3gf84u57n0cls7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnXvZlQCgghlGU7ySlv2GDhkhwRPJAJNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731619838643-np3stcnt4j86qnttp3gf84u57n0cls7j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
