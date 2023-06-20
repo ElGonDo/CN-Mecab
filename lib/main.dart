@@ -48,8 +48,7 @@ class _MyAppState extends State<MyApp> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.search_outlined), label: "Buscar"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.save_outlined),
-                  label: "Guardados"), // Cambio de flecha por "Guardados"
+                  icon: Icon(Icons.save_outlined), label: "Guardados"),
             ],
           ),
         ),

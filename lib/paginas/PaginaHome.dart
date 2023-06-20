@@ -55,8 +55,9 @@ class _PaginahomeState extends State<Paginahome> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                'Nombre de Usuario',
-                style: TextStyle(color: Colors.black),
+                'Nombre de Productora',
+                style:
+                    TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
               ),
               accountEmail: null,
               currentAccountPicture: CircleAvatar(
@@ -234,7 +235,7 @@ class _PaginahomeState extends State<Paginahome> {
           SizedBox(height: 20.0),
           Expanded(
             child: ListView.builder(
-              itemCount: 1,
+              itemCount: 20,
               itemBuilder: (context, index) {
                 if (currentPage == 'Para ti') {
                   return Card(
@@ -247,8 +248,8 @@ class _PaginahomeState extends State<Paginahome> {
                             backgroundImage:
                                 NetworkImage('https://via.placeholder.com/150'),
                           ),
-                          title: Text('Universal Studio'),
-                          subtitle: Text('Presentamos Rapidos y Furiosos X'),
+                          title: Text('Promotora'),
+                          subtitle: Text('Descripcion breve de la publicacion'),
                         ),
                         Image.network('https://via.placeholder.com/350'),
                         Row(
