@@ -1,7 +1,11 @@
+// ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
 
 class Paginahome extends StatelessWidget {
+  const Paginahome({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +60,7 @@ class Paginahome extends StatelessWidget {
                     // Acción al presionar el botón "Para ti"
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
@@ -71,7 +75,7 @@ class Paginahome extends StatelessWidget {
                     // Acción al presionar el botón "Películas"
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
@@ -86,7 +90,7 @@ class Paginahome extends StatelessWidget {
                     // Acción al presionar el botón "Series"
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
@@ -101,7 +105,7 @@ class Paginahome extends StatelessWidget {
                     // Acción al presionar el botón "Libros"
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),
@@ -116,7 +120,7 @@ class Paginahome extends StatelessWidget {
                     // Acción al presionar el botón "Animes"
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     minimumSize: Size(199, 50),
                     maximumSize: Size(200, 50),
                   ),

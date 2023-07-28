@@ -1,14 +1,17 @@
+// ignore_for_file: file_names, use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_element
+
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  List<String> _categories = [
+  final List<String> _categories = [
     "Para Ti",
     "Películas",
     "Series",
@@ -16,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
     "Animes"
   ];
 
-  List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _widgetOptions = <Widget>[
     Center(
       child: Text(
         'Para Ti',
@@ -81,12 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
               child: Text(
                 'Menú',
                 style: TextStyle(fontSize: 20),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue,
               ),
             ),
             ListTile(
