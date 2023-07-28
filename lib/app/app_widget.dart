@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Nombre de tu App',
       theme: appTheme,
       onGenerateRoute: generateRoute,
-      initialRoute: '/login',
+      initialRoute: '/welcome',
     );
   }
 }

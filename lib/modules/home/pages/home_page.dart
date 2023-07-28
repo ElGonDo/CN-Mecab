@@ -1,5 +1,6 @@
-// ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names
+// ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
 
@@ -34,7 +35,10 @@ class Paginahome extends StatelessWidget {
             ),
             ListTile(
               title: Text('Cerrar Sesión'),
-              onTap: () {},
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacementNamed('/welcome');
+              },
             ),
             ListTile(
               title: Text('Cuenta'),
