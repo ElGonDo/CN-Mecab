@@ -55,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (userCredential != null) {
                   // El usuario se registró correctamente
                   // Aquí puedes redirigir al usuario a la página principal, por ejemplo
-                  Navigator.of(context).pushNamed('/');
+                  Navigator.of(context).pushNamed('/home');
                 } else {
                   // Algo salió mal
                   // Puedes mostrar un mensaje de error

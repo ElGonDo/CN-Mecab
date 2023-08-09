@@ -9,73 +9,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  final List<String> _categories = [
-    "Para Ti",
-    "Películas",
-    "Series",
-    "Libros",
-    "Animes"
-  ];
-
-  final List<Widget> _widgetOptions = <Widget>[
-    Center(
-      child: Text(
-        'Para Ti',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Películas',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Series',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Libros',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Animes',
-        style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
-      ),
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onCategorySelected(String category) {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'CN MECAB',
-              style: TextStyle(fontSize: 25),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        title: Center(
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'CN',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text: ' MECAB',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {},
+            icon: Icon(
+              Icons.account_circle,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // Acción para mostrar el perfil
+            },
           ),
         ],
       ),
@@ -83,65 +58,80 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                'Nombre de Promotora',
+                style:
+                    TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+              ),
+              accountEmail: null,
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                ),
+              ),
               decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Menú',
-                style: TextStyle(fontSize: 20),
+                color: Colors.black,
               ),
             ),
             ListTile(
-              title: Text('Cerrar Sesión'),
+              title: Text('Cuenta', style: TextStyle(color: Colors.black)),
               onTap: () {},
             ),
             ListTile(
-              title: Text('Cuenta'),
-              onTap: () {},
+              title:
+                  Text('Cambiar Tema', style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para mostrar las políticas de seguridad
+              },
             ),
             ListTile(
-              title: Text('Más'),
-              onTap: () {},
+              title: Text('Políticas de Seguridad',
+                  style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para mostrar las políticas de seguridad
+              },
+            ),
+            ListTile(
+              title:
+                  Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para cerrar sesión
+              },
             ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 40,
-            margin: EdgeInsets.only(top: 10),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _categories.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                    child: Text(
-                      _categories[index],
-                      style: TextStyle(
-                          color: _selectedIndex == index
-                              ? Colors.blue
-                              : Colors.grey),
-                    ),
-                  ),
-                );
-              },
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Nombre de la publicación',
+              ),
             ),
-          ),
-          Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Descripción de la publicación',
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 255, 0, 0),
+              ),
+              child: Text('Cargar Imagen'),
+            ),
+          ],
+        ),
       ),
     );
   }
