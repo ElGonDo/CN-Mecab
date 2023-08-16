@@ -245,7 +245,7 @@ class _PaginahomeState extends State<Paginahome> {
           SizedBox(height: 20.0),
           Expanded(
             child: ListView.builder(
-              itemCount: 20,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 if (currentPage == 'Para ti') {
                   return Card(
