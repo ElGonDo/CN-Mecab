@@ -24,14 +24,13 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.black, // Color de fondo negro para la barra
-        centerTitle: true, // Centra el título en la barra de navegación
+        backgroundColor: Colors.black,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Centra el contenido verticalmente
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                   'CN',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.blue, // Color azul para "CN"
+                    color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -48,13 +47,13 @@ class _LoginPageState extends State<LoginPage> {
                   ' MECAB',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.red, // Color rojo para "MECAB"
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 30), // Espacio entre el título y los campos
+            SizedBox(height: 30),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -74,12 +73,11 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary:
-                    Colors.red, // Cambia el color de fondo del botón a rojo
+                primary: Colors.red,
               ),
               child: const Text(
                 'Iniciar Sesión',
-                style: TextStyle(fontSize: 18), // Tamaño de fuente del botón
+                style: TextStyle(fontSize: 18),
               ),
               onPressed: () async {
                 final String email = _emailController.text;
@@ -90,12 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                     await _authService.login(email, password);
 
                 if (userCredential != null) {
-                  // El usuario inició sesión correctamente
-                  // Aquí puedes redirigir al usuario a la página principal, por ejemplo
                   Navigator.of(context).pushNamed('/home');
                 } else {
-                  // Algo salió mal
-                  // Puedes mostrar un mensaje de error en una ventana emergente
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {

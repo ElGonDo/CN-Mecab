@@ -48,6 +48,15 @@ class _PaginahomeState extends State<Paginahome> {
         actions: [
           IconButton(
             icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // Acción para realizar la búsqueda
+            },
+          ),
+          IconButton(
+            icon: Icon(
               Icons.account_circle,
               color: Colors.white,
             ),
@@ -117,6 +126,12 @@ class _PaginahomeState extends State<Paginahome> {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushReplacementNamed('/welcome');
+              },
+            ),
+            ListTile(
+              title: Text('Guardados', style: TextStyle(color: Colors.black)),
+              onTap: () {
+                // Acción para la opción "Guardados"
               },
             ),
           ],

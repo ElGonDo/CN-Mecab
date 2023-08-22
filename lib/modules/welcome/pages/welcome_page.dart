@@ -9,10 +9,9 @@ class WelcomePage extends StatelessWidget {
       appBar: AppBar(
         // Oculta la barra de navegación superior
         toolbarHeight: 0,
-        backgroundColor:
-            Colors.black, // Cambia el color del fondo de la barra superior
+        backgroundColor: Colors.black,
       ),
-      backgroundColor: Colors.black, // Cambia el color de fondo de la pantalla
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -22,7 +21,7 @@ class WelcomePage extends StatelessWidget {
               height: 200, // Ajusta la altura de tu logo según sea necesario
               // child: YourLogoWidget(),  // Reemplaza con tu widget de logo
             ),
-            const SizedBox(height: 20), // Espacio entre el logo y los botones
+            const SizedBox(height: 20),
             const Text(
               'Bienvenido',
               style: TextStyle(
@@ -39,7 +38,7 @@ class WelcomePage extends StatelessWidget {
                   'CN',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.blue, // Color azul para "CN"
+                    color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -47,7 +46,7 @@ class WelcomePage extends StatelessWidget {
                   ' MECAB',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.red, // Color rojo para "MECAB"
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -56,19 +55,19 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 50),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Cambia el color de fondo del botón
-                onPrimary: Colors.white, // Cambia el color del texto del botón
+                primary: Colors.red,
+                onPrimary: Colors.white,
               ),
               child: const Text('Iniciar sesión'),
               onPressed: () {
                 Navigator.of(context).pushNamed('/login');
               },
             ),
-            const SizedBox(height: 20), // Espacio entre los botones
+            const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Cambia el color de fondo del botón
-                onPrimary: Colors.white, // Cambia el color del texto del botón
+                primary: Colors.red,
+                onPrimary: Colors.white,
               ),
               child: const Text('Registrarse'),
               onPressed: () {

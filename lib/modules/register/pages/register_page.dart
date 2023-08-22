@@ -18,23 +18,22 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registro'),
-        centerTitle: true, // Centra el título en la barra de navegación
-        backgroundColor: Colors.black, // Color de fondo negro para la barra
+        centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Centra el contenido verticalmente
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   'CN',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.blue, // Color azul para "CN"
+                    color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -42,13 +41,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   ' MECAB',
                   style: TextStyle(
                     fontSize: 30,
-                    color: Colors.red, // Color rojo para "MECAB"
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 30), // Espacio entre el título y los campos
+            const SizedBox(height: 30),
             TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -68,8 +67,8 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary:
-                    Colors.red, // Cambia el color de fondo del botón a rojo
+                // ignore: deprecated_member_use
+                primary: Colors.red,
               ),
               child: const Text('Registrarse'),
               onPressed: () async {
@@ -81,12 +80,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     await _authService.register(email, password);
 
                 if (userCredential != null) {
-                  // El usuario se registró correctamente
-                  // Aquí puedes redirigir al usuario a la página principal, por ejemplo
                   Navigator.of(context).pushNamed('/home');
                 } else {
-                  // Algo salió mal
-                  // Puedes mostrar un mensaje de error en una ventana emergente
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
