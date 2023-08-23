@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
@@ -113,11 +114,36 @@ class _PaginahomeState extends State<Paginahome> {
                 });
               },
             ),
+
+          
+
+
             ListTile(
-              title: Text('Políticas de Seguridad',
+              title: Text('Terminos y Políticas de Seguridad',
                   style: TextStyle(color: Colors.black)),
               onTap: () {
-                // Acción para mostrar las políticas de seguridad
+                showAboutDialog(
+                  context: context,
+                  applicationName: 'Cn Mecab',
+                  applicationVersion: '1.0.0',
+                  applicationLegalese: 'Ag System Information ${DateTime.now().year} Cn Mecab',
+                  //applicationIcon: 
+                  children: [
+                    TextButton(
+                      onPressed:(){
+                        Navigator.of(context).pushNamed('/politics');
+                      },
+                      child: const Text('Politicas de Privacidad'),
+                    ),
+                    TextButton(
+                      onPressed:(){
+                          Navigator.of(context).pushNamed('/terms');
+                      },
+                      child: const Text('Terminos y condiciones'),
+                    ),
+                  ],
+                );
+                 
               },
             ),
             ListTile(
