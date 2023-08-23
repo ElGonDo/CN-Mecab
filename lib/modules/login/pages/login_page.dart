@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cnmecab/services/auth_service.dart';
@@ -17,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Iniciar Sesión',
           style: TextStyle(
             fontSize: 20, // Tamaño de fuente del título
@@ -32,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -53,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -73,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                backgroundColor: Colors.red,
               ),
               child: const Text(
                 'Iniciar Sesión',
@@ -94,15 +96,15 @@ class _LoginPageState extends State<LoginPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Error al iniciar sesión'),
-                        content: Text(
+                        title: const Text('Error al iniciar sesión'),
+                        content: const Text(
                             'Ocurrió un error al intentar iniciar sesión.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Cerrar'),
+                            child: const Text('Cerrar'),
                           ),
                         ],
                       );

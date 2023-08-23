@@ -1,21 +1,23 @@
+// ignore_for_file: implementation_imports, file_names
+
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:flutter/src/material/icons.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 // ignore: camel_case_types
-class Terminos extends StatelessWidget{
+class Terminos extends StatelessWidget {
   const Terminos({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         title: Center(
           child: RichText(
-            text: TextSpan(
+            text: const TextSpan(
               children: [
-                
                 TextSpan(
                   text: 'CN',
                   style: TextStyle(
@@ -36,7 +38,6 @@ class Terminos extends StatelessWidget{
             ),
           ),
         ),
-        
       ),
       body: const Markdown(
         data: ''' 
@@ -72,8 +73,6 @@ Gracias por utilizar nuestra aplicación. Si tienes alguna pregunta o inquietud,
         
         ''',
       ),
-
-        );
-      
-    }
-   } 
+    );
+  }
+}

@@ -1,25 +1,27 @@
+// ignore_for_file: implementation_imports
+
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:flutter/src/material/icons.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 // ignore: camel_case_types
-class politics extends StatelessWidget{
+class politics extends StatelessWidget {
   const politics({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         title: Center(
           child: RichText(
-            text: TextSpan(
+            text: const TextSpan(
               children: [
-                
                 TextSpan(
                   text: 'CN',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Color.fromARGB(255, 30, 30, 31),
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                   ),
@@ -36,7 +38,6 @@ class politics extends StatelessWidget{
             ),
           ),
         ),
-        
       ),
       body: const Markdown(
         data: '''
@@ -86,12 +87,7 @@ Si tienes preguntas o inquietudes sobre esta política, contáctanos en [Agsyste
 Gracias por utilizar nuestra aplicación.
 
     ''',
-        ),
-
-      );
-      
-    }
-   } 
-  
-  
- 
+      ),
+    );
+  }
+}
