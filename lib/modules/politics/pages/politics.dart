@@ -42,7 +42,7 @@ class politics extends StatelessWidget{
         data: '''
 ## Política de Privacidad
 
-**Última actualización: 1 de enero de 2023**
+**Última actualización: 23 de agosto del 2023**
 
 Bienvenido a nuestra aplicación. En esta política de privacidad, explicamos cómo recopilamos, utilizamos y protegemos tus datos personales. Al utilizar nuestra aplicación, aceptas esta política.
 
