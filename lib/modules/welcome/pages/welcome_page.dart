@@ -31,7 +31,7 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -55,8 +55,8 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 50),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
-                onPrimary: Colors.white,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
               ),
               child: const Text('Iniciar sesión'),
               onPressed: () {
@@ -66,8 +66,8 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
-                onPrimary: Colors.white,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
               ),
               child: const Text('Registrarse'),
               onPressed: () {

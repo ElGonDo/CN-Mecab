@@ -77,14 +77,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   _selectedRole = newValue;
                 });
               },
-              items: <String>['visitante', 'creador', 'promotora']
+              items: <String>['Visitante', 'Creador', 'Promotora']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
                 );
               }).toList(),
-              hint: const Text('Selecciona un rol'),
+              hint: const Text('Selecciona Un Rol'),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
