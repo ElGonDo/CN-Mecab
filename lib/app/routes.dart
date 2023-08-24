@@ -1,5 +1,8 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
+import 'package:cnmecab/modules/Forms/pages/FormC.dart';
+import 'package:cnmecab/modules/Forms/pages/FormP.dart';
+import 'package:cnmecab/modules/Forms/pages/FormV.dart';
 import 'package:cnmecab/modules/Home/pages/home_page.dart';
 import 'package:cnmecab/modules/Home/pages/my_home_page.dart';
 import 'package:cnmecab/modules/Login/pages/login_page.dart';
@@ -13,6 +16,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/welcome':
       return MaterialPageRoute(builder: (_) => WelcomePage());
+    case '/FormV':
+      return MaterialPageRoute(builder: (_) => FormVPage());
+    case '/FormC':
+      return MaterialPageRoute(builder: (_) => FormCPage());
+    case '/FormP':
+      return MaterialPageRoute(builder: (_) => FormPPage());
     case '/politics':
       return MaterialPageRoute(builder: (_) => politics());
     case '/terms':

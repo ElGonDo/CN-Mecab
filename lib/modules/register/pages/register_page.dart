@@ -110,7 +110,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     'Rol': _selectedRole,
                     'Fecha_Registro': DateTime.now(),
                   });
-                  Navigator.of(context).pushNamed('/home');
+                  // Redirigir al usuario según el rol seleccionado
+                  switch (_selectedRole) {
+                    case 'Visitante':
+                      Navigator.of(context).pushNamed('/FormV');
+                      break;
+                    case 'Creador':
+                      Navigator.of(context).pushNamed('/FormC');
+                      break;
+                    case 'Promotora':
+                      Navigator.of(context).pushNamed('/FormP');
+                      break;
+                    default:
+                      // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
+                      break;
+                  }
                 } else {
                   showDialog(
                     context: context,
