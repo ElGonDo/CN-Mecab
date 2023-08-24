@@ -86,165 +86,167 @@ class _FormPPageState extends State<FormPPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Nombre Completo de la Promotora'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Por favor ingresa el nombre de la promotora';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  nombrePromotora = value!;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              InkWell(
-                onTap: () => _selectDate(context),
-                child: InputDecorator(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Fecha de Creacion De La Promotora',
-                  ),
-                  child: Text(
-                    fechaCreacionPromotora != null
-                        ? DateFormat('yyyy-MM-dd')
-                            .format(fechaCreacionPromotora!)
-                        : 'Seleccione una fecha',
+                      labelText: 'Nombre Completo de la Promotora'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor ingresa el nombre de la promotora';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    nombrePromotora = value!;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                InkWell(
+                  onTap: () => _selectDate(context),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Fecha de Creacion De La Promotora',
+                    ),
+                    child: Text(
+                      fechaCreacionPromotora != null
+                          ? DateFormat('yyyy-MM-dd')
+                              .format(fechaCreacionPromotora!)
+                          : 'Seleccione una fecha',
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              const Text('Categorías'),
-              CheckboxListTile(
-                title: const Text('Películas'),
-                value: categoriasSeleccionadas.contains('Películas'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      categoriasSeleccionadas.add('Películas');
-                    } else {
-                      categoriasSeleccionadas.remove('Películas');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Series'),
-                value: categoriasSeleccionadas.contains('Series'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      categoriasSeleccionadas.add('Series');
-                    } else {
-                      categoriasSeleccionadas.remove('Series');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Libros'),
-                value: categoriasSeleccionadas.contains('Libros'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      categoriasSeleccionadas.add('Libros');
-                    } else {
-                      categoriasSeleccionadas.remove('Libros');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Animación'),
-                value: categoriasSeleccionadas.contains('Animación'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      categoriasSeleccionadas.add('Animación');
-                    } else {
-                      categoriasSeleccionadas.remove('Animación');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Animes'),
-                value: categoriasSeleccionadas.contains('Animes'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      categoriasSeleccionadas.add('Animes');
-                    } else {
-                      categoriasSeleccionadas.remove('Animes');
-                    }
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              const Text('Tipo de Promotora'),
-              CheckboxListTile(
-                title: const Text('Productora'),
-                value: tiposSeleccionados.contains('Productora'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      tiposSeleccionados.add('Productora');
-                    } else {
-                      tiposSeleccionados.remove('Productora');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Animadora'),
-                value: tiposSeleccionados.contains('Animadora'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      tiposSeleccionados.add('Animadora');
-                    } else {
-                      tiposSeleccionados.remove('Animadora');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Televisora'),
-                value: tiposSeleccionados.contains('Televisora'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      tiposSeleccionados.add('Televisora');
-                    } else {
-                      tiposSeleccionados.remove('Televisora');
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Editorial'),
-                value: tiposSeleccionados.contains('Editorial'),
-                onChanged: (value) {
-                  setState(() {
-                    if (value!) {
-                      tiposSeleccionados.add('Editorial');
-                    } else {
-                      tiposSeleccionados.remove('Editorial');
-                    }
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: guardarDatos,
-                child: const Text('Guardar'),
-              ),
-            ],
+                const SizedBox(height: 16.0),
+                const Text('Categorías'),
+                CheckboxListTile(
+                  title: const Text('Películas'),
+                  value: categoriasSeleccionadas.contains('Películas'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        categoriasSeleccionadas.add('Películas');
+                      } else {
+                        categoriasSeleccionadas.remove('Películas');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Series'),
+                  value: categoriasSeleccionadas.contains('Series'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        categoriasSeleccionadas.add('Series');
+                      } else {
+                        categoriasSeleccionadas.remove('Series');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Libros'),
+                  value: categoriasSeleccionadas.contains('Libros'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        categoriasSeleccionadas.add('Libros');
+                      } else {
+                        categoriasSeleccionadas.remove('Libros');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Animación'),
+                  value: categoriasSeleccionadas.contains('Animación'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        categoriasSeleccionadas.add('Animación');
+                      } else {
+                        categoriasSeleccionadas.remove('Animación');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Animes'),
+                  value: categoriasSeleccionadas.contains('Animes'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        categoriasSeleccionadas.add('Animes');
+                      } else {
+                        categoriasSeleccionadas.remove('Animes');
+                      }
+                    });
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                const Text('Tipo de Promotora'),
+                CheckboxListTile(
+                  title: const Text('Productora'),
+                  value: tiposSeleccionados.contains('Productora'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        tiposSeleccionados.add('Productora');
+                      } else {
+                        tiposSeleccionados.remove('Productora');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Animadora'),
+                  value: tiposSeleccionados.contains('Animadora'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        tiposSeleccionados.add('Animadora');
+                      } else {
+                        tiposSeleccionados.remove('Animadora');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Televisora'),
+                  value: tiposSeleccionados.contains('Televisora'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        tiposSeleccionados.add('Televisora');
+                      } else {
+                        tiposSeleccionados.remove('Televisora');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text('Editorial'),
+                  value: tiposSeleccionados.contains('Editorial'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        tiposSeleccionados.add('Editorial');
+                      } else {
+                        tiposSeleccionados.remove('Editorial');
+                      }
+                    });
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: guardarDatos,
+                  child: const Text('Guardar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
