@@ -81,8 +81,18 @@ class _FormPPageState extends State<FormPPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        title: const Text('Formulario Promotora'),
+        title: const Align(
+          alignment: Alignment.center,
+          child: Text('Formulario Promotora'),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -93,6 +103,7 @@ class _FormPPageState extends State<FormPPage> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                       labelText: 'Nombre Completo de la Promotora'),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -109,6 +120,7 @@ class _FormPPageState extends State<FormPPage> {
                   onTap: () => _selectDate(context),
                   child: InputDecorator(
                     decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                       labelText: 'Fecha de Creacion De La Promotora',
                     ),
                     child: Text(
@@ -120,7 +132,13 @@ class _FormPPageState extends State<FormPPage> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                const Text('Categorías'),
+                const Text(
+                  'Categorías',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 CheckboxListTile(
                   title: const Text('Películas'),
                   value: categoriasSeleccionadas.contains('Películas'),
@@ -187,7 +205,13 @@ class _FormPPageState extends State<FormPPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                const Text('Tipo de Promotora'),
+                const Text(
+                  'Tipo de Promotora',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 CheckboxListTile(
                   title: const Text('Productora'),
                   value: tiposSeleccionados.contains('Productora'),
@@ -243,6 +267,7 @@ class _FormPPageState extends State<FormPPage> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: guardarDatos,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   child: const Text('Guardar'),
                 ),
               ],

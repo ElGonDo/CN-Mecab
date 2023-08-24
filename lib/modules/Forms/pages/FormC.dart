@@ -85,59 +85,74 @@ class _FormCPageState extends State<FormCPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.black,
         title: const Text('Formulario Creador'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nombreController,
-                decoration: const InputDecoration(
-                    labelText: 'Nombre Completo De Creador'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese Su Nombre Completo';
-                  }
-                  return null;
-                },
-              ),
-              DropdownButton<String>(
-                value: _selectedTipoRole,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedTipoRole = newValue;
-                  });
-                },
-                items: <String>['Actor', 'Actriz', 'Autor', 'Mangaka']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                hint: const Text('Selecciona Un Tipo De Creador'),
-              ),
-              InkWell(
-                onTap: () => _selectDate(context),
-                child: InputDecorator(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nombreController,
                   decoration: const InputDecoration(
-                    labelText: 'Fecha de nacimiento',
-                  ),
-                  child: Text(
-                    _selectedDate != null
-                        ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-                        : 'Seleccione una fecha',
+                      border: OutlineInputBorder(),
+                      labelText: 'Nombre Completo De Creador'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese Su Nombre Completo';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButton<String>(
+                  value: _selectedTipoRole,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedTipoRole = newValue;
+                    });
+                  },
+                  items: <String>['Actor', 'Actriz', 'Autor', 'Mangaka']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  hint: const Text('Selecciona Un Tipo De Creador'),
+                ),
+                InkWell(
+                  onTap: () => _selectDate(context),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Fecha de nacimiento',
+                    ),
+                    child: Text(
+                      _selectedDate != null
+                          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+                          : 'Seleccione una fecha',
+                    ),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Guardar'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text('Guardar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
