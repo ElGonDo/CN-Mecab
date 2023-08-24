@@ -5,19 +5,34 @@ import 'package:flutter/material.dart';
 class Guardados extends StatelessWidget {
   const Guardados({super.key});
 
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('CN MECAB'),
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        title: Center(
+          child: RichText(
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                  text: 'CN',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text: ' MECAB',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       backgroundColor: Color.fromARGB(255, 10, 10, 10),
@@ -25,7 +40,7 @@ class Guardados extends StatelessWidget {
         children: <Widget>[
           // Agrega aquí los widgets que deseas mostrar en la pantalla de inicio
           Container(
-            height: 200,
+            height: 300,
             color: Colors.blue,
             child: Center(
               child: Text(

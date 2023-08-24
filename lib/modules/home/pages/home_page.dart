@@ -147,6 +147,12 @@ class _PaginahomeState extends State<Paginahome> {
               },
             ),
             ListTile(
+              title: Text('Guardados', style: TextStyle(color: Colors.black)),
+              onTap: () {
+              Navigator.of(context).pushNamed('/saved');
+              },
+            ),
+            ListTile(
               title:
                   Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
               onTap: () async {
@@ -154,12 +160,7 @@ class _PaginahomeState extends State<Paginahome> {
                 Navigator.of(context).pushReplacementNamed('/welcome');
               },
             ),
-            ListTile(
-              title: Text('Guardados', style: TextStyle(color: Colors.black)),
-              onTap: () {
-                // Acción para la opción "Guardados"
-              },
-            ),
+            
           ],
         ),
       ),
