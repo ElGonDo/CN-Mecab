@@ -1,6 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/material/icons.dart';
+import 'package:flutter/material.dart'
+    show
+        Axis,
+        BuildContext,
+        Card,
+        CircleAvatar,
+        Color,
+        Colors,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        ElevatedButton,
+        Expanded,
+        Icon,
+        IconButton,
+        Icons,
+        Image,
+        ListTile,
+        ListView,
+        MainAxisAlignment,
+        NetworkImage,
+        Row,
+        Scaffold,
+        Size,
+        SizedBox,
+        Spacer,
+        State,
+        StatefulWidget,
+        Text,
+        TextStyle,
+        Widget;
 
 class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
