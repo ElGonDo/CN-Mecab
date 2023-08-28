@@ -1,8 +1,8 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
-import 'package:cnmecab/modules/Forms/pages/FormC.dart';
-import 'package:cnmecab/modules/Forms/pages/FormP.dart';
-import 'package:cnmecab/modules/Forms/pages/FormV.dart';
+import 'package:cnmecab/modules/forms/pages/FormC.dart';
+import 'package:cnmecab/modules/forms/pages/FormP.dart';
+import 'package:cnmecab/modules/forms/pages/FormV.dart';
 import 'package:cnmecab/modules/Home/pages/home_page.dart';
 import 'package:cnmecab/modules/Home/pages/my_home_page.dart';
 import 'package:cnmecab/modules/Login/pages/login_page.dart';
@@ -11,6 +11,7 @@ import 'package:cnmecab/modules/home/home_body.dart';
 import 'package:cnmecab/modules/politics/pages/politics.dart';
 import 'package:cnmecab/modules/politics/pages/Terms.dart';
 import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
+import 'package:cnmecab/modules/profile/pages/profile.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => FormCPage());
     case '/FormP':
       return MaterialPageRoute(builder: (_) => FormPPage());
+    case '/Profile':
+      return MaterialPageRoute(builder: (_) => ProfileScreen());
     case '/politics':
       return MaterialPageRoute(builder: (_) => politics());
     case '/saved':
@@ -43,6 +46,5 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => Publicar());
     default:
       return MaterialPageRoute(builder: (_) => WelcomePage());
-    
   }
 }

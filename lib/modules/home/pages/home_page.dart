@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
-
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:cnmecab/modules/home/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +18,11 @@ class _PaginahomeState extends State<Paginahome> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   int navegador = 0;
-  List<Widget> _paginas = [
+  final List<Widget> _paginas = [
     BodyPage(),
     Publicar(),
   ];
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +67,7 @@ class _PaginahomeState extends State<Paginahome> {
               color: Colors.white,
             ),
             onPressed: () {
-              // Acción para mostrar el perfil
+              Navigator.of(context).pushNamed('/Profile');
             },
           ),
         ],
@@ -121,10 +119,6 @@ class _PaginahomeState extends State<Paginahome> {
                 });
               },
             ),
-
-          
-
-
             ListTile(
               title: Text('Terminos y Políticas de Seguridad',
                   style: TextStyle(color: Colors.black)),
@@ -133,30 +127,30 @@ class _PaginahomeState extends State<Paginahome> {
                   context: context,
                   applicationName: 'Cn Mecab',
                   applicationVersion: '1.0.0',
-                  applicationLegalese: 'Ag System Information ${DateTime.now().year} Cn Mecab',
-                  //applicationIcon: 
+                  applicationLegalese:
+                      'Ag System Information ${DateTime.now().year} Cn Mecab',
+                  //applicationIcon:
                   children: [
                     TextButton(
-                      onPressed:(){
+                      onPressed: () {
                         Navigator.of(context).pushNamed('/politics');
                       },
                       child: const Text('Politicas de Privacidad'),
                     ),
                     TextButton(
-                      onPressed:(){
-                          Navigator.of(context).pushNamed('/terms');
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/terms');
                       },
                       child: const Text('Terminos y condiciones'),
                     ),
                   ],
                 );
-                 
               },
             ),
             ListTile(
               title: Text('Guardados', style: TextStyle(color: Colors.black)),
               onTap: () {
-              Navigator.of(context).pushNamed('/saved');
+                Navigator.of(context).pushNamed('/saved');
               },
             ),
             ListTile(
@@ -167,27 +161,25 @@ class _PaginahomeState extends State<Paginahome> {
                 Navigator.of(context).pushReplacementNamed('/welcome');
               },
             ),
-            
           ],
         ),
       ),
-
       body: _paginas[navegador],
-      
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (index){
+        onTap: (index) {
           setState(() {
             navegador = index;
           });
         },
         currentIndex: navegador,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home),label:"home"),
-          BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle),label:"subir"),
-          BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle),label:"notificaciones")
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.supervised_user_circle), label: "subir"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.supervised_user_circle), label: "notificaciones")
         ],
       ),
     );
   }
 }
-
