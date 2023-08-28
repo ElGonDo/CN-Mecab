@@ -21,7 +21,7 @@ class politics extends StatelessWidget {
                 TextSpan(
                   text: 'CN',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 30, 30, 31),
+                    color:  Colors.blue,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                   ),
