@@ -122,7 +122,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if (_userProfile == null) {
-      // Muestra un widget de carga mientras se inicializa _userProfile
       return Scaffold(
         appBar: AppBar(title: const Text('Cargando perfil')),
         body: const Center(child: CircularProgressIndicator()),
@@ -130,19 +129,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: const Text('Mi Perfil'),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Habilita la edición de campos
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: () {
-              // Guarda los cambios en Firestore
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -152,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             TextField(
               controller: _nameController,
-              enabled: false, // Habilitar cuando se toque el botón de edición
+              enabled: false,
               decoration: const InputDecoration(labelText: 'Nombre'),
             ),
             if (_userProfile?.role == 'Creador') ...[
