@@ -17,13 +17,65 @@ class Publicar extends StatefulWidget {
 
 class _PublicarState extends State<Publicar> {
  File? image_to_upload;
-
+  String? _selectedCategory;
+  String? _selectedGenero;
  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        
         children: [
+           const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Titulo de la publicacion',
+              ),         
+        ),
+          const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Sub Titulo de la publicacion',
+              ),         
+        ),
+          const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Descripcion de la publicacion',
+              ),         
+        ),
+        DropdownButton<String>(
+              value: _selectedGenero,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedGenero = newValue;
+                });
+              },
+              items: <String>['Genero1', 'Genero2', 'Genero3']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              hint: const Text('Selecciona Un Genero'),
+            ),
+          DropdownButton<String>(
+              value: _selectedCategory,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedCategory = newValue;
+                });
+              },
+              items: <String>['Categoria1', 'Categoria2', 'Categoria3']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              hint: const Text('Selecciona Una Categoria'),
+            ),
          image_to_upload != null ?Image.file(image_to_upload!) : Container(
             margin: const EdgeInsets.all(10),
             height: 200,
@@ -36,12 +88,16 @@ class _PublicarState extends State<Publicar> {
               setState(() {
                   image_to_upload = File(imagen!.path);
               });
-            }, child: Text("Seleccionar imagen")),
+            }, child: const Text("Seleccionar imagen")),
           ElevatedButton(
-            onPressed: (){}, child: Text("Subir imagen"))
-        ]
-        ),  
-      
+            onPressed: (){}, child: const Text("Subir imagen")
+            )
+              
+
+        ],
+        
+        
+      ),
       );
   }
 }
