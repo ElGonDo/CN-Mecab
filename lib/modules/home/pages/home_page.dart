@@ -166,6 +166,9 @@ class _PaginahomeState extends State<Paginahome> {
       ),
       body: _paginas[navegador],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: const Color.fromARGB(255, 255, 20, 20),
+        unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),
         onTap: (index) {
           setState(() {
             navegador = index;
@@ -173,11 +176,12 @@ class _PaginahomeState extends State<Paginahome> {
         },
         currentIndex: navegador,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.supervised_user_circle), label: "subir"),
+              icon: Icon(Icons.file_upload_outlined),
+              label: "Subir Publicacion"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.supervised_user_circle), label: "notificaciones")
+              icon: Icon(Icons.notifications), label: "Notificaciones")
         ],
       ),
     );
