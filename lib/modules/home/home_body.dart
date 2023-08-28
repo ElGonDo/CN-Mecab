@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
 
-  class BodyPage extends StatefulWidget {
+class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
 
   @override
@@ -15,12 +15,12 @@ class _PaginahomeState extends State<BodyPage> {
   bool isDarkModeEnabled = false;
 
   @override
- Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
+          SizedBox(
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -33,10 +33,10 @@ class _PaginahomeState extends State<BodyPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: currentPage == 'Para ti'
-                        ? Color.fromARGB(255, 255, 0, 0)
+                        ? const Color.fromARGB(255, 255, 0, 0)
                         : Colors.white,
-                    minimumSize: Size(199, 50),
-                    maximumSize: Size(200, 50),
+                    minimumSize: const Size(199, 50),
+                    maximumSize: const Size(200, 50),
                   ),
                   child: Text(
                     'Para ti',
@@ -57,8 +57,8 @@ class _PaginahomeState extends State<BodyPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         currentPage == 'Películas' ? Colors.red : Colors.white,
-                    minimumSize: Size(199, 50),
-                    maximumSize: Size(200, 50),
+                    minimumSize: const Size(199, 50),
+                    maximumSize: const Size(200, 50),
                   ),
                   child: Text(
                     'Películas',
@@ -79,8 +79,8 @@ class _PaginahomeState extends State<BodyPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         currentPage == 'Series' ? Colors.red : Colors.white,
-                    minimumSize: Size(199, 50),
-                    maximumSize: Size(200, 50),
+                    minimumSize: const Size(199, 50),
+                    maximumSize: const Size(200, 50),
                   ),
                   child: Text(
                     'Series',
@@ -100,8 +100,8 @@ class _PaginahomeState extends State<BodyPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         currentPage == 'Libros' ? Colors.red : Colors.white,
-                    minimumSize: Size(199, 50),
-                    maximumSize: Size(200, 50),
+                    minimumSize: const Size(199, 50),
+                    maximumSize: const Size(200, 50),
                   ),
                   child: Text(
                     'Libros',
@@ -120,10 +120,10 @@ class _PaginahomeState extends State<BodyPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: currentPage == 'Animes'
-                        ? Color.fromARGB(255, 255, 17, 0)
+                        ? const Color.fromARGB(255, 255, 17, 0)
                         : Colors.white,
-                    minimumSize: Size(199, 50),
-                    maximumSize: Size(200, 50),
+                    minimumSize: const Size(199, 50),
+                    maximumSize: const Size(200, 50),
                   ),
                   child: Text(
                     'Animes',
@@ -137,7 +137,7 @@ class _PaginahomeState extends State<BodyPage> {
               ],
             ),
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Expanded(
             child: ListView.builder(
               itemCount: 1,
@@ -147,7 +147,7 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
                             backgroundImage:
@@ -162,16 +162,16 @@ class _PaginahomeState extends State<BodyPage> {
                           children: [
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
+                              icon: const Icon(Icons.thumb_up),
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.comment),
+                              icon: const Icon(Icons.comment),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.share),
+                              icon: const Icon(Icons.share),
                             ),
                           ],
                         ),
@@ -184,7 +184,7 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
                             backgroundImage:
@@ -200,16 +200,16 @@ class _PaginahomeState extends State<BodyPage> {
                           children: [
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
+                              icon: const Icon(Icons.thumb_up),
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.comment),
+                              icon: const Icon(Icons.comment),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.share),
+                              icon: const Icon(Icons.share),
                             ),
                           ],
                         ),
@@ -222,14 +222,14 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
                             backgroundImage:
                                 NetworkImage('https://via.placeholder.com/150'),
                           ),
                           title: Text('Serie'),
-                          textColor: const Color.fromARGB(255, 255, 17, 0),
+                          textColor: Color.fromARGB(255, 255, 17, 0),
                           subtitle: Text('Descripcion breve de la publicacion'),
                         ),
                         Image.network('https://via.placeholder.com/1080'),
@@ -238,16 +238,16 @@ class _PaginahomeState extends State<BodyPage> {
                           children: [
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
+                              icon: const Icon(Icons.thumb_up),
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.comment),
+                              icon: const Icon(Icons.comment),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.share),
+                              icon: const Icon(Icons.share),
                             ),
                           ],
                         ),
@@ -260,7 +260,7 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
                             backgroundImage:
@@ -276,16 +276,16 @@ class _PaginahomeState extends State<BodyPage> {
                           children: [
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
+                              icon: const Icon(Icons.thumb_up),
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.comment),
+                              icon: const Icon(Icons.comment),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.share),
+                              icon: const Icon(Icons.share),
                             ),
                           ],
                         ),
@@ -298,7 +298,7 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
                             backgroundImage:
@@ -314,16 +314,16 @@ class _PaginahomeState extends State<BodyPage> {
                           children: [
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
+                              icon: const Icon(Icons.thumb_up),
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.comment),
+                              icon: const Icon(Icons.comment),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.share),
+                              icon: const Icon(Icons.share),
                             ),
                           ],
                         ),
@@ -339,5 +339,5 @@ class _PaginahomeState extends State<BodyPage> {
         ],
       ),
     );
-  } 
+  }
 }

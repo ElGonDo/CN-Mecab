@@ -18,7 +18,7 @@ class _PaginahomeState extends State<Paginahome> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   int navegador = 0;
-  List<Widget> _paginas = [
+  final List<Widget> _paginas = [
     BodyPage(),
     Publicar(),
   ];
