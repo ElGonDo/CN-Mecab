@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
+import 'package:cnmecab/modules/Notification/pages/Notification.dart';
 import 'package:cnmecab/modules/forms/pages/FormC.dart';
 import 'package:cnmecab/modules/forms/pages/FormP.dart';
 import 'package:cnmecab/modules/forms/pages/FormV.dart';
@@ -44,6 +45,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => BodyPage());
     case '/publicar':
       return MaterialPageRoute(builder: (_) => Publicar());
+    case '/notificaciones':
+      return MaterialPageRoute(builder: (_) => Notificacion());
     default:
       return MaterialPageRoute(builder: (_) => WelcomePage());
   }

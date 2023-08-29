@@ -1,10 +1,12 @@
 // ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
+import 'package:cnmecab/modules/Notification/pages/Notification.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:cnmecab/modules/home/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/icons.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});
@@ -21,6 +23,7 @@ class _PaginahomeState extends State<Paginahome> {
   final List<Widget> _paginas = [
     BodyPage(),
     Publicar(),
+    Notificacion(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -165,10 +168,10 @@ class _PaginahomeState extends State<Paginahome> {
         ),
       ),
       body: _paginas[navegador],
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: SalomonBottomBar(
+        margin: EdgeInsets.symmetric(vertical: 30,horizontal: 20),
         backgroundColor: Colors.black,
-        selectedItemColor: const Color.fromARGB(255, 255, 20, 20),
-        unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),
+         unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),
         onTap: (index) {
           setState(() {
             navegador = index;
@@ -176,12 +179,21 @@ class _PaginahomeState extends State<Paginahome> {
         },
         currentIndex: navegador,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.file_upload_outlined),
-              label: "Subir Publicacion"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: "Notificaciones")
+          SalomonBottomBarItem(
+            icon: Icon(Icons.home), 
+            title: Text("home"),
+            selectedColor: Color.fromARGB(255, 156, 37, 37)
+            ),
+             SalomonBottomBarItem(
+             icon: Icon(Icons.file_upload_outlined), 
+            title: Text("Subir Publicaciones"),
+            selectedColor: Color.fromARGB(255, 156, 37, 37)
+            ),
+             SalomonBottomBarItem( 
+             icon: Icon(Icons.notifications),
+            title: Text("Notificaciones"),
+            selectedColor: Color.fromARGB(255, 156, 37, 37)
+            ),
         ],
       ),
     );
