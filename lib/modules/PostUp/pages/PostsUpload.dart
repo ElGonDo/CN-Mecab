@@ -16,30 +16,30 @@ class Publicar extends StatefulWidget {
 }
 
 class _PublicarState extends State<Publicar> {
-  File? image_to_upload;
-
+ File? image_to_upload;
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: [
-        image_to_upload != null
-            ? Image.file(image_to_upload!)
-            : Container(
-                margin: const EdgeInsets.all(10),
-                height: 200,
-                width: double.infinity,
-                color: Colors.red,
-              ),
-        ElevatedButton(
+         image_to_upload != null 
+         ? Image.file(image_to_upload!) 
+         : Container(
+            margin: const EdgeInsets.all(10),
+            height: 200,
+            width: double.infinity,
+            color: Colors.red,
+          ),
+          ElevatedButton(
             onPressed: () async {
               final XFile? imagen = await getImage();
               setState(() {
                 image_to_upload = File(imagen!.path);
               });
-            },
+            }, 
             child: const Text("Seleccionar imagen")),
         ElevatedButton(onPressed: () {}, child: const Text("Subir imagen"))
-      ]),
-    );
+        ]),  
+      );
   }
 }

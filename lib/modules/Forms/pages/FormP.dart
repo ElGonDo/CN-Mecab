@@ -87,12 +87,6 @@ class _FormPPageState extends State<FormPPage> {
           alignment: Alignment.center,
           child: Text('Formulario Promotora'),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

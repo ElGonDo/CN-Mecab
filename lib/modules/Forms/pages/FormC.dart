@@ -87,12 +87,6 @@ class _FormCPageState extends State<FormCPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
         title: const Text('Formulario Creador'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
       ),
       body: Center(
         child: Padding(

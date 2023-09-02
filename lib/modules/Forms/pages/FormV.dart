@@ -87,8 +87,12 @@ class _FormVPageState extends State<FormVPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        title: const Text('Formulario Visitante'),
+        title: const Align(
+          alignment: Alignment.center,
+          child: Text('Formulario Visitante'),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -130,6 +134,7 @@ class _FormVPageState extends State<FormVPage> {
                 onTap: () => _selectDate(context),
                 child: InputDecorator(
                   decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     labelText: 'Fecha de nacimiento',
                   ),
                   child: Text(
@@ -141,6 +146,9 @@ class _FormVPageState extends State<FormVPage> {
               ),
               ElevatedButton(
                 onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
                 child: const Text('Guardar'),
               ),
             ],
