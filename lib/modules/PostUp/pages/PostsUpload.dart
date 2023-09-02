@@ -24,56 +24,58 @@ class _PublicarState extends State<Publicar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        DropdownButton<String>(
-          value: _selectCategoria,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectCategoria = newValue;
-            });
-          },
-          items: <String>['Visitante', 'Creador', 'Promotora']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          hint: const Text('Selecciona Un Rol'),
-        ),
-        image_to_upload != null
-            ? Image.file(image_to_upload!)
-            : Container(
-                margin: const EdgeInsets.all(10),
-                height: 200,
-                width: double.infinity,
-                color: Colors.red,
-              ),
-        ElevatedButton(
-            onPressed: () async {
-              final XFile? imagen = await getImage();
+      body: SingleChildScrollView(
+        child: Column(children: [
+          DropdownButton<String>(
+            value: _selectCategoria,
+            onChanged: (String? newValue) {
               setState(() {
-                image_to_upload = File(imagen!.path);
+                _selectCategoria = newValue;
               });
             },
-            child: const Text("Seleccionar imagen")),
-        ElevatedButton(
-            onPressed: () async {
-              if (image_to_upload == null) {
-                return;
-              }
-              final uploaded = await uploadImage(image_to_upload!);
+            items: <String>['Visitante', 'Creador', 'Promotora']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            hint: const Text('Selecciona Un Rol'),
+          ),
+          image_to_upload != null
+              ? Image.file(image_to_upload!)
+              : Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 200,
+                  width: double.infinity,
+                  color: Colors.red,
+                ),
+          ElevatedButton(
+              onPressed: () async {
+                final XFile? imagen = await getImage();
+                setState(() {
+                  image_to_upload = File(imagen!.path);
+                });
+              },
+              child: const Text("Seleccionar imagen")),
+          ElevatedButton(
+              onPressed: () async {
+                if (image_to_upload == null) {
+                  return;
+                }
+                final uploaded = await uploadImage(image_to_upload!);
 
-              if (uploaded) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("imagen subida correctamente")));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Error al subir la imagen")));
-              }
-            },
-            child: const Text("Subir imagen"))
-      ]),
+                if (uploaded) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("imagen subida correctamente")));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Error al subir la imagen")));
+                }
+              },
+              child: const Text("Subir imagen"))
+        ]),
+      ),
     );
   }
 }

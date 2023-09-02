@@ -5,7 +5,6 @@ import 'package:cnmecab/modules/forms/pages/FormC.dart';
 import 'package:cnmecab/modules/forms/pages/FormP.dart';
 import 'package:cnmecab/modules/forms/pages/FormV.dart';
 import 'package:cnmecab/modules/Home/pages/home_page.dart';
-import 'package:cnmecab/modules/Home/pages/my_home_page.dart';
 import 'package:cnmecab/modules/Login/pages/login_page.dart';
 import 'package:cnmecab/modules/Register/pages/register_page.dart';
 import 'package:cnmecab/modules/home/home_body.dart';
