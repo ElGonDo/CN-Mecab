@@ -169,9 +169,9 @@ class _PaginahomeState extends State<Paginahome> {
       ),
       body: _paginas[navegador],
       bottomNavigationBar: SalomonBottomBar(
-        margin: EdgeInsets.symmetric(vertical: 30,horizontal: 20),
+        margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         backgroundColor: Colors.black,
-         unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),
+        unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),
         onTap: (index) {
           setState(() {
             navegador = index;
@@ -180,20 +180,17 @@ class _PaginahomeState extends State<Paginahome> {
         currentIndex: navegador,
         items: [
           SalomonBottomBarItem(
-            icon: Icon(Icons.home), 
-            title: Text("home"),
-            selectedColor: Color.fromARGB(255, 156, 37, 37)
-            ),
-             SalomonBottomBarItem(
-             icon: Icon(Icons.file_upload_outlined), 
-            title: Text("Subir Publicaciones"),
-            selectedColor: Color.fromARGB(255, 156, 37, 37)
-            ),
-             SalomonBottomBarItem( 
-             icon: Icon(Icons.notifications),
-            title: Text("Notificaciones"),
-            selectedColor: Color.fromARGB(255, 156, 37, 37)
-            ),
+              icon: Icon(Icons.home),
+              title: Text("home"),
+              selectedColor: Color.fromARGB(255, 156, 37, 37)),
+          SalomonBottomBarItem(
+              icon: Icon(Icons.file_upload_outlined),
+              title: Text("Subir Publicaciones"),
+              selectedColor: Color.fromARGB(255, 156, 37, 37)),
+          SalomonBottomBarItem(
+              icon: Icon(Icons.notifications),
+              title: Text("Notificaciones"),
+              selectedColor: Color.fromARGB(255, 156, 37, 37)),
         ],
       ),
     );
