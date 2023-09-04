@@ -19,29 +19,147 @@ class Publicar extends StatefulWidget {
 
 class _PublicarState extends State<Publicar> {
   File? image_to_upload;
-  String? _selectCategoria;
-
+  String? _selectedGenero;
+  String? _selectedCategory;
+  String? _tipoPubli;
+  List<String> categoriasSeleccionadas = [];
+void _onCategorySelected(String category) {
+    setState(() {
+      _selectedGenero = category;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(children: [
-          DropdownButton<String>(
-            value: _selectCategoria,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectCategoria = newValue;
-              });
-            },
-            items: <String>['Visitante', 'Creador', 'Promotora']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            hint: const Text('Selecciona Un Rol'),
-          ),
+        child: Column( children: [
+          const SizedBox(height: 20),
+            const Text(
+              'Tipo de publicación:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              children: [
+                ChoiceChip(
+                  label: const Text('Reseñable'),
+                  selected: _tipoPubli == 'Reseñable',
+                  onSelected: (selected) {
+                    _onCategorySelected('Reseñable');
+                  },
+                ),
+                ChoiceChip(
+                  label: const Text('No reseñable'),
+                  selected: _tipoPubli == 'No reseñable',
+                  onSelected: (selected) {
+                    _onCategorySelected('No reseñable');
+                  },
+                ),
+              ],
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Titulo de la publicación',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Descripción de la publicación',
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Categoría de tu publicación',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              title: const Text('Películas'),
+              leading: Radio(
+                value: 'Películas',
+                groupValue: _selectedCategory,
+                onChanged: (value) {
+                  _onCategorySelected('Películas');
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Series'),
+              leading: Radio(
+                value: 'Series',
+                groupValue: _selectedCategory,
+                onChanged: (value) {
+                  _onCategorySelected('Series');
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Libros'),
+              leading: Radio(
+                value: 'Libros',
+                groupValue: _selectedCategory,
+                onChanged: (value) {
+                  _onCategorySelected('Libros');
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Animación'),
+              leading: Radio(
+                value: 'Animación',
+                groupValue: _selectedCategory,
+                onChanged: (value) {
+                  _onCategorySelected('Animación');
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Animes'),
+              leading: Radio(
+                value: 'Animes',
+                groupValue: _selectedCategory,
+                onChanged: (value) {
+                  _onCategorySelected('Animes');
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Género:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              children: [
+                ChoiceChip(
+                  label: const Text('Acción'),
+                  selected: _selectedGenero == 'Acción',
+                  onSelected: (selected) {
+                    _onCategorySelected('Acción');
+                  },
+                ),
+                ChoiceChip(
+                  label: const Text('Comedia'),
+                  selected: _selectedGenero == 'Comedia',
+                  onSelected: (selected) {
+                    _onCategorySelected('Comedia');
+                  },
+                ),
+                ChoiceChip(
+                  label: const Text('Drama'),
+                  selected: _selectedGenero == 'Drama',
+                  onSelected: (selected) {
+                    _onCategorySelected('Drama');
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
           image_to_upload != null
               ? Image.file(image_to_upload!)
               : Container(
@@ -67,10 +185,10 @@ class _PublicarState extends State<Publicar> {
 
                 if (uploaded) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("imagen subida correctamente")));
+                      content: Text("Error al subir la imagen")));
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Error al subir la imagen")));
+                      content: Text("imagen subida correctamente")));
                 }
               },
               child: const Text("Subir imagen"))
