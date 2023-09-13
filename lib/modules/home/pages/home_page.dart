@@ -1,10 +1,12 @@
-// ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables
+// ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables, avoid_print, prefer_typing_uninitialized_variables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Notification/pages/Notification.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:cnmecab/modules/home/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -17,6 +19,85 @@ class Paginahome extends StatefulWidget {
 }
 
 class _PaginahomeState extends State<Paginahome> {
+  Future<bool> solicitarAutenticacion() async {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    try {
+      // Mostrar el diálogo emergente para ingresar el correo y contraseña
+      var result = await showPlatformDialog(
+        context: context,
+        builder: (_) => BasicDialogAlert(
+          title: Text('Ingrese sus credenciales'),
+          content: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Correo electrónico'),
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    emailController.text = newValue ?? '';
+                  });
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                obscureText: true,
+                controller: passwordController,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    passwordController.text = newValue ?? '';
+                  });
+                },
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text('Aceptar'),
+              onPressed: () {
+                // Cerrar el diálogo emergente y continuar con la autenticación
+                Navigator.pop(context, true);
+              },
+            ),
+            BasicDialogAction(
+              title: Text('Cancelar'),
+              onPressed: () {
+                // Cerrar el diálogo emergente sin realizar la autenticación
+                Navigator.pop(context, false);
+              },
+            ),
+          ],
+        ),
+      );
+
+      // Verificar si el usuario aceptó el diálogo emergente
+      if (result == true) {
+        // Obtener los datos ingresados por el usuario
+        String email = emailController.text;
+        String password = passwordController.text;
+
+        // Autenticar al usuario nuevamente
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        // La autenticación fue exitosa
+        return true;
+      } else {
+        // El usuario canceló el diálogo emergente
+        return false;
+      }
+    } catch (error) {
+      // Ocurrió un error durante la autenticación
+      print('Error de autenticación: $error');
+      // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
+
+      return false;
+    }
+  }
+
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   int navegador = 0;
@@ -162,6 +243,29 @@ class _PaginahomeState extends State<Paginahome> {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushReplacementNamed('/welcome');
+              },
+            ),
+            ListTile(
+              title:
+                  Text('Borrar Cuenta', style: TextStyle(color: Colors.black)),
+              onTap: () async {
+                // Invocar al método para solicitar autenticación nuevamente
+                bool success = await solicitarAutenticacion();
+
+                if (success) {
+                  final currentUser = FirebaseAuth.instance.currentUser;
+                  await FirebaseFirestore.instance
+                      .collection('Usuarios')
+                      .doc(currentUser?.uid)
+                      .update({
+                    'Activo': false,
+                  });
+                  // Si la autenticación es exitosa, eliminar la cuenta y actualizar
+                  await FirebaseAuth.instance.currentUser!.delete();
+                  Navigator.of(context).pushReplacementNamed('/welcome');
+                } else {
+                  // Si la autenticación no es exitosa, realizar alguna acción adicional o mostrar un mensaje de error al usuario
+                }
               },
             ),
           ],
