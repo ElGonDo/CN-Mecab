@@ -15,11 +15,13 @@ class Publicar extends StatefulWidget {
 class _PublicarState extends State<Publicar> {
   TextEditingController tituloController = TextEditingController(text: "");
   TextEditingController descripcionController = TextEditingController(text: "");
+  // ignore: non_constant_identifier_names
   File? image_to_upload;
   String? _selectedGenero = '';
   String _selectedCategory = '';
   String? _tipoPubli;
   List<String> categoriasSeleccionadas = [];
+  String? collectionName;
 
   void _onCategorySelected(String category) {
     setState(() {
@@ -28,10 +30,18 @@ class _PublicarState extends State<Publicar> {
   }
 
   void _onTypePubli(String tipoPubli) {
-    setState(() {
-      _tipoPubli = tipoPubli;
-    });
+  setState(() {
+    _tipoPubli = tipoPubli;
+  });
+  if (tipoPubli == 'Reseñable') {
+    collectionName = "Publicaciones_Reseñables";
+  } else if (tipoPubli == 'No reseñable') {
+    collectionName = "Publicaciones_No_Reseñables";
+  } else {
+    // Puedes manejar un caso predeterminado aquí si es necesario
+    return;
   }
+}
 
   void _onGeneroSelected(String genero) {
     setState(() {
@@ -70,6 +80,7 @@ class _PublicarState extends State<Publicar> {
                 ),
               ],
             ),
+            
             TextField(
               controller: tituloController,
               decoration: const InputDecoration(
@@ -182,11 +193,14 @@ class _PublicarState extends State<Publicar> {
                 child: const Text("Seleccionar imagen")),
             ElevatedButton(
                 onPressed: () async {
+
                   await addTitle(
                       tituloController.text,
                       descripcionController.text,
                       _selectedCategory,
-                      _selectedGenero);
+                      _selectedGenero,
+                      collectionName
+                      );
                   if (image_to_upload == null) {
                     return;
                   }

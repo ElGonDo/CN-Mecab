@@ -40,6 +40,16 @@ class _PaginahomeState extends State<BodyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                          /* FutureBuilder(
+                         future: getPubliR(), 
+                         builder: ((context, snapshot){
+                          return ListView.builder(
+                         itemCount: snapshot.data?.length,
+                         itemBuilder: (context, index){
+                          return Text(snapshot.data?[index]['Titulo']);
+                },
+                );
+            })),*/
                         const ListTile(
                           leading: CircleAvatar(
                             radius: 20.0,
@@ -68,16 +78,6 @@ class _PaginahomeState extends State<BodyPage> {
                             ),
                           ],
                         ),
-                      /* FutureBuilder(
-                         future: getPubliR(), 
-                         builder: ((context, snapshot){
-                          return ListView.builder(
-                         itemCount: snapshot.data?.length,
-                         itemBuilder: (context, index){
-                          return Text(snapshot.data?[index]['Titulo']);
-                },
-                );
-            })),*/
                       ],
                       
                     ),

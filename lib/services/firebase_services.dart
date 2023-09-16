@@ -13,8 +13,9 @@ Future<List> getPubliR() async{
   return publiR;
 }
 
-Future<void> addTitle(String titulo, String descripcion, String selectedCategory, String? selectedGenero) async{
-  await db.collection("Publicaciones_Reseñables").add({
+
+Future<void> addTitle(String titulo, String descripcion, String selectedCategory, String? selectedGenero, String? collectionName,) async{
+  await db.collection(collectionName!).add({
     "Titulo" : titulo, 
     "Descripcion" : descripcion,
     "Categoria" : selectedCategory,
