@@ -3,12 +3,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Notification/pages/Notification.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
-import 'package:cnmecab/modules/home/home_body.dart';
+import 'package:cnmecab/modules/home/pages/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
 
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});

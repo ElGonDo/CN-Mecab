@@ -1,39 +1,51 @@
-// ignore_for_file: non_constant_identifier_names, file_names, use_build_context_synchronously
-
 import 'dart:io';
-
 import 'package:cnmecab/modules/PostUp/pages/select_Image.dart';
 import 'package:cnmecab/modules/PostUp/pages/upload_image.dart';
-
+import 'package:cnmecab/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Publicar extends StatefulWidget {
-  const Publicar({
-    super.key,
-  });
+  const Publicar({super.key});
 
   @override
   State<Publicar> createState() => _PublicarState();
 }
 
 class _PublicarState extends State<Publicar> {
+  TextEditingController tituloController = TextEditingController(text: "");
+  TextEditingController descripcionController = TextEditingController(text: "");
   File? image_to_upload;
-  String? _selectedGenero;
-  String? _selectedCategory;
+  String? _selectedGenero = '';
+  String _selectedCategory = '';
   String? _tipoPubli;
   List<String> categoriasSeleccionadas = [];
-void _onCategorySelected(String category) {
+
+  void _onCategorySelected(String category) {
     setState(() {
-      _selectedGenero = category;
+      _selectedCategory = category;
     });
   }
+
+  void _onTypePubli(String tipoPubli) {
+    setState(() {
+      _tipoPubli = tipoPubli;
+    });
+  }
+
+  void _onGeneroSelected(String genero) {
+    setState(() {
+      _selectedGenero = genero;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column( children: [
-          const SizedBox(height: 20),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
             const Text(
               'Tipo de publicación:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -46,26 +58,28 @@ void _onCategorySelected(String category) {
                   label: const Text('Reseñable'),
                   selected: _tipoPubli == 'Reseñable',
                   onSelected: (selected) {
-                    _onCategorySelected('Reseñable');
+                    _onTypePubli('Reseñable');
                   },
                 ),
                 ChoiceChip(
                   label: const Text('No reseñable'),
                   selected: _tipoPubli == 'No reseñable',
                   onSelected: (selected) {
-                    _onCategorySelected('No reseñable');
+                    _onTypePubli('No reseñable');
                   },
                 ),
               ],
             ),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: tituloController,
+              decoration: const InputDecoration(
                 labelText: 'Titulo de la publicación',
               ),
             ),
             const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: descripcionController,
+              decoration: const InputDecoration(
                 labelText: 'Descripción de la publicación',
               ),
             ),
@@ -108,16 +122,6 @@ void _onCategorySelected(String category) {
               ),
             ),
             ListTile(
-              title: const Text('Animación'),
-              leading: Radio(
-                value: 'Animación',
-                groupValue: _selectedCategory,
-                onChanged: (value) {
-                  _onCategorySelected('Animación');
-                },
-              ),
-            ),
-            ListTile(
               title: const Text('Animes'),
               leading: Radio(
                 value: 'Animes',
@@ -140,59 +144,67 @@ void _onCategorySelected(String category) {
                   label: const Text('Acción'),
                   selected: _selectedGenero == 'Acción',
                   onSelected: (selected) {
-                    _onCategorySelected('Acción');
+                    _onGeneroSelected('Acción');
                   },
                 ),
                 ChoiceChip(
                   label: const Text('Comedia'),
                   selected: _selectedGenero == 'Comedia',
                   onSelected: (selected) {
-                    _onCategorySelected('Comedia');
+                    _onGeneroSelected('Comedia');
                   },
                 ),
                 ChoiceChip(
                   label: const Text('Drama'),
                   selected: _selectedGenero == 'Drama',
                   onSelected: (selected) {
-                    _onCategorySelected('Drama');
+                    _onGeneroSelected('Drama');
                   },
                 ),
               ],
             ),
             const SizedBox(height: 20),
-          image_to_upload != null
-              ? Image.file(image_to_upload!)
-              : Container(
-                  margin: const EdgeInsets.all(10),
-                  height: 200,
-                  width: double.infinity,
-                  color: Colors.red,
-                ),
-          ElevatedButton(
-              onPressed: () async {
-                final XFile? imagen = await getImage();
-                setState(() {
-                  image_to_upload = File(imagen!.path);
-                });
-              },
-              child: const Text("Seleccionar imagen")),
-          ElevatedButton(
-              onPressed: () async {
-                if (image_to_upload == null) {
-                  return;
-                }
-                final uploaded = await uploadImage(image_to_upload!);
+            image_to_upload != null
+                ? Image.file(image_to_upload!)
+                : Container(
+                    margin: const EdgeInsets.all(10),
+                    height: 200,
+                    width: double.infinity,
+                    color: Colors.red,
+                  ),
+            ElevatedButton(
+                onPressed: () async {
+                  final XFile? imagen = await getImage();
+                  setState(() {
+                    image_to_upload = File(imagen!.path);
+                  });
+                },
+                child: const Text("Seleccionar imagen")),
+            ElevatedButton(
+                onPressed: () async {
+                  await addTitle(
+                      tituloController.text,
+                      descripcionController.text,
+                      _selectedCategory,
+                      _selectedGenero);
+                  if (image_to_upload == null) {
+                    return;
+                  }
+                  final uploaded = await uploadImage(image_to_upload!);
 
-                if (uploaded) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Error al subir la imagen")));
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("imagen subida correctamente")));
-                }
-              },
-              child: const Text("Subir imagen"))
-        ]),
+                  if (uploaded) {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Error al subir la imagen")));
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("imagen subida correctamente")));
+                  }
+                },
+                child: const Text("Subir Publicacion"))
+          ],
+        ),
       ),
     );
   }

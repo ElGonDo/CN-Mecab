@@ -1,34 +1,7 @@
-import 'package:flutter/material.dart'
-    show
-        Axis,
-        BuildContext,
-        Card,
-        CircleAvatar,
-        Color,
-        Colors,
-        Column,
-        Container,
-        CrossAxisAlignment,
-        ElevatedButton,
-        Expanded,
-        Icon,
-        IconButton,
-        Icons,
-        Image,
-        ListTile,
-        ListView,
-        MainAxisAlignment,
-        NetworkImage,
-        Row,
-        Scaffold,
-        Size,
-        SizedBox,
-        Spacer,
-        State,
-        StatefulWidget,
-        Text,
-        TextStyle,
-        Widget;
+import 'package:cnmecab/modules/home/pages/filter_body.dart';
+//import 'package:cnmecab/services/firebase_services.dart';
+import 'package:flutter/material.dart';
+ // Importa la clase FilterBody
 
 class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
@@ -39,7 +12,7 @@ class BodyPage extends StatefulWidget {
 }
 
 class _PaginahomeState extends State<BodyPage> {
-  String currentPage = 'Para ti';
+  String currentPage = 'Para ti'; 
   bool isDarkModeEnabled = false;
 
   @override
@@ -48,129 +21,21 @@ class _PaginahomeState extends State<BodyPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      currentPage = 'Para ti';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: currentPage == 'Para ti'
-                        ? const Color.fromARGB(255, 255, 0, 0)
-                        : Colors.white,
-                    minimumSize: const Size(199, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  child: Text(
-                    'Para ti',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: currentPage == 'Para ti'
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      currentPage = 'Películas';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        currentPage == 'Películas' ? Colors.red : Colors.white,
-                    minimumSize: const Size(199, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  child: Text(
-                    'Películas',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: currentPage == 'Películas'
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      currentPage = 'Series';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        currentPage == 'Series' ? Colors.red : Colors.white,
-                    minimumSize: const Size(199, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  child: Text(
-                    'Series',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color:
-                          currentPage == 'Series' ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      currentPage = 'Libros';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        currentPage == 'Libros' ? Colors.red : Colors.white,
-                    minimumSize: const Size(199, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  child: Text(
-                    'Libros',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color:
-                          currentPage == 'Libros' ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      currentPage = 'Animes';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: currentPage == 'Animes'
-                        ? const Color.fromARGB(255, 255, 17, 0)
-                        : Colors.white,
-                    minimumSize: const Size(199, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  child: Text(
-                    'Animes',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color:
-                          currentPage == 'Animes' ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          FilterBody(
+            currentPage: currentPage,
+            onPageChanged: (newPage) {
+              setState(() {
+                currentPage = newPage;
+              });
+            },
           ),
           const SizedBox(height: 20.0),
           Expanded(
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (context, index) {
-                if (currentPage == 'Para ti') {
+                // Agrega aquí el contenido específico para cada página
+               if (currentPage == 'Para ti') {
                   return Card(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -203,9 +68,21 @@ class _PaginahomeState extends State<BodyPage> {
                             ),
                           ],
                         ),
+                      /* FutureBuilder(
+                         future: getPubliR(), 
+                         builder: ((context, snapshot){
+                          return ListView.builder(
+                         itemCount: snapshot.data?.length,
+                         itemBuilder: (context, index){
+                          return Text(snapshot.data?[index]['Titulo']);
+                },
+                );
+            })),*/
                       ],
+                      
                     ),
                   );
+                  
                 } else if (currentPage == 'Películas') {
                   // Código para la página de películas
                   return Card(
