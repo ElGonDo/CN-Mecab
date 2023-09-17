@@ -16,11 +16,13 @@ class _FormCPageState extends State<FormCPage> {
 
   final TextEditingController _nombreController = TextEditingController();
   DateTime? _selectedDate;
-  String? _selectedTipoRole;
+  //String? _selectedTipoRole;
+  List<String> tiposCreadoresSeleccionados = [];
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final currentUser = FirebaseAuth.instance.currentUser;
+      _formKey.currentState?.save();
       if (currentUser != null) {
         // Convertir la fecha seleccionada a un valor de tipo Timestamp
         final birthDateTimestamp =
@@ -33,7 +35,7 @@ class _FormCPageState extends State<FormCPage> {
             .set({
           'Nombre_Creador': _nombreController.text,
           'Fecha_Nacimiento': birthDateTimestamp,
-          'Tipo Creador': _selectedTipoRole,
+          'Tipo Creador': tiposCreadoresSeleccionados,
         });
 
         // Actualizar los datos del usuario en la colección "Usuarios"
@@ -91,61 +93,106 @@ class _FormCPageState extends State<FormCPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nombre Completo De Creador'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ingrese Su Nombre Completo';
-                    }
-                    return null;
-                  },
-                ),
-                DropdownButton<String>(
-                  value: _selectedTipoRole,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedTipoRole = newValue;
-                    });
-                  },
-                  items: <String>['Actor', 'Actriz', 'Autor', 'Mangaka']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  hint: const Text('Selecciona Un Tipo De Creador'),
-                ),
-                InkWell(
-                  onTap: () => _selectDate(context),
-                  child: InputDecorator(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nombreController,
                     decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Fecha de nacimiento',
-                    ),
-                    child: Text(
-                      _selectedDate != null
-                          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-                          : 'Seleccione una fecha',
+                        border: OutlineInputBorder(),
+                        labelText: 'Nombre Completo De Creador'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ingrese Su Nombre Completo';
+                      }
+                      return null;
+                    },
+                  ),
+                  InkWell(
+                    onTap: () => _selectDate(context),
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Fecha de nacimiento',
+                      ),
+                      child: Text(
+                        _selectedDate != null
+                            ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+                            : 'Seleccione una fecha',
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                  const Text(
+                    'Tipo De Creador',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  child: const Text('Guardar'),
-                ),
-              ],
+                  CheckboxListTile(
+                    title: const Text('Actor'),
+                    value: tiposCreadoresSeleccionados.contains('Actor'),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value!) {
+                          tiposCreadoresSeleccionados.add('Actor');
+                        } else {
+                          tiposCreadoresSeleccionados.remove('Actor');
+                        }
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('Actriz'),
+                    value: tiposCreadoresSeleccionados.contains('Actriz'),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value!) {
+                          tiposCreadoresSeleccionados.add('Actriz');
+                        } else {
+                          tiposCreadoresSeleccionados.remove('Actriz');
+                        }
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('Autor'),
+                    value: tiposCreadoresSeleccionados.contains('Autor'),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value!) {
+                          tiposCreadoresSeleccionados.add('Autor');
+                        } else {
+                          tiposCreadoresSeleccionados.remove('Autor');
+                        }
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('Mangaka'),
+                    value: tiposCreadoresSeleccionados.contains('Mangaka'),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value!) {
+                          tiposCreadoresSeleccionados.add('Mangaka');
+                        } else {
+                          tiposCreadoresSeleccionados.remove('Mangaka');
+                        }
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Guardar'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

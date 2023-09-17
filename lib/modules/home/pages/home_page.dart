@@ -10,7 +10,6 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});
 
@@ -181,7 +180,9 @@ class _PaginahomeState extends State<Paginahome> {
             ),
             ListTile(
               title: Text('Cuenta', style: TextStyle(color: Colors.black)),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed('/Profile');
+              },
             ),
             ListTile(
               title:

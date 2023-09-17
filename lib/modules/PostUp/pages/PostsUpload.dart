@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:io';
 import 'package:cnmecab/modules/PostUp/pages/select_Image.dart';
 import 'package:cnmecab/modules/PostUp/pages/upload_image.dart';
@@ -30,18 +32,18 @@ class _PublicarState extends State<Publicar> {
   }
 
   void _onTypePubli(String tipoPubli) {
-  setState(() {
-    _tipoPubli = tipoPubli;
-  });
-  if (tipoPubli == 'Reseñable') {
-    collectionName = "Publicaciones_Reseñables";
-  } else if (tipoPubli == 'No reseñable') {
-    collectionName = "Publicaciones_No_Reseñables";
-  } else {
-    // Puedes manejar un caso predeterminado aquí si es necesario
-    return;
+    setState(() {
+      _tipoPubli = tipoPubli;
+    });
+    if (tipoPubli == 'Reseñable') {
+      collectionName = "Publicaciones_Reseñables";
+    } else if (tipoPubli == 'No reseñable') {
+      collectionName = "Publicaciones_No_Reseñables";
+    } else {
+      // Puedes manejar un caso predeterminado aquí si es necesario
+      return;
+    }
   }
-}
 
   void _onGeneroSelected(String genero) {
     setState(() {
@@ -80,7 +82,6 @@ class _PublicarState extends State<Publicar> {
                 ),
               ],
             ),
-            
             TextField(
               controller: tituloController,
               decoration: const InputDecoration(
@@ -193,14 +194,12 @@ class _PublicarState extends State<Publicar> {
                 child: const Text("Seleccionar imagen")),
             ElevatedButton(
                 onPressed: () async {
-
                   await addTitle(
                       tituloController.text,
                       descripcionController.text,
                       _selectedCategory,
                       _selectedGenero,
-                      collectionName
-                      );
+                      collectionName);
                   if (image_to_upload == null) {
                     return;
                   }
@@ -208,12 +207,12 @@ class _PublicarState extends State<Publicar> {
 
                   if (uploaded) {
                     // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Error al subir la imagen")));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Error al subir la imagen")));
                   } else {
                     // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("imagen subida correctamente")));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("imagen subida correctamente")));
                   }
                 },
                 child: const Text("Subir Publicacion"))

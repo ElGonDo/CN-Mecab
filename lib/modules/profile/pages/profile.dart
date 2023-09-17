@@ -13,8 +13,7 @@ class UserProfile {
 }
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-
+  const ProfileScreen({Key? key}) : super(key: key);
   @override
   // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -24,12 +23,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserProfile? _userProfile;
   DateTime? _birthDate;
   DateTime? _creationDate;
+  bool isEditing = false;
   bool _isDataLoaded = false;
+  List<String> categoriasSeleccionadas = [];
+  List<String> tipoPromotoraSeleccionadas = [];
+  List<String> tipoCreadorSeleccionado = [];
+  List<bool> categoriasCheckbox = [];
+  List<bool> tipoPromotoraCheckbox = [];
+  List<bool> tipoCreadorCheckbox = [];
+  static const List<String> categoriasDisponibles = [
+    'Películas',
+    'Series',
+    'Libros',
+    'Animación',
+    'Animes',
+  ];
+  static const List<String> tipoPromotora = [
+    'Productora',
+    'Animadora',
+    'Televisora',
+    'Editorial',
+  ];
+  static const List<String> tiposCreador = [
+    'Actor',
+    'Actriz',
+    'Autor',
+    'Mangaka',
+  ];
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
+  //final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _creationDateController = TextEditingController();
-  final TextEditingController _typeController = TextEditingController();
+  //final TextEditingController _typeController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
 
@@ -82,7 +107,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _birthDateController.text = _birthDate != null
             ? DateFormat('yyyy-MM-dd').format(_birthDate!)
             : '';
-        _typeController.text = creatorData['Tipo Creador'];
+        // obtener los creadores seleccionados
+        List<dynamic> tipoCreador = creatorData['Tipo Creador'];
+        tipoCreadorSeleccionado = tipoCreador.cast<String>();
+        // Inicializar las listas de checkboxes
+        tipoCreadorCheckbox = List.filled(tiposCreador.length, false);
+        // Marcar El Tipo De Creador seleccionado como true
+        for (var i = 0; i < tiposCreador.length; i++) {
+          if (tipoCreadorSeleccionado.contains(tiposCreador[i])) {
+            tipoCreadorCheckbox[i] = true;
+          }
+        }
       } else if (_userProfile?.role == 'Promotora') {
         DocumentSnapshot promoterSnapshot = await FirebaseFirestore.instance
             .collection('Promotoras')
@@ -96,8 +131,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _creationDateController.text = _creationDate != null
             ? DateFormat('yyyy-MM-dd').format(_creationDate!)
             : '';
-        _categoryController.text = promoterData['Categoria'].join(', ');
-        _typeController.text = promoterData['Tipo_Promotora'].join(', ');
+        // Obtener categorías seleccionadas
+        List<dynamic> categorias = promoterData['Categoria'];
+        categoriasSeleccionadas = categorias.cast<String>();
+        // Obtener tipos de promotora seleccionados
+        List<dynamic> tiposPromotora = promoterData['Tipo_Promotora'];
+        tipoPromotoraSeleccionadas = tiposPromotora.cast<String>();
+        // Inicializar las listas de checkboxes
+        categoriasCheckbox =
+            List<bool>.filled(categoriasDisponibles.length, false);
+        tipoPromotoraCheckbox = List<bool>.filled(tipoPromotora.length, false);
+        // Marcar las categorías seleccionadas como true
+        for (var i = 0; i < categoriasDisponibles.length; i++) {
+          if (categoriasSeleccionadas.contains(categoriasDisponibles[i])) {
+            categoriasCheckbox[i] = true;
+          }
+        }
+        // Marcar los tipos de promotora seleccionados como true
+        for (var i = 0; i < tipoPromotora.length; i++) {
+          if (tipoPromotoraSeleccionadas.contains(tipoPromotora[i])) {
+            tipoPromotoraCheckbox[i] = true;
+          }
+        }
       } else if (_userProfile?.role == 'Visitante') {
         DocumentSnapshot visitorSnapshot = await FirebaseFirestore.instance
             .collection('Visitantes')
@@ -119,6 +174,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void guardarVisitante(
+      String nombre, String apellido, String apodo, DateTime fechaNacimiento) {
+    final CollectionReference visitantesCollection =
+        FirebaseFirestore.instance.collection('Visitantes');
+    visitantesCollection.doc(_userProfile?.uid).set({
+      'Nombre': nombre,
+      'Apellido': apellido,
+      'Apodo': apodo,
+      'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
+    }).then((value) {
+      print('Datos del visitante guardados en Firestore');
+    }).catchError((error) {
+      print('Error al guardar los datos del visitante: $error');
+    });
+  }
+
+// Función para guardar los datos del creador en Firestore
+  void guardarCreador(String nombreCreador, DateTime fechaNacimiento,
+      List<String> tiposCreador) {
+    try {
+      // Eliminar los tipos de creador deseleccionados
+      tipoCreadorSeleccionado
+          .removeWhere((tipo) => !tiposCreador.contains(tipo));
+      // Guardar los datos actualizados en la base de datos
+      final CollectionReference creadoresCollection =
+          FirebaseFirestore.instance.collection('Creadores');
+
+      creadoresCollection.doc(_userProfile?.uid).set({
+        'Nombre_Creador': nombreCreador,
+        'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
+        'Tipo Creador': tipoCreadorSeleccionado, // Usar la lista actualizada
+      }).then((value) {
+        print('Datos del creador guardados en Firestore');
+      }).catchError((error) {
+        print('Error al guardar los datos del creador: $error');
+      });
+    } catch (e) {
+      // Manejar cualquier error
+      print(e.toString());
+    }
+  }
+
+// Función para guardar los datos de la promotora en Firestore
+  void guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
+      List<String> categorias, List<String> tipoPromotora) {
+    final CollectionReference promotorasCollection =
+        FirebaseFirestore.instance.collection('Promotoras');
+
+    promotorasCollection.doc(_userProfile?.uid).set({
+      'Nombre_Promotora': nombrePromotora,
+      'Creacion_Promotora': Timestamp.fromDate(fechaCreacion),
+      'Categoria': categorias,
+      'Tipo_Promotora': tipoPromotora,
+    }).then((value) {
+      print('Datos de la promotora guardados en Firestore');
+    }).catchError((error) {
+      print('Error al guardar los datos de la promotora: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_userProfile == null) {
@@ -134,117 +249,208 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                isEditing = !isEditing;
+              });
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {},
-          ),
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                DateTime? newDate;
+                newDate = _birthDate;
+                if (_userProfile?.role == 'Visitante') {
+                  _birthDateController.text =
+                      DateFormat('yyyy-MM-dd').format(newDate!);
+                  guardarVisitante(
+                    _nameController.text,
+                    _lastNameController.text,
+                    _nicknameController.text,
+                    newDate,
+                  );
+                  setState(() {
+                    isEditing = !isEditing;
+                  });
+                } else if (_userProfile?.role == 'Creador') {
+                  _birthDateController.text =
+                      DateFormat('yyyy-MM-dd').format(newDate!);
+                  tipoCreadorSeleccionado.clear();
+                  for (int i = 0; i < tipoCreadorCheckbox.length; i++) {
+                    if (tipoCreadorCheckbox[i]) {
+                      tipoCreadorSeleccionado.add(tiposCreador[i]);
+                    }
+                  }
+                  guardarCreador(
+                    _nameController.text,
+                    newDate,
+                    tipoCreadorSeleccionado,
+                  );
+                  setState(() {
+                    isEditing = !isEditing;
+                  });
+                }
+              }),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              enabled: false,
-              decoration: const InputDecoration(labelText: 'Nombre'),
-            ),
-            if (_userProfile?.role == 'Creador') ...[
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
               TextField(
-                controller: _birthDateController,
-                enabled: false,
-                decoration:
-                    const InputDecoration(labelText: 'Fecha de Nacimiento'),
-                onTap: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: _birthDate ?? DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
-                  );
-                  if (newDate != null) {
-                    setState(() {
-                      _birthDate = newDate;
-                      _birthDateController.text =
-                          DateFormat('yyyy-MM-dd').format(newDate);
-                    });
-                  }
-                },
+                controller: _nameController,
+                enabled: isEditing,
+                decoration: const InputDecoration(labelText: 'Nombre'),
               ),
-              TextField(
-                controller: _typeController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration: const InputDecoration(labelText: 'Tipo de Creador'),
-              ),
-            ] else if (_userProfile?.role == 'Promotora') ...[
-              TextField(
-                controller: _creationDateController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration: const InputDecoration(
-                    labelText: 'Fecha de Creación de Promotora'),
-                onTap: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: _birthDate ?? DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
-                  );
-                  if (newDate != null) {
-                    setState(() {
-                      _creationDate = newDate;
-                      _creationDateController.text =
-                          DateFormat('yyyy-MM-dd').format(newDate);
-                    });
-                  }
-                },
-              ),
-              TextField(
-                controller: _categoryController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration: const InputDecoration(labelText: 'Categoría'),
-              ),
-              TextField(
-                controller: _typeController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration:
-                    const InputDecoration(labelText: 'Tipo de Promotora'),
-              ),
-            ] else if (_userProfile?.role == 'Visitante') ...[
-              TextField(
-                controller: _lastNameController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration: const InputDecoration(labelText: 'Apellido'),
-              ),
-              TextField(
-                controller: _nicknameController,
-                enabled: false, // Habilitar cuando se toque el botón de edición
-                decoration: const InputDecoration(labelText: 'Apodo'),
-              ),
-              TextField(
-                controller: _birthDateController,
-                enabled: false,
-                decoration:
-                    const InputDecoration(labelText: 'Fecha de Nacimiento'),
-                onTap: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: _birthDate ?? DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
-                  );
-                  if (newDate != null) {
-                    setState(() {
-                      _birthDate = newDate;
-                      _birthDateController.text =
-                          DateFormat('yyyy-MM-dd').format(newDate);
-                    });
-                  }
-                },
-              ),
+              if (_userProfile?.role == 'Creador') ...[
+                TextField(
+                  controller: _birthDateController,
+                  enabled: isEditing,
+                  decoration:
+                      const InputDecoration(labelText: 'Fecha de Nacimiento'),
+                  onTap: () async {
+                    DateTime? newDate = await showDatePicker(
+                      context: context,
+                      initialDate: _birthDate ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (newDate != null) {
+                      setState(() {
+                        _birthDate = newDate;
+                        _birthDateController.text =
+                            DateFormat('yyyy-MM-dd').format(newDate);
+                      });
+                    }
+                  },
+                ),
+                const ListTile(
+                  title: Text('Tipo Creador'),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: tiposCreador.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CheckboxListTile(
+                      enabled: isEditing,
+                      title: Text(tiposCreador[index]),
+                      value: tipoCreadorCheckbox[index],
+                      onChanged: (bool? value) {
+                        setState(() {
+                          tipoCreadorCheckbox[index] = value!;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ] else if (_userProfile?.role == 'Promotora') ...[
+                TextField(
+                  controller: _creationDateController,
+                  enabled:
+                      isEditing, // Habilitar cuando se toque el botón de edición
+                  decoration: const InputDecoration(
+                      labelText: 'Fecha de Creación de Promotora'),
+                  onTap: () async {
+                    DateTime? newDate = await showDatePicker(
+                      context: context,
+                      initialDate: _birthDate ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (newDate != null) {
+                      setState(() {
+                        _creationDate = newDate;
+                        _creationDateController.text =
+                            DateFormat('yyyy-MM-dd').format(newDate);
+                      });
+                    }
+                  },
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const ListTile(
+                        title: Text('Categorías'),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: categoriasDisponibles.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CheckboxListTile(
+                            enabled: isEditing,
+                            title: Text(categoriasDisponibles[index]),
+                            value: categoriasCheckbox[index],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                categoriasCheckbox[index] = value!;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      const ListTile(
+                        title: Text('Tipo Promotora'),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: tipoPromotora.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CheckboxListTile(
+                            enabled: isEditing,
+                            title: Text(tipoPromotora[index]),
+                            value: tipoPromotoraCheckbox[index],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                tipoPromotoraCheckbox[index] = value!;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ] else if (_userProfile?.role == 'Visitante') ...[
+                TextField(
+                  controller: _lastNameController,
+                  enabled:
+                      isEditing, // Habilitar cuando se toque el botón de edición
+                  decoration: const InputDecoration(labelText: 'Apellido'),
+                ),
+                TextField(
+                  controller: _nicknameController,
+                  enabled:
+                      isEditing, // Habilitar cuando se toque el botón de edición
+                  decoration: const InputDecoration(labelText: 'Apodo'),
+                ),
+                TextField(
+                  controller: _birthDateController,
+                  enabled: isEditing,
+                  decoration:
+                      const InputDecoration(labelText: 'Fecha de Nacimiento'),
+                  onTap: () async {
+                    DateTime? newDate = await showDatePicker(
+                      context: context,
+                      initialDate: _birthDate ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (newDate != null) {
+                      setState(() {
+                        _birthDate = newDate;
+                        _birthDateController.text =
+                            DateFormat('yyyy-MM-dd').format(newDate);
+                      });
+                    }
+                  },
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
