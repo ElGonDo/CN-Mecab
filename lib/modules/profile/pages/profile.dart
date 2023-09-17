@@ -218,20 +218,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 // Función para guardar los datos de la promotora en Firestore
   void guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
-      List<String> categorias, List<String> tipoPromotora) {
-    final CollectionReference promotorasCollection =
-        FirebaseFirestore.instance.collection('Promotoras');
+      List<String> categoriasDisponibles, List<String> tipoPromotora) {
+    try {
+      // Eliminar las categorias deseleccionados
+      categoriasSeleccionadas
+          .removeWhere((tipo) => !categoriasDisponibles.contains(tipo));
+      // Eliminar los tipos de promotora deseleccionados
+      tipoPromotoraSeleccionadas
+          .removeWhere((tipo) => !tipoPromotora.contains(tipo));
+      // Guardar los datos actualizados en la base de datos
+      final CollectionReference promotorasCollection =
+          FirebaseFirestore.instance.collection('Promotoras');
 
-    promotorasCollection.doc(_userProfile?.uid).set({
-      'Nombre_Promotora': nombrePromotora,
-      'Creacion_Promotora': Timestamp.fromDate(fechaCreacion),
-      'Categoria': categorias,
-      'Tipo_Promotora': tipoPromotora,
-    }).then((value) {
-      print('Datos de la promotora guardados en Firestore');
-    }).catchError((error) {
-      print('Error al guardar los datos de la promotora: $error');
-    });
+      promotorasCollection.doc(_userProfile?.uid).set({
+        'Nombre_Promotora': nombrePromotora,
+        'Creacion_Promotora': Timestamp.fromDate(fechaCreacion),
+        'Categoria': categoriasSeleccionadas,
+        'Tipo_Promotora': tipoPromotoraSeleccionadas,
+      }).then((value) {
+        print('Datos de la promotora guardados en Firestore');
+      }).catchError((error) {
+        print('Error al guardar los datos de la promotora: $error');
+      });
+    } catch (e) {
+      // Manejar cualquier error
+      print(e.toString());
+    }
   }
 
   @override
@@ -285,6 +297,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _nameController.text,
                     newDate,
                     tipoCreadorSeleccionado,
+                  );
+                  setState(() {
+                    isEditing = !isEditing;
+                  });
+                } else if (_userProfile?.role == 'Promotora') {
+                  newDate = _creationDate;
+                  _creationDateController.text =
+                      DateFormat('yyyy-MM-dd').format(newDate!);
+                  categoriasSeleccionadas.clear();
+                  for (int i = 0; i < categoriasCheckbox.length; i++) {
+                    if (categoriasCheckbox[i]) {
+                      categoriasSeleccionadas.add(categoriasDisponibles[i]);
+                    }
+                  }
+                  tipoPromotoraSeleccionadas.clear();
+                  for (int i = 0; i < tipoPromotoraCheckbox.length; i++) {
+                    if (tipoPromotoraCheckbox[i]) {
+                      tipoPromotoraSeleccionadas.add(tipoPromotora[i]);
+                    }
+                  }
+                  guardarPromotora(
+                    _nameController.text,
+                    newDate,
+                    categoriasSeleccionadas,
+                    tipoPromotoraSeleccionadas,
                   );
                   setState(() {
                     isEditing = !isEditing;
