@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Oculta la barra de navegación superior
         toolbarHeight: 0,
-        backgroundColor: Colors.black,
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 246, 246, 246),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(
-              width: 200, // Ajusta el ancho de tu logo según sea necesario
-              height: 200, // Ajusta la altura de tu logo según sea necesario
-              // child: YourLogoWidget(),  // Reemplaza con tu widget de logo
+            Image.network(
+              'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/post%2FIMG-20230918-WA0003.jpg?alt=media&token=b32dfb0a-f985-4b98-8031-3f968d7c5b1d',
+              width: 380,
+              height: 340,
             ),
             const SizedBox(height: 20),
             const Text(
               'Bienvenido',
               style: TextStyle(
                 fontSize: 35,
-                color: Colors.white,
+                color: Color.fromARGB(255, 0, 0, 0),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,7 +36,7 @@ class WelcomePage extends StatelessWidget {
                 Text(
                   'CN',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),

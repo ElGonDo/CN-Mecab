@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   'CN',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),

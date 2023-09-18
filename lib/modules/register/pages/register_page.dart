@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text(
                   'CN',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
