@@ -142,7 +142,7 @@ class _PaginahomeState extends State<Paginahome> {
               color: Colors.white,
             ),
             onPressed: () {
-              // Acción para realizar la búsqueda
+              Navigator.of(context).pushNamed('/Search');
             },
           ),
           IconButton(
