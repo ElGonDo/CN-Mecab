@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key});
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       ),
-      backgroundColor: Color.fromARGB(255, 246, 246, 246),
+      backgroundColor: const Color.fromARGB(255, 246, 246, 246),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
