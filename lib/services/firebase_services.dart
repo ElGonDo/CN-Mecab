@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 Future<List> getPubliR() async{
@@ -14,11 +14,24 @@ Future<List> getPubliR() async{
 }
 
 
-Future<void> addTitle(String titulo, String descripcion, String selectedCategory, String? selectedGenero, String? collectionName,) async{
-  await db.collection(collectionName!).add({
+Future<void> addTitle(
+  String titulo, 
+  String descripcion, 
+  String selectedCategory, 
+  String? selectedGenero, 
+  String? collectionName,
+  ) async{
+    
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // Utiliza el UID del usuario como nombre de documento
+    final documentReference = db.collection(collectionName!).doc(user.uid);
+ await documentReference.set({
     "Titulo" : titulo, 
     "Descripcion" : descripcion,
     "Categoria" : selectedCategory,
     "Genero" : selectedGenero,
     });
 }
+  }

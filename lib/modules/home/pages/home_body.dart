@@ -3,6 +3,7 @@ import 'package:cnmecab/modules/home/pages/filter_body.dart';
 import 'package:flutter/material.dart';
 // Importa la clase FilterBody
 
+
 class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
 
@@ -15,6 +16,8 @@ class _PaginahomeState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
 
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:cnmecab/modules/PostUp/pages/select_Image.dart';
 import 'package:cnmecab/modules/PostUp/pages/upload_image.dart';
 import 'package:cnmecab/services/firebase_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Publicar extends StatefulWidget {
   const Publicar({super.key});
@@ -49,6 +51,32 @@ class _PublicarState extends State<Publicar> {
     setState(() {
       _selectedGenero = genero;
     });
+  }
+  
+  @override
+  void initState(){
+    super.initState();
+    initializeUserId();
+  }
+  Future<void> initializeUserId() async{
+    try{
+       User? user = FirebaseAuth.instance.currentUser;
+
+if (user != null) {
+  String uid = user.uid;
+  if (kDebugMode) {
+    print('El UID del usuario es: $uid');
+  }
+} else {
+  if (kDebugMode) {
+    print('No hay usuario autenticado.');
+  }
+}
+    }catch (e) {
+      if (kDebugMode) {
+        print('Error fetching user profile: $e');
+      }
+    }
   }
 
   @override
