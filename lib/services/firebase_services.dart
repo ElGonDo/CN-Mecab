@@ -27,11 +27,18 @@ Future<void> addTitle(
   if (user != null) {
     // Utiliza el UID del usuario como nombre de documento
     final documentReference = db.collection(collectionName!).doc(user.uid);
- await documentReference.set({
-    "Titulo" : titulo, 
-    "Descripcion" : descripcion,
-    "Categoria" : selectedCategory,
-    "Genero" : selectedGenero,
-    });
+     final postId = DateTime.now().millisecondsSinceEpoch.toString();
+     final postData = {
+      "Titulo": titulo,
+      "Descripcion": descripcion,
+      "Categoria": selectedCategory,
+      "Genero": selectedGenero,
+    };
+  await documentReference.set(
+      {postId: postData},
+      SetOptions(merge: true),
+  );
+    };
 }
-  }
+
+  
