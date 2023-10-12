@@ -13,6 +13,7 @@ import 'package:cnmecab/modules/politics/pages/politics.dart';
 import 'package:cnmecab/modules/politics/pages/Terms.dart';
 import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
+import 'package:cnmecab/modules/profile/pages/profileimage.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => SearchScreen());
     case '/notificaciones':
       return MaterialPageRoute(builder: (_) => Notificacion());
+    case '/imagesprofile':
+      return MaterialPageRoute(builder: (_) => ImageListScreen());
     default:
       return MaterialPageRoute(builder: (_) => WelcomePage());
   }

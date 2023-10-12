@@ -167,11 +167,16 @@ class _PaginahomeState extends State<Paginahome> {
                     TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
               ),
               accountEmail: null,
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.grey,
+              currentAccountPicture: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/imagesprofile');
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
               decoration: BoxDecoration(

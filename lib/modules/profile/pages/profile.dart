@@ -16,11 +16,11 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   @override
   // ignore: library_private_types_in_public_api
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  UserProfile? _userProfile;
+class ProfileScreenState extends State<ProfileScreen> {
+  UserProfile? userProfile;
   DateTime? _birthDate;
   DateTime? _creationDate;
   bool isEditing = false;
@@ -61,10 +61,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeUserProfile();
+    initializeUserProfile();
   }
 
-  Future<void> _initializeUserProfile() async {
+  Future<void> initializeUserProfile() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Map<String, dynamic> userData =
             userProfileSnapshot.data() as Map<String, dynamic>;
 
-        _userProfile = UserProfile(
+        userProfile = UserProfile(
           uid: user.uid,
           role: userData['Rol'],
         );
@@ -94,10 +94,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchUserData() async {
     try {
-      if (_userProfile?.role == 'Creador') {
+      if (userProfile?.role == 'Creador') {
         DocumentSnapshot creatorSnapshot = await FirebaseFirestore.instance
             .collection('Creadores')
-            .doc(_userProfile?.uid)
+            .doc(userProfile?.uid)
             .get();
         Map<String, dynamic> creatorData =
             creatorSnapshot.data() as Map<String, dynamic>;
@@ -118,10 +118,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             tipoCreadorCheckbox[i] = true;
           }
         }
-      } else if (_userProfile?.role == 'Promotora') {
+      } else if (userProfile?.role == 'Promotora') {
         DocumentSnapshot promoterSnapshot = await FirebaseFirestore.instance
             .collection('Promotoras')
-            .doc(_userProfile?.uid)
+            .doc(userProfile?.uid)
             .get();
         Map<String, dynamic> promoterData =
             promoterSnapshot.data() as Map<String, dynamic>;
@@ -153,10 +153,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             tipoPromotoraCheckbox[i] = true;
           }
         }
-      } else if (_userProfile?.role == 'Visitante') {
+      } else if (userProfile?.role == 'Visitante') {
         DocumentSnapshot visitorSnapshot = await FirebaseFirestore.instance
             .collection('Visitantes')
-            .doc(_userProfile?.uid)
+            .doc(userProfile?.uid)
             .get();
         Map<String, dynamic> visitorData =
             visitorSnapshot.data() as Map<String, dynamic>;
@@ -178,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String nombre, String apellido, String apodo, DateTime fechaNacimiento) {
     final CollectionReference visitantesCollection =
         FirebaseFirestore.instance.collection('Visitantes');
-    visitantesCollection.doc(_userProfile?.uid).set({
+    visitantesCollection.doc(userProfile?.uid).set({
       'Nombre': nombre,
       'Apellido': apellido,
       'Apodo': apodo,
@@ -201,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final CollectionReference creadoresCollection =
           FirebaseFirestore.instance.collection('Creadores');
 
-      creadoresCollection.doc(_userProfile?.uid).set({
+      creadoresCollection.doc(userProfile?.uid).set({
         'Nombre_Creador': nombreCreador,
         'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
         'Tipo Creador': tipoCreadorSeleccionado, // Usar la lista actualizada
@@ -230,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final CollectionReference promotorasCollection =
           FirebaseFirestore.instance.collection('Promotoras');
 
-      promotorasCollection.doc(_userProfile?.uid).set({
+      promotorasCollection.doc(userProfile?.uid).set({
         'Nombre_Promotora': nombrePromotora,
         'Creacion_Promotora': Timestamp.fromDate(fechaCreacion),
         'Categoria': categoriasSeleccionadas,
@@ -248,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_userProfile == null) {
+    if (userProfile == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Cargando perfil')),
         body: const Center(child: CircularProgressIndicator()),
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 DateTime? newDate;
                 newDate = _birthDate;
-                if (_userProfile?.role == 'Visitante') {
+                if (userProfile?.role == 'Visitante') {
                   _birthDateController.text =
                       DateFormat('yyyy-MM-dd').format(newDate!);
                   guardarVisitante(
@@ -284,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setState(() {
                     isEditing = !isEditing;
                   });
-                } else if (_userProfile?.role == 'Creador') {
+                } else if (userProfile?.role == 'Creador') {
                   _birthDateController.text =
                       DateFormat('yyyy-MM-dd').format(newDate!);
                   tipoCreadorSeleccionado.clear();
@@ -301,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setState(() {
                     isEditing = !isEditing;
                   });
-                } else if (_userProfile?.role == 'Promotora') {
+                } else if (userProfile?.role == 'Promotora') {
                   newDate = _creationDate;
                   _creationDateController.text =
                       DateFormat('yyyy-MM-dd').format(newDate!);
@@ -340,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 enabled: isEditing,
                 decoration: const InputDecoration(labelText: 'Nombre'),
               ),
-              if (_userProfile?.role == 'Creador') ...[
+              if (userProfile?.role == 'Creador') ...[
                 TextField(
                   controller: _birthDateController,
                   enabled: isEditing,
@@ -382,7 +382,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                 ),
-              ] else if (_userProfile?.role == 'Promotora') ...[
+              ] else if (userProfile?.role == 'Promotora') ...[
                 TextField(
                   controller: _creationDateController,
                   enabled:
@@ -451,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 )
-              ] else if (_userProfile?.role == 'Visitante') ...[
+              ] else if (userProfile?.role == 'Visitante') ...[
                 TextField(
                   controller: _lastNameController,
                   enabled:

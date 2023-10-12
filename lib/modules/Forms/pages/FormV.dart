@@ -20,11 +20,6 @@ class _FormVPageState extends State<FormVPage> {
   final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _apodoController = TextEditingController();
   DateTime? _selectedDate;
-  String? _selectedImage;
-  final String _Image =
-      'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/profileV%2FFirefly%20perfil%20de%20avatar%2029892.jpg?alt=media&token=0df68c4e-9dea-4b00-a22e-99bfc0fb1699&_gl=1*11v9o81*_ga*MTI3OTQzOTQ0LjE2OTQyODQ2MDU.*_ga_CW55HF8NVT*MTY5NjYzNjYxNy4xOS4xLjE2OTY2NDQ0NDEuNTIuMC4w';
-  final String _Image2 =
-      'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/profileV%2FFirefly%20perfil%20de%20avatar%2035512.jpg?alt=media&token=e66af79f-0d3b-487a-84c5-5a211bf905b4&_gl=1*1gy3b9g*_ga*MTI3OTQzOTQ0LjE2OTQyODQ2MDU.*_ga_CW55HF8NVT*MTY5NjYzNjYxNy4xOS4xLjE2OTY2NDQyODQuMTMuMC4w';
   void _submitForm() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -42,8 +37,6 @@ class _FormVPageState extends State<FormVPage> {
           'Apellido': _apellidoController.text,
           'Apodo': _apodoController.text,
           'Fecha_Nacimiento': birthDateTimestamp,
-          'Foto_Pefil_URL': _selectedImage,
-          'Rol': 'Visitante'
         });
 
         // Actualizar los datos del usuario en la colección "Usuarios"
@@ -88,18 +81,6 @@ class _FormVPageState extends State<FormVPage> {
         _selectedDate = picked;
       });
     }
-  }
-
-  void _selectImage1Fuction() {
-    setState(() {
-      _selectedImage = _Image;
-    });
-  }
-
-  void _selectImage2Funtion() {
-    setState(() {
-      _selectedImage = _Image2;
-    });
   }
 
   @override
@@ -162,51 +143,6 @@ class _FormVPageState extends State<FormVPage> {
                           : 'Seleccione una fecha',
                     ),
                   ),
-                ),
-                const Text(
-                  'Seleccione Su Avatar:',
-                  style: TextStyle(fontSize: 16),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: _selectImage1Fuction,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: _selectedImage == _Image
-                                ? Colors.blue
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Image.network(
-                          _Image,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: _selectImage2Funtion,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: _selectedImage == _Image2
-                                ? Colors.blue
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Image.network(
-                          _Image2,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 ElevatedButton(
                   onPressed: _submitForm,
