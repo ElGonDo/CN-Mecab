@@ -1,8 +1,7 @@
 // ignore_for_file: avoid_print
-
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cnmecab/modules/profile/pages/profile.dart';
 
 List<String> imageNames = [
   'Firefly perfil de avatar 29892.jpg',
@@ -42,6 +41,14 @@ class _ImageListScreenState extends State<ImageListScreen> {
   @override
   void initState() {
     super.initState();
+    // Obtener el perfil del usuario desde el Singleton
+    userProfile = UserProfileSingleton().userProfile;
+
+    if (userProfile != null) {
+      // Verificar si el perfil del usuario está disponible y mostrar información
+      print('UID: ${userProfile?.uid}');
+      print('Rol: ${userProfile?.role}');
+    }
   }
 
   @override

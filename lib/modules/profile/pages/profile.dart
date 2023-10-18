@@ -4,13 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
-class UserProfile {
-  final String uid;
-  final String role; // Agrega un campo para el rol del usuario
-
-  UserProfile({required this.uid, required this.role});
-}
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);

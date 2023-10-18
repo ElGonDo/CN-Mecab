@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, no_leading_underscores_for_local_identifiers
 
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cnmecab/services/auth_service.dart';
@@ -90,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                     await _authService.login(email, password);
 
                 if (userCredential != null) {
+                  // Llamada a initializeUserProfile si el inicio de sesión es exitoso
+                  UserProfileSingleton().initializeUserProfile();
                   Navigator.of(context).pushNamed('/home');
                 } else {
                   showDialog(
