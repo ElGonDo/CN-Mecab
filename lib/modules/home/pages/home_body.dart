@@ -2,7 +2,7 @@ import 'package:cnmecab/modules/home/pages/filter_body.dart';
 //import 'package:cnmecab/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 // Importa la clase FilterBody
-
+import 'package:cnmecab/services/show_posts.dart';
 
 class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
@@ -15,8 +15,17 @@ class BodyPage extends StatefulWidget {
 class _PaginahomeState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
+  List<Publicacion> publicacionesList = [];
 
-
+   @override
+  void initState() {
+    super.initState();
+    obtenerDatos((data) {
+      setState(() {
+        publicacionesList = data;
+      });
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -33,36 +42,28 @@ class _PaginahomeState extends State<BodyPage> {
             },
           ),
           const SizedBox(height: 20.0),
-          Expanded(
+         Expanded(
             child: ListView.builder(
-              itemCount: 1,
+              itemCount: publicacionesList.length, // Usamos la cantidad de elementos en la lista
               itemBuilder: (context, index) {
                 // Agrega aquí el contenido específico para cada página
                 if (currentPage == 'Para ti') {
+                  // Accedemos a los datos de publicacionesList usando el índice
+                  String titulo = publicacionesList[index].titulo;
+                  String descripcion = publicacionesList[index].descripcion;
                   return Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        /* FutureBuilder(
-                         future: getPubliR(), 
-                         builder: ((context, snapshot){
-                          return ListView.builder(
-                         itemCount: snapshot.data?.length,
-                         itemBuilder: (context, index){
-                          return Text(snapshot.data?[index]['Titulo']);
-                },
-                );
-            })),*/
-                        const ListTile(
-                          leading: CircleAvatar(
-                            radius: 20.0,
-                            backgroundImage:
-                                NetworkImage('https://via.placeholder.com/180'),
-                          ),
-                          title: Text('Promotora'),
-                          subtitle: Text('Descripcion breve de la publicacion'),
-                        ),
-                        Image.network('https://via.placeholder.com/1080'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ListTile(
+                leading: const CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+                ),
+                title: Text(titulo), // Usamos la categoría de publicacionesList
+                subtitle: Text(descripcion), // Usamos la descripción de publicacionesList
+              ),
+                      Image.network('https://via.placeholder.com/1080'),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
