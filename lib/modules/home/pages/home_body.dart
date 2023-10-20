@@ -1,8 +1,9 @@
+import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
 //import 'package:cnmecab/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 // Importa la clase FilterBody
-import 'package:cnmecab/services/show_posts.dart';
+import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
 
 class BodyPage extends StatefulWidget {
   const BodyPage({super.key});
@@ -16,13 +17,18 @@ class _PaginahomeState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   List<Publicacion> publicacionesList = [];
-
+  List<PublicacionR> publicacionesListR = [];
    @override
   void initState() {
     super.initState();
     obtenerDatos((data) {
       setState(() {
         publicacionesList = data;
+      });
+    });
+    obtenerDatosR((data) {
+      setState(() {
+        publicacionesListR = data;
       });
     });
   }
@@ -43,15 +49,94 @@ class _PaginahomeState extends State<BodyPage> {
           ),
           const SizedBox(height: 20.0),
          Expanded(
-            child: ListView.builder(
-              itemCount: publicacionesList.length, // Usamos la cantidad de elementos en la lista
-              itemBuilder: (context, index) {
-                // Agrega aquí el contenido específico para cada página
-                if (currentPage == 'Para ti') {
-                  // Accedemos a los datos de publicacionesList usando el índice
-                  String titulo = publicacionesList[index].titulo;
-                  String descripcion = publicacionesList[index].descripcion;
-                  return Card(
+  child: ListView.builder(
+    itemCount: currentPage == 'Para ti' ? publicacionesList.length + publicacionesListR.length : publicacionesListR.length,
+    itemBuilder: (context, index) {
+      // Agrega aquí el contenido específico para cada página
+      if (currentPage == 'Para ti') {
+        if (index < publicacionesList.length) {
+          // Esto es para mostrar el contenido de publicacionesList
+          String titulo = publicacionesList[index].titulo;
+          String descripcion = publicacionesList[index].descripcion;
+          return Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  leading: const CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+                  ),
+                  title: Text(titulo),
+                  subtitle: Text(descripcion),
+                ),
+                Image.network('https://via.placeholder.com/1080'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.thumb_up),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.comment),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.share),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Esto es para mostrar el contenido de publicacionesListR
+          int rIndex = index - publicacionesList.length;
+          String rtitulo = publicacionesListR[rIndex].rtitulo;
+          String rdescripcion = publicacionesListR[rIndex].rdescripcion;
+          return Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  leading: const CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+                  ),
+                  title: Text(rtitulo),
+                  subtitle: Text(rdescripcion),
+                ),
+                Image.network('https://via.placeholder.com/1080'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.thumb_up),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.comment),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.share),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+      } else if (currentPage == 'Películas') {
+        // Código para la página de películas
+        String rtitulo = publicacionesListR[index].rtitulo;
+        String rdescripcion = publicacionesListR[index].rdescripcion;
+        return Card(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -60,48 +145,9 @@ class _PaginahomeState extends State<BodyPage> {
                   radius: 20.0,
                   backgroundImage: NetworkImage('https://via.placeholder.com/180'),
                 ),
-                title: Text(titulo), // Usamos la categoría de publicacionesList
-                subtitle: Text(descripcion), // Usamos la descripción de publicacionesList
+                title: Text(rtitulo),
+                subtitle: Text(rdescripcion),
               ),
-                      Image.network('https://via.placeholder.com/1080'),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.thumb_up),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.comment),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.share),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (currentPage == 'Películas') {
-                  // Código para la página de películas
-                  return Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const ListTile(
-                          leading: CircleAvatar(
-                            radius: 20.0,
-                            backgroundImage:
-                                NetworkImage('https://via.placeholder.com/150'),
-                          ),
-                          title: Text('Bohemian Rhapsody'),
-                          textColor: Color.fromARGB(255, 0, 0, 0),
-                          subtitle: Text(
-                              'Una pelicula que relata la vida de Fredy Mercury '),
-                        ),
                         Image.network(
                             'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/post%2F1000000037.jpg?alt=media&token=e16e6551-7fa4-4d0c-bd40-c45af6429b5b'),
                         Row(
@@ -124,7 +170,7 @@ class _PaginahomeState extends State<BodyPage> {
                         ),
                       ],
                     ),
-                  );
+               ); 
                 } else if (currentPage == 'Series') {
                   // Código para la página de series
                   return Card(
