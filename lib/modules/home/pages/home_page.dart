@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});
@@ -94,6 +95,153 @@ class _PaginahomeState extends State<Paginahome> {
       print('Error de autenticación: $error');
       // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
 
+      return false;
+    }
+  }
+
+  Future<bool> cambiarCorreo(BuildContext context) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final TextEditingController emailController = TextEditingController();
+    final user = auth.currentUser!;
+    String currentEmail =
+        user.email ?? ''; // Obtener el correo actual del usuario
+    try {
+      // Mostrar el diálogo emergente para ingresar el correo y contraseña
+      var result = await showPlatformDialog(
+        context: context,
+        builder: (_) => BasicDialogAlert(
+          title: Text('Cambiar de correo: '),
+          content: Column(
+            children: [
+              Text('Correo actual: $currentEmail'), // Mostrar el correo actual
+              TextField(
+                decoration:
+                    InputDecoration(labelText: 'Nuevo correo electrónico'),
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text('Aceptar'),
+              onPressed: () {
+                // Cerrar el diálogo emergente y continuar con el cambio de correo
+                Navigator.pop(context, true);
+              },
+            ),
+            BasicDialogAction(
+              title: Text('Cancelar'),
+              onPressed: () {
+                // Cerrar el diálogo emergente sin realizar el cambio de correo
+                Navigator.pop(context, false);
+              },
+            ),
+          ],
+        ),
+      );
+
+      // Verificar si el usuario aceptó el diálogo emergente
+      if (result == true) {
+        // Obtener los datos ingresados por el usuario
+        String newEmail = emailController.text;
+        try {
+          await user.updateEmail(newEmail);
+          Fluttertoast.showToast(msg: 'Correo actualizado exitosamente');
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushReplacementNamed(
+              '/welcome'); // Cerrar sesión automáticamente después de cambiar el correo
+          return true;
+        } catch (error) {
+          print('Error al actualizar el correo electrónico: $error');
+          Fluttertoast.showToast(
+              msg: 'Error al actualizar el correo electrónico');
+        }
+        // El Cambio de correo fue exitoso
+        return true;
+      } else {
+        // El usuario canceló el diálogo emergente
+        return false;
+      }
+    } catch (error) {
+      // Ocurrió un error durante el cambio de correo
+      print('Error de autenticación: $error');
+      // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
+
+      return false;
+    }
+  }
+
+  Future<bool> cambiaContrasena(BuildContext context) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController newpasswordController = TextEditingController();
+    final user = auth.currentUser!;
+
+    try {
+      var result = await showPlatformDialog(
+        context: context,
+        builder: (_) => BasicDialogAlert(
+          title: Text('Cambiar contraseña: '),
+          content: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Contraseña actual'),
+                obscureText: true,
+                controller: passwordController,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Nueva contraseña'),
+                obscureText: true,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    newpasswordController.text = newValue ?? '';
+                  });
+                },
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text('Aceptar'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+            BasicDialogAction(
+              title: Text('Cancelar'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        String newPassword = newpasswordController.text;
+        String currentPassword = passwordController.text;
+
+        try {
+          final credentials = EmailAuthProvider.credential(
+            email: user.email!,
+            password: currentPassword,
+          );
+          await user.reauthenticateWithCredential(credentials);
+          await user.updatePassword(newPassword);
+          Fluttertoast.showToast(msg: 'Contraseña actualizada exitosamente');
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushReplacementNamed('/welcome');
+          return true;
+        } catch (error) {
+          print('Error al actualizar la contraseña: $error');
+          Fluttertoast.showToast(msg: 'Error al actualizar la contraseña');
+        }
+      }
+
+      return false;
+    } catch (error) {
+      print('Error durante el cambio de contraseña: $error');
       return false;
     }
   }
@@ -272,6 +420,100 @@ class _PaginahomeState extends State<Paginahome> {
                   Navigator.of(context).pushReplacementNamed('/welcome');
                 } else {
                   // Si la autenticación no es exitosa, realizar alguna acción adicional o mostrar un mensaje de error al usuario
+                }
+              },
+            ),
+            ListTile(
+              title:
+                  Text('Cambiar Correo', style: TextStyle(color: Colors.black)),
+              onTap: () async {
+                bool cambioExitoso = await cambiarCorreo(context);
+                // Realiza las acciones necesarias dependiendo si el cambio fue exitoso o no
+                if (cambioExitoso) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Cambio Exitoso'),
+                        content: Text(
+                            'El cambio de correo fue realizado correctamente.'),
+                        actions: [
+                          TextButton(
+                            child: Text('Aceptar'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Error'),
+                        content: Text(
+                            'Hubo un error al cambiar el correo. Por favor, inténtalo nuevamente.'),
+                        actions: [
+                          TextButton(
+                            child: Text('Aceptar'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+            ListTile(
+              title: Text('Cambiar Contraseña',
+                  style: TextStyle(color: Colors.black)),
+              onTap: () async {
+                bool cambioExitoso = await cambiaContrasena(context);
+                // Realiza las acciones necesarias dependiendo si el cambio fue exitoso o no
+                if (cambioExitoso) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Cambio Exitoso'),
+                        content: Text(
+                            'El cambio de contraseña fue realizado correctamente.'),
+                        actions: [
+                          TextButton(
+                            child: Text('Aceptar'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Error'),
+                        content: Text(
+                            'Hubo un error al cambiar la contraseña Por favor, inténtalo nuevamente.'),
+                        actions: [
+                          TextButton(
+                            child: Text('Aceptar'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
             ),
