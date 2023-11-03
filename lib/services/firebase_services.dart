@@ -33,6 +33,7 @@ Future<void> addTitle(
       "Descripcion": descripcion,
       "Categoria": selectedCategory,
       "Genero": selectedGenero,
+      "FechaHora": FieldValue.serverTimestamp(),
     };
     await documentReference.set(
       {postId: postData},
