@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: file_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Publicacion {
   final String categoria;
@@ -14,6 +15,7 @@ class Publicacion {
     required this.titulo,
   });
 }
+
 void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
   final firestoreInstance = FirebaseFirestore.instance;
   List<Publicacion> publicacionesList = [];
