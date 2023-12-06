@@ -1,5 +1,5 @@
 // ignore_for_file: use_key_in_widget_constructors
-
+import 'package:cnmecab/modules/Notification/pages/push_notifications.dart';
 import 'package:cnmecab/app/routes.dart';
 import 'package:cnmecab/modules/home/pages/home_page.dart';
 import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
@@ -11,10 +11,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await PushNotification().initNotifications();
   runApp(MyApp());
 }
 
