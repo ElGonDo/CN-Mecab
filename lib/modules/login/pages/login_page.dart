@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               obscureText: true,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            // Nuevo código para la opción "Olvidaste la contraseña"
+            TextButton(
+              onPressed: () {
+                resetPassword(context); // Llamada a la función resetPassword
+              },
+              child: const Text(
+                '¿Olvidaste la contraseña?',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -119,6 +130,66 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+    );
+  }
+
+  // Función resetPassword
+  Future<void> resetPassword(BuildContext context) async {
+    String email = '';
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Recuperar contraseña'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                  'Digite El Correo Electronico De Su Cuenta, Para Restablecer La Contraseña'),
+              TextField(
+                onChanged: (value) {
+                  email = value;
+                },
+                decoration:
+                    const InputDecoration(hintText: 'Correo electrónico'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Recuperar'),
+              onPressed: () async {
+                bool success = await auth
+                    .sendPasswordResetEmail(email: email)
+                    .then((value) => true)
+                    .catchError((onError) => false);
+                Navigator.of(context).pop();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(success
+                          ? 'Contraseña Restablecida'
+                          : 'Error Al Restablecer La Contraseña'),
+                      content: Text(success
+                          ? 'El restablecimiento fue exitoso, revise su correo de su cuenta para restablecer la contraseña'
+                          : 'No se pudo restablecer la contraseña, por favor inténtelo de nuevo'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cerrar'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
