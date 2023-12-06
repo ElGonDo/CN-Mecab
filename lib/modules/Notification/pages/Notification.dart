@@ -2,14 +2,13 @@
 
 import 'package:flutter/material.dart';
 
-class Notificacion extends StatelessWidget{
-  const Notificacion ({super.key});
+class Notificacion extends StatelessWidget {
+  const Notificacion({super.key});
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("notificaciones"),
-      )
-    );
-}
+        body: Center(
+      child: Text("notificaciones"),
+    ));
+  }
 }
