@@ -21,7 +21,7 @@ class UserProfileSingleton {
 
   UserProfile? get userProfile => _userProfile;
 
-  void initializeUserProfile() async {
+  Future<UserProfile?> initializeUserProfile() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -39,10 +39,12 @@ class UserProfileSingleton {
         // Imprime la UID y el rol en la consola
         print('UID: ${_userProfile?.uid}');
         print('Rol: ${_userProfile?.role}');
+        return _userProfile;
       }
     } catch (e) {
       print('Error fetching user profile: $e');
     }
+    return null;
   }
 
   UserProfileSingleton._internal();

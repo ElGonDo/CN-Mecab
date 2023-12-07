@@ -10,6 +10,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});
@@ -246,12 +247,28 @@ class _PaginahomeState extends State<Paginahome> {
     }
   }
 
+  UserProfile? userProfile;
+  @override
+  void initState() {
+    super.initState();
+    // Llamamos al método para inicializar el perfil del usuario
+    UserProfileSingleton().initializeUserProfile().then((profile) {
+      setState(() {
+        userProfile = profile;
+      });
+    });
+  }
+
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   int navegador = 0;
   final List<Widget> _paginas = [
     BodyPage(),
     Publicar(),
+    Notificacion(),
+  ];
+  final List<Widget> _paginas2 = [
+    BodyPage(),
     Notificacion(),
   ];
   @override
@@ -520,7 +537,9 @@ class _PaginahomeState extends State<Paginahome> {
           ],
         ),
       ),
-      body: _paginas[navegador],
+      body: (userProfile != null && userProfile?.role != 'Visitante')
+          ? _paginas[navegador]
+          : _paginas2[navegador],
       bottomNavigationBar: SalomonBottomBar(
         margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         backgroundColor: Colors.black,
@@ -536,10 +555,11 @@ class _PaginahomeState extends State<Paginahome> {
               icon: Icon(Icons.home),
               title: Text("home"),
               selectedColor: Color.fromARGB(255, 156, 37, 37)),
-          SalomonBottomBarItem(
-              icon: Icon(Icons.file_upload_outlined),
-              title: Text("Subir Publicaciones"),
-              selectedColor: Color.fromARGB(255, 156, 37, 37)),
+          if (userProfile != null && userProfile?.role != 'Visitante')
+            SalomonBottomBarItem(
+                icon: Icon(Icons.file_upload_outlined),
+                title: Text("Subir Publicaciones"),
+                selectedColor: Color.fromARGB(255, 156, 37, 37)),
           SalomonBottomBarItem(
               icon: Icon(Icons.notifications),
               title: Text("Notificaciones"),
