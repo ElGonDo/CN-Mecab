@@ -1,5 +1,5 @@
 
- // ignore_for_file: unused_import, unnecessary_null_comparison
+ // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
@@ -85,6 +85,14 @@ void actualizarLikes(String pubId) async {
   }
 }
 
+void mostrarModalComentarios(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ComentariosModal(); // Implementa esta clase según tus necesidades
+      },
+    );
+  }
 
  @override
   Widget build(BuildContext context) {
@@ -195,7 +203,9 @@ void actualizarLikes(String pubId) async {
                 icon: const Icon(Icons.thumb_up),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mostrarModalComentarios(context); // Llama a la función para mostrar el modal de comentarios
+               },
                 icon: const Icon(Icons.comment),
               ),
               const Spacer(),
@@ -206,6 +216,57 @@ void actualizarLikes(String pubId) async {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+class ComentariosModal extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+          left: 16,
+          right: 16,
+          top: 16,
+        ),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 20.0,
+              backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Escribe un comentario...',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: null,
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.close),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Lógica para subir el comentario
+                    // Agrega tu lógica aquí para manejar el comentario
+                    // Por ejemplo, puedes enviar el comentario a Firebase
+                  },
+                  child: Text('Comentar'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
