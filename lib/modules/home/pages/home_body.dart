@@ -121,14 +121,14 @@ void mostrarModalComentarios(BuildContext context) {
           String titulo = publicacionesList[index].titulo;
           String descripcion = publicacionesList[index].descripcion;
           String pubId = publicacionesList[index].pubID;
-                    return buildCardWidget(titulo, descripcion, pubId);
+                    return buildCardWidget(titulo, descripcion, pubId, '$pubId.jpg');
                   } else {
           // Esto es para mostrar el contenido de publicacionesListR
            int rIndex = index - publicacionesList.length;
                     String rtitulo = publicacionesListR[rIndex].rtitulo;
                     String rdescripcion = publicacionesListR[rIndex].rdescripcion;
                     String pubId = publicacionesListR[rIndex].rpubID;
-                    return buildCardWidget(rtitulo, rdescripcion, pubId);
+                    return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                   }
                 
         
@@ -137,25 +137,25 @@ void mostrarModalComentarios(BuildContext context) {
                   String rtitulo = publicacionesListR[index].rtitulo;
                   String rdescripcion = publicacionesListR[index].rdescripcion;
                   String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(rtitulo, rdescripcion, pubId);
+                  return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                 } else if (currentPage == 'Series') {
                   // Código para la página de series
                   String rtitulo = publicacionesListR[index].rtitulo;
                   String rdescripcion = publicacionesListR[index].rdescripcion;
                   String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(rtitulo, rdescripcion, pubId);
+                  return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                 } else if (currentPage == 'Libros') {
                   // Código para la página de libros
                   String rtitulo = publicacionesListR[index].rtitulo;
                   String rdescripcion = publicacionesListR[index].rdescripcion;
                   String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(rtitulo, rdescripcion, pubId);
+                  return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                 } else if (currentPage == 'Animes') {
                   // Código para la página de animes
                   String rtitulo = publicacionesListR[index].rtitulo;
                   String rdescripcion = publicacionesListR[index].rdescripcion;
                   String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(rtitulo, rdescripcion, pubId);
+                  return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                 } else {
                   return Container();
                 }
@@ -167,22 +167,22 @@ void mostrarModalComentarios(BuildContext context) {
     );
   }
 
-  Widget buildCardWidget(String title, String description, String pubId) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Agregar el Text con la ID del mapa
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'ID de la publicacion: $pubId',   
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
+  Widget buildCardWidget(String title, String description, String pubId, String imageName) {
+  return Card(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Agregar el Text con la ID del mapa
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'ID de la publicación: $pubId',   
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
             ),
           ),
+        ),
           ListTile(
             leading: const CircleAvatar(
               radius: 20.0,
@@ -191,7 +191,18 @@ void mostrarModalComentarios(BuildContext context) {
             title: Text(title),
             subtitle: Text(description),
           ),
-          Image.network('https://via.placeholder.com/1080'),
+           FutureBuilder<String>(
+          future: getImageUrl(imageName),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la URL de la imagen
+            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('Error cargando la imagen'); // Muestra un mensaje si hay un error
+            } else {
+              return Image.network(snapshot.data!);
+            }
+          },
+        ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

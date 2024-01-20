@@ -223,7 +223,7 @@ if (user != null) {
                 child: const Text("Seleccionar imagen")),
             ElevatedButton(
                 onPressed: () async {
-                  await addTitle(
+                   final postId = await addTitle(
                       tituloController.text,
                       descripcionController.text,
                       _selectedCategory,
@@ -232,7 +232,7 @@ if (user != null) {
                   if (image_to_upload == null) {
                     return;
                   }
-                  final uploaded = await uploadImage(image_to_upload!);
+                  final uploaded = await uploadImage(image_to_upload!, postId);;
 
                   if (uploaded) {
                     // ignore: use_build_context_synchronously

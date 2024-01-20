@@ -1,9 +1,27 @@
+// ignore_for_file: unused_import
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cnmecab/modules/PostUp/pages/upload_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<void> addTitle(
+Future<String> getImageUrl(String imageName) async {
+  try {
+    final Reference ref = storage.ref().child("post").child(imageName);
+    return await ref.getDownloadURL();
+  } catch (e) {
+    // Manejar errores aquí, por ejemplo, la imagen no existe
+    if (kDebugMode) {
+      print('Error obteniendo la URL de la imagen: $e');
+    }
+    return ''; // Puedes devolver una URL predeterminada o nula
+  }
+}
+
+Future<String> addTitle(
   String titulo,
   String descripcion,
   String selectedCategory,
@@ -26,6 +44,10 @@ Future<void> addTitle(
     await documentReference.set(
       {postId: postData},
       SetOptions(merge: true),
-    );
+    );  
+       return postId; // Devuelve la ID de la publicación
   }
-}
+
+  return ''; // Devuelve un valor por defecto en caso de error o si el usuario es nulo
+} 
+  
