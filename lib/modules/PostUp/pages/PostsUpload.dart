@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class Publicar extends StatefulWidget {
   const Publicar({super.key});
 
@@ -53,27 +52,28 @@ class _PublicarState extends State<Publicar> {
       _selectedGenero = genero;
     });
   }
-  
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     initializeUserId();
   }
-  Future<void> initializeUserId() async{
-    try{
-       User? user = FirebaseAuth.instance.currentUser;
 
-if (user != null) {
-  String uid = user.uid;
-  if (kDebugMode) {
-    print('El UID del usuario es: $uid');
-  }
-} else {
-  if (kDebugMode) {
-    print('No hay usuario autenticado.');
-  }
-}
-    }catch (e) {
+  Future<void> initializeUserId() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+        if (kDebugMode) {
+          print('El UID del usuario es: $uid');
+        }
+      } else {
+        if (kDebugMode) {
+          print('No hay usuario autenticado.');
+        }
+      }
+    } catch (e) {
       if (kDebugMode) {
         print('Error fetching user profile: $e');
       }
@@ -223,7 +223,7 @@ if (user != null) {
                 child: const Text("Seleccionar imagen")),
             ElevatedButton(
                 onPressed: () async {
-                   final postId = await addTitle(
+                  final postId = await addTitle(
                       tituloController.text,
                       descripcionController.text,
                       _selectedCategory,
@@ -232,7 +232,7 @@ if (user != null) {
                   if (image_to_upload == null) {
                     return;
                   }
-                  final uploaded = await uploadImage(image_to_upload!, postId);;
+                  final uploaded = await uploadImage(image_to_upload!, postId);
 
                   if (uploaded) {
                     // ignore: use_build_context_synchronously
