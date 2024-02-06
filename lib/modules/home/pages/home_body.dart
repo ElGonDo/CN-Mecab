@@ -295,11 +295,32 @@ class ComentariosModal extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                     // Obtén el texto del comentario del controlador
+                     String comentario = comentarioController.text;
+                      // Verifica si el comentario no está vacío
+                      if (comentario.trim().isNotEmpty) {
                     // Llama a la función para agregar el comentario
                     await agregarComentario(pubId, comentarioController.text);
                     // Limpia el texto del controlador después de enviar el comentario
                     comentarioController.clear();
+                      
                     Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('El comentario se ha subido correctamente'),
+                          duration: Duration(seconds: 2), // Duración del SnackBar
+                        ),
+                      );}
+                   else {
+                    Navigator.pop(context);
+                      // Muestra un SnackBar para informar al usuario que el comentario está vacío
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('El comentario no puede estar vacío'),
+                          duration: Duration(seconds: 2), // Duración del SnackBar
+                        ),
+                      );
+                    }
                   },
                   child: Text('Comentar'),
                 ),
