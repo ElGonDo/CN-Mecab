@@ -1,5 +1,5 @@
 
- // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors
+ // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors, use_build_context_synchronously
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
@@ -25,6 +25,7 @@ class _PaginahomeState extends State<BodyPage> {
   bool isDarkModeEnabled = false;
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
+  TextEditingController comentarioController = TextEditingController(text: "");
    @override
   void initState() {
     super.initState();
@@ -85,15 +86,14 @@ void actualizarLikes(String pubId) async {
   }
 }
 
-void mostrarModalComentarios(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return ComentariosModal(); // Implementa esta clase según tus necesidades
-      },
-    );
-  }
-
+void mostrarModalComentarios(BuildContext context, String pubId, TextEditingController comentarioController) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return ComentariosModal(pubId: pubId, comentarioController: comentarioController);
+    },
+  );
+}
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,7 +215,7 @@ void mostrarModalComentarios(BuildContext context) {
               ),
               IconButton(
                 onPressed: () {
-                  mostrarModalComentarios(context); // Llama a la función para mostrar el modal de comentarios
+                 mostrarModalComentarios(context, pubId, comentarioController);// Llama a la función para mostrar el modal de comentarios
                },
                 icon: const Icon(Icons.comment),
               ),
@@ -231,7 +231,33 @@ void mostrarModalComentarios(BuildContext context) {
     );
   }
 }
+Future<void> agregarComentario(String pubId, String comentario) async {
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // Obtener la referencia del documento en la colección de Comentarios
+    final comentariosDocumentReference = FirebaseFirestore.instance.collection('Comentarios').doc(pubId);
+    final comentariosDocument = await comentariosDocumentReference.get();
+
+    if (!comentariosDocument.exists) {
+      // Si el documento no existe, crea uno nuevo
+      await comentariosDocumentReference.set({
+        'comentarios': {user.uid: [comentario]}
+      });
+    } else {
+      // Si el documento existe, agrega el comentario al documento existente
+      comentariosDocumentReference.update({
+        'comentarios.${user.uid}': FieldValue.arrayUnion([comentario])
+      });
+    }
+  }
+}
 class ComentariosModal extends StatelessWidget {
+  final String pubId;
+  final TextEditingController comentarioController;
+
+  const ComentariosModal({required this.pubId, required this.comentarioController});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -250,12 +276,13 @@ class ComentariosModal extends StatelessWidget {
             ),
             SizedBox(height: 16),
             TextField(
+              controller: comentarioController, // Usar el controlador proporcionado
               decoration: InputDecoration(
-                hintText: 'Escribe un comentario...',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: null,
+              hintText: 'Escribe un comentario...',
+              border: OutlineInputBorder(),
             ),
+           maxLines: null,
+          ),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -267,10 +294,12 @@ class ComentariosModal extends StatelessWidget {
                   icon: Icon(Icons.close),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para subir el comentario
-                    // Agrega tu lógica aquí para manejar el comentario
-                    // Por ejemplo, puedes enviar el comentario a Firebase
+                  onPressed: () async {
+                    // Llama a la función para agregar el comentario
+                    await agregarComentario(pubId, comentarioController.text);
+                    // Limpia el texto del controlador después de enviar el comentario
+                    comentarioController.clear();
+                    Navigator.pop(context);
                   },
                   child: Text('Comentar'),
                 ),
