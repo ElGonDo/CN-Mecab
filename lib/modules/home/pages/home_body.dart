@@ -1,8 +1,9 @@
 
- // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors
+ // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors, use_build_context_synchronously
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
+import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ class _PaginahomeState extends State<BodyPage> {
   bool isDarkModeEnabled = false;
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
+  TextEditingController comentarioController = TextEditingController(text: "");
    @override
   void initState() {
     super.initState();
@@ -117,14 +119,6 @@ void actualizarRating(String pubId, double rating) async {
 
 
 
-void mostrarModalComentarios(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return ComentariosModal(); // Implementa esta clase según tus necesidades
-      },
-    );
-  }
 
  @override
   Widget build(BuildContext context) {
@@ -245,7 +239,7 @@ void mostrarModalComentarios(BuildContext context) {
               ),
               IconButton(
                 onPressed: () {
-                  mostrarModalComentarios(context); // Llama a la función para mostrar el modal de comentarios
+                 mostrarModalComentarios(context, pubId, comentarioController);// Llama a la función para mostrar el modal de comentarios
                },
                 icon: const Icon(Icons.comment),
               ),
@@ -349,54 +343,4 @@ Widget buildCardWidget2(String title, String description, String pubId, String i
   );
 }
 }
-class ComentariosModal extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          left: 16,
-          right: 16,
-          top: 16,
-        ),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/180'),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Escribe un comentario...',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: null,
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.close),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Lógica para subir el comentario
-                    // Agrega tu lógica aquí para manejar el comentario
-                    // Por ejemplo, puedes enviar el comentario a Firebase
-                  },
-                  child: Text('Comentar'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
