@@ -107,14 +107,6 @@ void actualizarRating(String pubId, double rating) async {
       reseniasData['calificaciones'][user.uid] = rating;
     }
 
-    // Calcular el promedio de las calificaciones
-    double sumaCalificaciones = reseniasData['calificaciones'].values.reduce((value, element) => value + element);
-    int cantidadCalificaciones = reseniasData['calificaciones'].length;
-    double promedioCalificaciones = sumaCalificaciones / cantidadCalificaciones;
-
-    // Actualizamos el mapa con el promedio de las calificaciones
-    reseniasData['promedio'] = promedioCalificaciones;
-
     // Actualizamos el documento en la base de datos
     await reseniasDocumentReference.set(reseniasData, SetOptions(merge: true));
   } else {
@@ -170,8 +162,6 @@ void mostrarModalComentarios(BuildContext context) {
                     String pubId = publicacionesListR[rIndex].rpubID;
                     return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                   }
-                
-        
       } else if (currentPage == 'Películas') {
                   // Código para la página de películas
                   String rtitulo = publicacionesListR[index].rtitulo;
@@ -270,10 +260,8 @@ void mostrarModalComentarios(BuildContext context) {
       ),
     );
   }
-
 Widget buildCardWidget2(String title, String description, String pubId, String imageName,) {
-  double currentRating = 3.0; // Calificación inicial
-
+  double currentRating = 1.0; // Calificación inicial
   return Card(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -310,7 +298,7 @@ Widget buildCardWidget2(String title, String description, String pubId, String i
           },
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinea los íconos al final de la fila
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RatingBar.builder(
               initialRating: currentRating,
@@ -345,6 +333,12 @@ Widget buildCardWidget2(String title, String description, String pubId, String i
                     // Aquí puedes agregar la lógica para guardar
                   },
                   icon: Icon(Icons.bookmark),
+                ),
+                IconButton(
+                  onPressed: () {
+                    // Aquí puedes agregar la lógica para guardar
+                  },
+                  icon: Icon(Icons.share),
                 ),
               ],
             ),
