@@ -1,12 +1,14 @@
 
- // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors
+ // ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors, use_build_context_synchronously
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
+import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 //import 'package:cnmecab/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 // Importa la clase FilterBody
@@ -25,6 +27,7 @@ class _PaginahomeState extends State<BodyPage> {
   bool isDarkModeEnabled = false;
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
+  TextEditingController comentarioController = TextEditingController(text: "");
    @override
   void initState() {
     super.initState();
@@ -84,15 +87,46 @@ void actualizarLikes(String pubId) async {
     }
   }
 }
+void actualizarRating(String pubId, double rating) async {
+  final user = FirebaseAuth.instance.currentUser;
 
-void mostrarModalComentarios(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return ComentariosModal(); // Implementa esta clase según tus necesidades
-      },
-    );
+  if (user != null) {
+    // Obtener la referencia del documento en la colección de Reseñas
+    final reseniasDocumentReference = FirebaseFirestore.instance.collection('Reseñas').doc(pubId);
+    final reseniasDocument = await reseniasDocumentReference.get();
+    Map<String, dynamic> reseniasData;
+    if (!reseniasDocument.exists) {
+      // Si el documento no existe, inicializamos el mapa con la calificación actual y la ID del usuario
+      reseniasData = {
+        'calificaciones': {
+          user.uid: rating,
+        }
+      };
+    } else {
+      // Si el documento ya existe, obtenemos los datos actuales del documento
+      reseniasData = reseniasDocument.data() as Map<String, dynamic>;
+      // Actualizamos el mapa con la calificación actual del usuario
+      reseniasData['calificaciones'][user.uid] = rating;
+    }
+
+    // Calcular el promedio de las calificaciones
+    double sumaCalificaciones = reseniasData['calificaciones'].values.reduce((value, element) => value + element);
+    int cantidadCalificaciones = reseniasData['calificaciones'].length;
+    double promedioCalificaciones = sumaCalificaciones / cantidadCalificaciones;
+
+    // Actualizamos el mapa con el promedio de las calificaciones
+    reseniasData['promedio'] = promedioCalificaciones;
+
+    // Actualizamos el documento en la base de datos
+    await reseniasDocumentReference.set(reseniasData, SetOptions(merge: true));
+  } else {
+    // Si el usuario no está autenticado, muestra un mensaje o toma otra acción según tus necesidades
+    print('El usuario no está autenticado.');
   }
+}
+
+
+
 
  @override
   Widget build(BuildContext context) {
@@ -121,7 +155,7 @@ void mostrarModalComentarios(BuildContext context) {
           String titulo = publicacionesList[index].titulo;
           String descripcion = publicacionesList[index].descripcion;
           String pubId = publicacionesList[index].pubID;
-                    return buildCardWidget(titulo, descripcion, pubId, '$pubId.jpg');
+                    return buildCardWidget2(titulo, descripcion, pubId, '$pubId.jpg');
                   } else {
           // Esto es para mostrar el contenido de publicacionesListR
            int rIndex = index - publicacionesList.length;
@@ -179,7 +213,7 @@ void mostrarModalComentarios(BuildContext context) {
             'ID de la publicación: $pubId',   
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
           ),
         ),
@@ -215,7 +249,7 @@ void mostrarModalComentarios(BuildContext context) {
               ),
               IconButton(
                 onPressed: () {
-                  mostrarModalComentarios(context); // Llama a la función para mostrar el modal de comentarios
+                 mostrarModalComentarios(context, pubId, comentarioController);// Llama a la función para mostrar el modal de comentarios
                },
                 icon: const Icon(Icons.comment),
               ),
@@ -230,55 +264,89 @@ void mostrarModalComentarios(BuildContext context) {
       ),
     );
   }
-}
-class ComentariosModal extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          left: 16,
-          right: 16,
-          top: 16,
+
+Widget buildCardWidget2(String title, String description, String pubId, String imageName,) {
+  double currentRating = 3.0; // Calificación inicial
+
+  return Card(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Agregar el Text con la ID del mapa
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'ID de la publicación: $pubId',   
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
+          ),
         ),
-        child: Column(
+        ListTile(
+          leading: const CircleAvatar(
+            radius: 20.0,
+            backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+          ),
+          title: Text(title),
+          subtitle: Text(description),
+        ),
+        FutureBuilder<String>(
+          future: getImageUrl(imageName),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la URL de la imagen
+            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('Error cargando la imagen'); // Muestra un mensaje si hay un error
+            } else {
+              return Image.network(snapshot.data!);
+            }
+          },
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinea los íconos al final de la fila
           children: [
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/180'),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Escribe un comentario...',
-                border: OutlineInputBorder(),
+            RatingBar.builder(
+              initialRating: currentRating,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: 20.0, // Tamaño del ícono de la calificación
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Color.fromARGB(255, 255, 0, 0),
               ),
-              maxLines: null,
+              onRatingUpdate: (rating) {
+                currentRating = rating;
+                actualizarRating(pubId, rating); // Llama a la función para actualizar el rating
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Calificación actualizada: $rating')),
+                );
+              },
             ),
-            SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    // Aquí puedes agregar la lógica para comentarios
                   },
-                  icon: Icon(Icons.close),
+                  icon: Icon(Icons.comment),
                 ),
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
-                    // Lógica para subir el comentario
-                    // Agrega tu lógica aquí para manejar el comentario
-                    // Por ejemplo, puedes enviar el comentario a Firebase
+                    // Aquí puedes agregar la lógica para guardar
                   },
-                  child: Text('Comentar'),
+                  icon: Icon(Icons.bookmark),
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }
+}
+

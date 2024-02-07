@@ -343,27 +343,6 @@ class _PaginahomeState extends State<Paginahome> {
               },
             ),
             ListTile(
-              title:
-                  Text('Cambiar Tema', style: TextStyle(color: Colors.black)),
-              onTap: () {
-                setState(() {
-                  isDarkModeEnabled = !isDarkModeEnabled;
-                  // Aplicar tema oscuro o claro según el estado
-                  if (isDarkModeEnabled) {
-                    // Configurar tema oscuro
-                    // ...
-                    // Por ejemplo:
-                    // ThemeMode.dark
-                  } else {
-                    // Configurar tema claro
-                    // ...
-                    // Por ejemplo:
-                    // ThemeMode.light
-                  }
-                });
-              },
-            ),
-            ListTile(
               title: Text('Terminos y Políticas de Seguridad',
                   style: TextStyle(color: Colors.black)),
               onTap: () {

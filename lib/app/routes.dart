@@ -51,7 +51,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/publicar':
       return MaterialPageRoute(builder: (_) => Publicar());
     case '/Search':
-      return MaterialPageRoute(builder: (_) => SearchScreen());
+      return MaterialPageRoute(builder: (_) => Search());
     case '/notificaciones':
       return MaterialPageRoute(builder: (_) => Notificacion());
     case '/imagesprofileVisitor':
