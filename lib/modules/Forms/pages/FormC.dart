@@ -44,6 +44,7 @@ class _FormCPageState extends State<FormCPage> {
             .doc(currentUser.uid)
             .update({
           'Activo': true,
+          'Nombre': _nombreController.text,
         });
 
         // Mostrar mensaje de éxito y regresar a la página de inicio

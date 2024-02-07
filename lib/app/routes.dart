@@ -13,7 +13,9 @@ import 'package:cnmecab/modules/politics/pages/politics.dart';
 import 'package:cnmecab/modules/politics/pages/Terms.dart';
 import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
-import 'package:cnmecab/modules/profile/pages/profileimage.dart';
+import 'package:cnmecab/modules/profile/pages/profileimageCreators.dart';
+import 'package:cnmecab/modules/profile/pages/profileimageVisitor.dart';
+import 'package:cnmecab/modules/profile/pages/profilenew.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => FormPPage());
     case '/Profile':
       return MaterialPageRoute(builder: (_) => ProfileScreen());
+    case '/ProfileNew':
+      return MaterialPageRoute(builder: (_) => ProfilePage());
     case '/politics':
       return MaterialPageRoute(builder: (_) => politics());
     case '/saved':
@@ -50,8 +54,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => SearchScreen());
     case '/notificaciones':
       return MaterialPageRoute(builder: (_) => Notificacion());
-    case '/imagesprofile':
+    case '/imagesprofileVisitor':
       return MaterialPageRoute(builder: (_) => ImageListScreen());
+    case '/imagesprofileCreators':
+      return MaterialPageRoute(builder: (_) => PublicarCreators());
     default:
       return MaterialPageRoute(builder: (_) => WelcomePage());
   }

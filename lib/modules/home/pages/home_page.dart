@@ -316,7 +316,7 @@ class _PaginahomeState extends State<Paginahome> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed('/Profile');
+              Navigator.of(context).pushNamed('/ProfileNew');
             },
           ),
         ],
@@ -327,23 +327,11 @@ class _PaginahomeState extends State<Paginahome> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                'Nombre de Productora',
+                '¡Hola! ${userProfile?.name}',
                 style:
                     TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
               ),
               accountEmail: null,
-              currentAccountPicture: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/imagesprofile');
-                },
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
               decoration: BoxDecoration(
                 color: Colors.black,
               ),
@@ -351,7 +339,7 @@ class _PaginahomeState extends State<Paginahome> {
             ListTile(
               title: Text('Cuenta', style: TextStyle(color: Colors.black)),
               onTap: () {
-                Navigator.of(context).pushNamed('/Profile');
+                Navigator.of(context).pushNamed('/ProfileNew');
               },
             ),
             ListTile(

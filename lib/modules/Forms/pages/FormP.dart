@@ -41,6 +41,7 @@ class _FormPPageState extends State<FormPPage> {
             .doc(currentUser.uid)
             .update({
           'Activo': true,
+          'Nombre': nombrePromotora,
         });
         showDialog(
           context: context,

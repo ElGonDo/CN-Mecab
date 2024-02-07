@@ -1,24 +1,25 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, library_private_types_in_public_api, use_build_context_synchronously, file_names
 import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 List<String> imageNames = [
-  'Firefly perfil de avatar 29892.jpg',
-  'Firefly perfil de avatar 35512.jpg',
-  'Firefly perfil de avatar 51841.jpg',
-  'Firefly perfiles de avatar 20770.jpg',
-  'Firefly perfiles de avatar 53116.jpg',
-  'Firefly perfiles de avatar 53859.jpg',
-  'Firefly perfiles de avatar 62552.jpg',
-  'Firefly perfiles de avatar 67575.jpg',
-  'Firefly perfiles de avatar 76738.jpg',
-  'Firefly perfiles de avatar 91583.jpg',
+  'Firefly perfil de avatar 29892',
+  'Firefly perfil de avatar 35512',
+  'Firefly perfil de avatar 51841',
+  'Firefly perfiles de avatar 20770',
+  'Firefly perfiles de avatar 53116',
+  'Firefly perfiles de avatar 53859',
+  'Firefly perfiles de avatar 62552',
+  'Firefly perfiles de avatar 67575',
+  'Firefly perfiles de avatar 76738',
+  'Firefly perfiles de avatar 91583',
 ];
 
 Future<Widget> _getImageWidget(String imageName) async {
   try {
-    final ref = FirebaseStorage.instance.ref().child('profileV/$imageName');
+    final ref = FirebaseStorage.instance.ref().child('profileV/$imageName.jpg');
     final url = await ref.getDownloadURL();
     return Image.network(url);
   } catch (e) {
@@ -27,17 +28,33 @@ Future<Widget> _getImageWidget(String imageName) async {
   }
 }
 
+Future<void> updateVisitorProfileImage(
+    String currentUserUid, String selectedImage) async {
+  try {
+    // Actualizar los datos del visitante en la colección "Visitantes"
+    await FirebaseFirestore.instance
+        .collection('Visitantes')
+        .doc(currentUserUid)
+        .update({
+      'ImagenPerfil': selectedImage,
+    });
+  } catch (e) {
+    print('Error al actualizar la imagen del perfil del visitante: $e');
+    // Manejar el error según sea necesario
+  }
+}
+
 class ImageListScreen extends StatefulWidget {
-  const ImageListScreen({super.key});
+  const ImageListScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ImageListScreenState createState() => _ImageListScreenState();
 }
 
 class _ImageListScreenState extends State<ImageListScreen> {
   String? selectedImage;
   UserProfile? userProfile;
+
   @override
   void initState() {
     super.initState();
@@ -46,8 +63,24 @@ class _ImageListScreenState extends State<ImageListScreen> {
 
     if (userProfile != null) {
       // Verificar si el perfil del usuario está disponible y mostrar información
-      print('UID: ${userProfile?.uid}');
-      print('Rol: ${userProfile?.role}');
+      print('Imagen UID: ${userProfile?.uid}');
+      print('Imagen Rol: ${userProfile?.role}');
+      print('Imagen name: ${userProfile?.name}');
+    }
+  }
+
+  Future<void> _updateProfileImage() async {
+    if (userProfile != null && selectedImage != null) {
+      await updateVisitorProfileImage(userProfile!.uid, selectedImage!);
+      print('Imagen de perfil actualizada: $selectedImage');
+
+      // Mostrar la notificación de foto de perfil actualizada
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('¡Foto de perfil actualizada!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -98,6 +131,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
                     setState(() {
                       selectedImage = imageNames[index];
                     });
+                    _updateProfileImage(); // Llama al método para actualizar la imagen de perfil
                   },
                   child: Container(
                     decoration: BoxDecoration(

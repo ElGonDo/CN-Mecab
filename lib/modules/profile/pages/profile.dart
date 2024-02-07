@@ -72,6 +72,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         userProfile = UserProfile(
           uid: user.uid,
           role: userData['Rol'],
+          name: userData['Nombre'],
         );
 
         if (!_isDataLoaded) {
