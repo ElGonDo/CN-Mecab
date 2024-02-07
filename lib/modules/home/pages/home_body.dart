@@ -3,6 +3,7 @@
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
+import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,14 +87,7 @@ void actualizarLikes(String pubId) async {
   }
 }
 
-void mostrarModalComentarios(BuildContext context, String pubId, TextEditingController comentarioController) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return ComentariosModal(pubId: pubId, comentarioController: comentarioController);
-    },
-  );
-}
+
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,181 +225,4 @@ void mostrarModalComentarios(BuildContext context, String pubId, TextEditingCont
     );
   }
 }
-Future<void> agregarComentario(String pubId, String comentario) async {
-  final user = FirebaseAuth.instance.currentUser;
 
-  if (user != null) {
-    // Obtener la referencia del documento en la colección de Comentarios
-    final comentariosDocumentReference = FirebaseFirestore.instance.collection('Comentarios').doc(pubId);
-    final comentariosDocument = await comentariosDocumentReference.get();
-
-    if (!comentariosDocument.exists) {
-      // Si el documento no existe, crea uno nuevo
-      await comentariosDocumentReference.set({
-        'comentarios': {user.uid: [comentario]}
-      });
-    } else {
-      // Si el documento existe, agrega el comentario al documento existente
-      comentariosDocumentReference.update({
-        'comentarios.${user.uid}': FieldValue.arrayUnion([comentario])
-      });
-    }
-  }
-}
-class ComentariosModal extends StatelessWidget {
-  final String pubId;
-  final TextEditingController comentarioController;
-
-  const ComentariosModal({required this.pubId, required this.comentarioController});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Botones de cerrar el modal y enviar comentario
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Botón de cerrar el modal
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close),
-              ),
-              // Botón de enviar comentario
-              IconButton(
-                onPressed: () async {
-                  // Obtén el texto del comentario del controlador
-                  String comentario = comentarioController.text;
-                  // Verifica si el comentario no está vacío
-                  if (comentario.trim().isNotEmpty) {
-                    // Llama a la función para agregar el comentario
-                    await agregarComentario(pubId, comentarioController.text);
-                    // Limpia el texto del controlador después de enviar el comentario
-                    comentarioController.clear();
-                    // Cierra el modal
-                    Navigator.pop(context);
-                    // Muestra un SnackBar para informar al usuario que el comentario se ha subido correctamente
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('El comentario se ha subido correctamente'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  } else {
-                    Navigator.pop(context);
-                    // Muestra un SnackBar para informar al usuario que el comentario está vacío
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('El comentario no puede estar vacío'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  }
-                },
-                icon: Icon(Icons.send),
-                color: Color.fromARGB(255, 243, 33, 33),
-              ),
-            ],
-          ),
-        ),
-        // Foto del usuario y caja de texto
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              // Foto del usuario
-              CircleAvatar(
-                radius: 24.0,
-                backgroundImage: NetworkImage('https://via.placeholder.com/180'),
-              ),
-              SizedBox(width: 8),
-              // Caja de texto para escribir un nuevo comentario con padding en la parte inferior
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: TextField(
-                    controller: comentarioController,
-                    decoration: InputDecoration(
-                      hintText: 'Escribe un comentario...',
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: null,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Lista de comentarios
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            children: [
-              // Comentario de ejemplo
-              Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Avatar del usuario
-                    CircleAvatar(
-                      radius: 16.0,
-                      backgroundImage: NetworkImage('https://via.placeholder.com/180'),
-                    ),
-                    SizedBox(width: 8),
-                    // Comentario del usuario
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Nombre del Usuario',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Este es un comentario de ejemplo. Aquí puedes ver el texto completo del comentario.',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    // Botones de responder y reaccionar
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            // Acción al presionar el botón de responder comentario
-                          },
-                          icon: Icon(Icons.comment),
-                          color: Color.fromARGB(255, 243, 33, 33),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            // Acción al presionar el botón de reaccionar comentario
-                          },
-                          icon: Icon(Icons.thumb_up),
-                          color: Color.fromARGB(255, 243, 33, 33),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
