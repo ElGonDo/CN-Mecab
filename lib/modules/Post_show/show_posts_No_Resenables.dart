@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, avoid_function_literals_in_foreach_calls
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -10,6 +8,7 @@ class Publicacion {
   final String titulo;
   final String uid; // La UID del usuario
   final String pubID; // La ID de cada mapa dentro del documento
+  final bool esResenable; // Cambio de "esReseñable" a "esResenable"
 
   Publicacion({
     required this.categoria,
@@ -18,6 +17,7 @@ class Publicacion {
     required this.titulo,
     required this.uid,
     required this.pubID,
+    required this.esResenable, // Cambio de "esReseñable" a "esResenable"
   });
 }
 
@@ -39,6 +39,7 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
       String descripcion = publicacion['Descripcion'];
       String genero = publicacion['Genero'];
       String titulo = publicacion['Titulo'];
+      bool esResenable = publicacion['Reseñable'] ?? false; 
 
       // Crear una instancia de Publicacion y agregarla a la lista
       Publicacion nuevaPublicacion = Publicacion(
@@ -47,7 +48,8 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
         genero: genero,
         titulo: titulo,
         uid: uid, // Asignar la UID del usuario
-        pubID: pubID, 
+        pubID: pubID,
+        esResenable: esResenable, 
       );
       publicacionesList.add(nuevaPublicacion);
     });
