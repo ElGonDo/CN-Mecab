@@ -169,8 +169,8 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void guardarVisitante(
-      String nombre, String apellido, String apodo, DateTime fechaNacimiento) {
+  Future<void> guardarVisitante(String nombre, String apellido, String apodo,
+      DateTime fechaNacimiento) async {
     final CollectionReference visitantesCollection =
         FirebaseFirestore.instance.collection('Visitantes');
     visitantesCollection.doc(userProfile?.uid).set({
@@ -183,11 +183,18 @@ class ProfileScreenState extends State<ProfileScreen> {
     }).catchError((error) {
       print('Error al guardar los datos del visitante: $error');
     });
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombre,
+    });
   }
 
 // Función para guardar los datos del creador en Firestore
-  void guardarCreador(String nombreCreador, DateTime fechaNacimiento,
-      List<String> tiposCreador) {
+  Future<void> guardarCreador(String nombreCreador, DateTime fechaNacimiento,
+      List<String> tiposCreador) async {
     try {
       // Eliminar los tipos de creador deseleccionados
       tipoCreadorSeleccionado
@@ -209,11 +216,18 @@ class ProfileScreenState extends State<ProfileScreen> {
       // Manejar cualquier error
       print(e.toString());
     }
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombreCreador,
+    });
   }
 
 // Función para guardar los datos de la promotora en Firestore
-  void guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
-      List<String> categoriasDisponibles, List<String> tipoPromotora) {
+  Future<void> guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
+      List<String> categoriasDisponibles, List<String> tipoPromotora) async {
     try {
       // Eliminar las categorias deseleccionados
       categoriasSeleccionadas
@@ -239,6 +253,13 @@ class ProfileScreenState extends State<ProfileScreen> {
       // Manejar cualquier error
       print(e.toString());
     }
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombrePromotora,
+    });
   }
 
   @override

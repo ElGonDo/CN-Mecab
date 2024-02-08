@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -39,7 +41,7 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
       String descripcion = publicacion['Descripcion'];
       String genero = publicacion['Genero'];
       String titulo = publicacion['Titulo'];
-      bool esResenable = publicacion['Reseñable'] ?? false; 
+      bool esResenable = publicacion['Reseñable'] ?? false;
 
       // Crear una instancia de Publicacion y agregarla a la lista
       Publicacion nuevaPublicacion = Publicacion(
@@ -49,13 +51,13 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
         titulo: titulo,
         uid: uid, // Asignar la UID del usuario
         pubID: pubID,
-        esResenable: esResenable, 
+        esResenable: esResenable,
       );
       publicacionesList.add(nuevaPublicacion);
     });
   }
   onDataFetched(publicacionesList); // Llama a la función con los datos
-  publicacionesList.forEach((publicacion) {
+  for (var publicacion in publicacionesList) {
     // Muestra en la consola cada UID del usuario y la ID de cada mapa
     if (kDebugMode) {
       print("UID del usuario: ${publicacion.uid}");
@@ -63,5 +65,5 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
     if (kDebugMode) {
       print("ID del mapa: ${publicacion.pubID}");
     }
-   });  // Llama a la función con los datos
+  } // Llama a la función con los datos
 }
