@@ -291,8 +291,7 @@ class _PaginahomeState extends State<BodyPage> {
     String pubId,
     String imageName,
   ) {
-    double currentRating = 3.0; // Calificación inicial
-
+    double currentRating = 1.0; // Calificación inicial
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -332,8 +331,7 @@ class _PaginahomeState extends State<BodyPage> {
             },
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // Alinea los íconos al final de la fila
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RatingBar.builder(
                 initialRating: currentRating,
@@ -370,6 +368,12 @@ class _PaginahomeState extends State<BodyPage> {
                       // Aquí puedes agregar la lógica para guardar
                     },
                     icon: Icon(Icons.bookmark),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Aquí puedes agregar la lógica para guardar
+                    },
+                    icon: Icon(Icons.share),
                   ),
                 ],
               ),
