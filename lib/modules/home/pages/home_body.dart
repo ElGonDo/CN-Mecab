@@ -110,16 +110,14 @@ void actualizarRating(String pubId, double rating) async {
     }
 
     // Actualizamos el documento en la base de datos
-    await reseniasDocumentReference.set(reseniasData, SetOptions(merge: true));
+    await reseniasDocumentReference.set({
+      'calificaciones': reseniasData['calificaciones'],
+    });
   } else {
     // Si el usuario no está autenticado, muestra un mensaje o toma otra acción según tus necesidades
     print('El usuario no está autenticado.');
   }
 }
-
-
-
-
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,14 +145,14 @@ void actualizarRating(String pubId, double rating) async {
           String titulo = publicacionesList[index].titulo;
           String descripcion = publicacionesList[index].descripcion;
           String pubId = publicacionesList[index].pubID;
-                    return buildCardWidget2(titulo, descripcion, pubId, '$pubId.jpg');
+                    return buildCardWidget(titulo, descripcion, pubId, '$pubId.jpg');
                   } else {
           // Esto es para mostrar el contenido de publicacionesListR
            int rIndex = index - publicacionesList.length;
                     String rtitulo = publicacionesListR[rIndex].rtitulo;
                     String rdescripcion = publicacionesListR[rIndex].rdescripcion;
                     String pubId = publicacionesListR[rIndex].rpubID;
-                    return buildCardWidget(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+                    return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
                   }
       } else if (currentPage == 'Películas') {
                   // Código para la página de películas
@@ -318,8 +316,8 @@ Widget buildCardWidget2(String title, String description, String pubId, String i
               children: [
                 IconButton(
                   onPressed: () {
-                    // Aquí puedes agregar la lógica para comentarios
-                  },
+                 mostrarModalComentarios(context, pubId, comentarioController);// Llama a la función para mostrar el modal de comentarios
+               },
                   icon: Icon(Icons.comment),
                 ),
                 IconButton(

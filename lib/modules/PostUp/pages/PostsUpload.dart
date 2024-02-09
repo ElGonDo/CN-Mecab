@@ -221,7 +221,7 @@ class _PublicarState extends State<Publicar> {
                   });
                 },
                 child: const Text("Seleccionar imagen")),
-            ElevatedButton(
+             ElevatedButton(
                 onPressed: () async {
                   final postId = await addTitle(
                       tituloController.text,
