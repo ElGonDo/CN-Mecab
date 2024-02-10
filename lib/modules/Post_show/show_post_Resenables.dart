@@ -57,10 +57,10 @@ void obtenerDatosR(Function(List<PublicacionR>) onDataFetched) async {
   publicacionesListR.forEach((publicacion) {
     // Muestra en la consola cada UID del usuario y la ID de cada mapa
     if (kDebugMode) {
-      print("UID del usuario: ${publicacion.ruid}");
+      //print("UID del usuario: ${publicacion.ruid}");
     }
     if (kDebugMode) {
-      print("ID del mapa: ${publicacion.rpubID}");
+      //print("ID del mapa: ${publicacion.rpubID}");
     }
   });
 }

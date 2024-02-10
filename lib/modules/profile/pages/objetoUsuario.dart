@@ -55,10 +55,10 @@ class UserProfileSingleton {
         }
 
         // Imprime la UID, el rol y la URL de la imagen en la consola
-        print('Objeto UID: ${_userProfile?.uid}');
+        /*print('Objeto UID: ${_userProfile?.uid}');
         print('Objeto Rol: ${_userProfile?.role}');
         print('Objeto Name: ${_userProfile?.name}');
-        print('Objeto ProfileImageURL: ${_userProfile?.profileImageURL}');
+        print('Objeto ProfileImageURL: ${_userProfile?.profileImageURL}');*/
         return _userProfile;
       }
     } catch (e) {
