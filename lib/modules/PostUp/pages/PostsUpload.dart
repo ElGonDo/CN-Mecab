@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'dart:io';
 import 'package:cnmecab/modules/PostUp/pages/select_Image.dart';
 import 'package:cnmecab/modules/PostUp/pages/upload_image.dart';
@@ -8,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class Publicar extends StatefulWidget {
   const Publicar({super.key});
 
@@ -19,7 +17,6 @@ class Publicar extends StatefulWidget {
 class _PublicarState extends State<Publicar> {
   TextEditingController tituloController = TextEditingController(text: "");
   TextEditingController descripcionController = TextEditingController(text: "");
-  // ignore: non_constant_identifier_names
   File? image_to_upload;
   String? _selectedGenero = '';
   String _selectedCategory = '';
@@ -42,7 +39,7 @@ class _PublicarState extends State<Publicar> {
     } else if (tipoPubli == 'No reseñable') {
       collectionName = "Publicaciones_No_Reseñables";
     } else {
-      // Puedes manejar un caso predeterminado aquí si es necesario
+      // Handle default case if necessary
       return;
     }
   }
@@ -80,6 +77,34 @@ class _PublicarState extends State<Publicar> {
     }
   }
 
+   Future<void> enviarANotificaciones(String titulo, String descripcion, String category, String userId) async {
+  try {
+    // Obtener la referencia a la colección de notificaciones
+    CollectionReference notificacionesRef = FirebaseFirestore.instance.collection('Notificaciones');
+
+    // Obtener el nombre del usuario que crea la publicación
+    User? user = FirebaseAuth.instance.currentUser;
+    String nombreUsuario = user?.displayName ?? 'Usuario Desconocido';
+
+    // Crear un documento para la notificación
+    await notificacionesRef.add({
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'categoria': category,
+      'nombreUsuario': nombreUsuario,
+      'userId': userId, // Si es necesario, puedes almacenar también el ID de usuario
+      'timestamp': FieldValue.serverTimestamp(), // Marcar la fecha y hora de la notificación
+    });
+
+    // Éxito al enviar la notificación
+    // ignore: avoid_print
+    print('Notificación enviada correctamente');
+  } catch (error) {
+    // Manejar cualquier error que ocurra durante el envío de la notificación
+    // ignore: avoid_print
+    print('Error al enviar la notificación: $error');
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,11 +233,11 @@ class _PublicarState extends State<Publicar> {
             image_to_upload != null
                 ? Image.file(image_to_upload!)
                 : Container(
-                    margin: const EdgeInsets.all(10),
-                    height: 200,
-                    width: double.infinity,
-                    color: Colors.red,
-                  ),
+              margin: const EdgeInsets.all(10),
+              height: 200,
+              width: double.infinity,
+              color: Colors.red,
+            ),
             ElevatedButton(
                 onPressed: () async {
                   final XFile? imagen = await getImage();
@@ -221,7 +246,7 @@ class _PublicarState extends State<Publicar> {
                   });
                 },
                 child: const Text("Seleccionar imagen")),
-             ElevatedButton(
+            ElevatedButton(
                 onPressed: () async {
                   final postId = await addTitle(
                       tituloController.text,
@@ -235,16 +260,25 @@ class _PublicarState extends State<Publicar> {
                   final uploaded = await uploadImage(image_to_upload!, postId);
 
                   if (uploaded) {
+
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Error al subir la imagen")));
                   } else {
-                    // ignore: use_build_context_synchronously
+                      // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("imagen subida correctamente")));
+                        content: Text("Imagen subida correctamente")));
                   }
+
+                  // Envía los datos a la colección de Notificaciones
+                  await enviarANotificaciones(
+                      tituloController.text,
+                      descripcionController.text,
+                      _selectedCategory,
+                      FirebaseAuth.instance.currentUser?.uid ?? ''
+                  );
                 },
-                child: const Text("Subir Publicacion"))
+                child: const Text("Subir Publicacion y Notificar"))
           ],
         ),
       ),
