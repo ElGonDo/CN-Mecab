@@ -8,7 +8,7 @@ class Publicacion {
   final String titulo;
   final String uid; // La UID del usuario
   final String pubID; // La ID de cada mapa dentro del documento
-  final bool esResenable; // Cambio de "esReseñable" a "esResenable"
+  final bool esResenable; 
 
   Publicacion({
     required this.categoria,
@@ -17,7 +17,7 @@ class Publicacion {
     required this.titulo,
     required this.uid,
     required this.pubID,
-    required this.esResenable, // Cambio de "esReseñable" a "esResenable"
+    required this.esResenable, 
   });
 }
 
