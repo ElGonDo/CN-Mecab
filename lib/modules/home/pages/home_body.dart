@@ -1,9 +1,12 @@
+// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +26,7 @@ class _BodyPageState extends State<BodyPage> {
   List<PublicacionR> publicacionesListR = [];
   TextEditingController comentarioController =
       TextEditingController(text: "");
+      int likes = 0;
 
   @override
   void initState() {
@@ -38,8 +42,7 @@ class _BodyPageState extends State<BodyPage> {
       });
     });
   }
-
-  void actualizarLikes(String pubId) async {
+Future<int> actualizarLikes(String pubId) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -64,20 +67,28 @@ class _BodyPageState extends State<BodyPage> {
         List<String> usuariosQueDieronLike =
             usuariosQueDieronLikeDynamic.cast<String>();
 
-        if (!usuariosQueDieronLike.contains(user.uid)) {
+        if (usuariosQueDieronLike.contains(user.uid)) {
+          // El usuario ya dio like, entonces se quitará
+          likes--;
+          usuariosQueDieronLike.remove(user.uid);
+        } else {
+          // El usuario no había dado like, entonces se agregará
           likes++;
           usuariosQueDieronLike.add(user.uid);
-
-          reaccionesData = {
-            'likes': likes,
-            'usuarios_que_dieron_like': usuariosQueDieronLike,
-          };
-
-          await reaccionesDocumentReference
-              .set(reaccionesData, SetOptions(merge: true));
         }
+
+        reaccionesData = {
+          'likes': likes,
+          'usuarios_que_dieron_like': usuariosQueDieronLike,
+        };
+
+        await reaccionesDocumentReference
+            .set(reaccionesData, SetOptions(merge: true));
+
+        return likes; // Devuelve el nuevo contador de likes
       }
     }
+    return likes; // Devuelve el contador actual de likes si no se realizó ningún cambio
   }
 
   void actualizarRating(String pubId, double rating) async {
@@ -115,7 +126,9 @@ class _BodyPageState extends State<BodyPage> {
         'promedio_rating': promedioRating,
       });
     } else {
-      print('El usuario no está autenticado.');
+      if (kDebugMode) {
+        print('El usuario no está autenticado.');
+      }
     }
   }
 
@@ -143,12 +156,7 @@ class _BodyPageState extends State<BodyPage> {
               itemBuilder: (context, index) {
                 if (currentPage == 'Para ti') {
                   if (index < publicacionesList.length) {
-                    String titulo = publicacionesList[index].titulo;
-                    String descripcion =
-                        publicacionesList[index].descripcion;
-                    String pubId = publicacionesList[index].pubID;
-                    return buildCardWidget(
-                        titulo, descripcion, pubId, '$pubId.jpg');
+                   return buildCardWidget(publicacionesList[index]);
                   } else {
                     int rIndex = index - publicacionesList.length;
                     String rtitulo =
@@ -239,8 +247,7 @@ class _BodyPageState extends State<BodyPage> {
     }
   }
 
-  Widget buildCardWidget(
-      String title, String description, String pubId, String imageName) {
+  Widget buildCardWidget(Publicacion publicacion) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -248,7 +255,7 @@ class _BodyPageState extends State<BodyPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'ID de la publicación: $pubId',
+              'ID de la publicación: ${publicacion.pubID}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 0, 0, 0),
@@ -261,11 +268,11 @@ class _BodyPageState extends State<BodyPage> {
               backgroundImage: NetworkImage(
                   'https://via.placeholder.com/180'),
             ),
-            title: Text(title),
-            subtitle: Text(description),
+            title: Text(publicacion.titulo),
+            subtitle: Text(publicacion.descripcion),
           ),
           FutureBuilder<String>(
-            future: getImageUrl(imageName),
+            future: getImageUrl('${publicacion.pubID}.jpg'),
             builder: (context, snapshot) {
               if (snapshot.connectionState ==
                   ConnectionState.waiting) {
@@ -284,14 +291,20 @@ class _BodyPageState extends State<BodyPage> {
             children: [
               IconButton(
                 onPressed: () {
-                  actualizarLikes(pubId);
+                  actualizarLikes(publicacion.pubID).then((value) {
+                    setState(() {
+                      publicacion.likes = value;
+                    });
+                  });
                 },
                 icon: const Icon(Icons.thumb_up),
+                
               ),
+              Text('Likes: ${publicacion.likes}'),
               IconButton(
                 onPressed: () {
                   mostrarModalComentarios(
-                      context, pubId, comentarioController);
+                      context, publicacion.pubID, comentarioController);
                 },
                 icon: const Icon(Icons.comment),
               ),
