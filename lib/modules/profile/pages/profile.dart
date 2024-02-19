@@ -173,11 +173,11 @@ class ProfileScreenState extends State<ProfileScreen> {
       DateTime fechaNacimiento) async {
     final CollectionReference visitantesCollection =
         FirebaseFirestore.instance.collection('Visitantes');
-    visitantesCollection.doc(userProfile?.uid).set({
+    visitantesCollection.doc(userProfile?.uid).update({
       'Nombre': nombre,
       'Apellido': apellido,
       'Apodo': apodo,
-      'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
+      'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento)
     }).then((value) {
       print('Datos del visitante guardados en Firestore');
     }).catchError((error) {

@@ -58,8 +58,11 @@ class _ImageListScreenState extends State<ImageListScreen> {
   @override
   void initState() {
     super.initState();
-    // Obtener el perfil del usuario desde el Singleton
-    userProfile = UserProfileSingleton().userProfile;
+    UserProfileSingleton().initializeUserProfile().then((profile) {
+      setState(() {
+        userProfile = profile;
+      });
+    });
 
     if (userProfile != null) {
       // Verificar si el perfil del usuario está disponible y mostrar información

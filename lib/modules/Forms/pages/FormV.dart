@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class FormVPage extends StatefulWidget {
   final _formKey = GlobalKey<FormState>();
@@ -47,6 +48,8 @@ class _FormVPageState extends State<FormVPage> {
           'Activo': true,
           'Nombre': _nombreController.text,
         });
+
+        UserProfileSingleton().initializeUserProfile(uid: currentUser.uid);
 
         // Mostrar mensaje de éxito y regresar a la página de inicio
         showDialog(

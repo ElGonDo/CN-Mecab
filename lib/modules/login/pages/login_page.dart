@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cnmecab/services/auth_service.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -101,6 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                     await _authService.login(email, password);
 
                 if (userCredential != null) {
+                  // Si el usuario está autenticado, llama a initializeUserProfile
+                  UserProfileSingleton().initializeUserProfile();
                   Navigator.of(context).pushNamed('/home');
                 } else {
                   showDialog(

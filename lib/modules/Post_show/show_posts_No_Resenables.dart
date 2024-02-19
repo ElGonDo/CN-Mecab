@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -60,10 +60,10 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
   for (var publicacion in publicacionesList) {
     // Muestra en la consola cada UID del usuario y la ID de cada mapa
     if (kDebugMode) {
-      print("UID del usuario: ${publicacion.uid}");
+      //print("UID del usuario: ${publicacion.uid}");
     }
     if (kDebugMode) {
-      print("ID del mapa: ${publicacion.pubID}");
+      //print("ID del mapa: ${publicacion.pubID}");
     }
   } // Llama a la función con los datos
 }

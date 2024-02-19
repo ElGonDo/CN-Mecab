@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class FormPPage extends StatefulWidget {
   const FormPPage({super.key});
@@ -261,7 +262,10 @@ class _FormPPageState extends State<FormPPage> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: guardarDatos,
+                  onPressed: () {
+                    guardarDatos();
+                    UserProfileSingleton().initializeUserProfile();
+                  },
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   child: const Text('Guardar'),
                 ),

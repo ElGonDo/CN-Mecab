@@ -20,8 +20,11 @@ class CreatorsPage extends State<PublicarCreators> {
   @override
   void initState() {
     super.initState();
-    // Obtener el perfil del usuario desde el Singleton
-    userProfile = UserProfileSingleton().userProfile;
+    UserProfileSingleton().initializeUserProfile().then((profile) {
+      setState(() {
+        userProfile = profile;
+      });
+    });
 
     if (userProfile != null) {
       // Verificar si el perfil del usuario está disponible y mostrar información
@@ -34,7 +37,7 @@ class CreatorsPage extends State<PublicarCreators> {
   Future<void> uploadProfileImage(File imageFile) async {
     final FirebaseStorage storage = FirebaseStorage.instance;
     final String fileName =
-        '${userProfile!.uid}.jpg'; // Cambiar el nombre de la imagen por la UID del usuario
+        '${userProfile?.uid}.jpg'; // Cambiar el nombre de la imagen por la UID del usuario
     try {
       final Reference ref = storage
           .ref()

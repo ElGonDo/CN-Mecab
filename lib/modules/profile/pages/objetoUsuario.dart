@@ -16,6 +16,16 @@ class UserProfile {
       required this.role,
       required this.name,
       this.profileImageURL});
+
+  UserProfile copyWith({String? profileImageURL}) {
+    return UserProfile(
+      uid: uid,
+      role: role,
+      name: name,
+      profileImageURL: profileImageURL ??
+          this.profileImageURL, // Actualiza imagenURL si se proporciona, de lo contrario mantiene el mismo valor
+    );
+  }
 }
 
 class UserProfileSingleton {
@@ -29,41 +39,41 @@ class UserProfileSingleton {
 
   UserProfile? get userProfile => _userProfile;
 
-  Future<UserProfile?> initializeUserProfile() async {
+  Future<UserProfile?> initializeUserProfile({String? uid}) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        DocumentSnapshot userProfileSnapshot = await FirebaseFirestore.instance
-            .collection('Usuarios')
-            .doc(user.uid)
-            .get();
-        Map<String, dynamic> userData =
-            userProfileSnapshot.data() as Map<String, dynamic>;
+      String userId = uid ?? FirebaseAuth.instance.currentUser!.uid;
 
-        // Nuevo código para obtener la URL de la imagen de perfil
-        String? profileImageName =
-            await getProfileImageName(user.uid, userData['Rol']);
-        if (profileImageName != null) {
-          // Suponiendo que tienes un método para obtener la URL de la imagen por nombre
-          String imageURL =
-              await getImageURLByName(profileImageName, userData['Rol']);
-          _userProfile = UserProfile(
-              uid: user.uid,
-              role: userData['Rol'],
-              name: userData['Nombre'],
-              profileImageURL: imageURL);
-        }
+      DocumentSnapshot userProfileSnapshot = await FirebaseFirestore.instance
+          .collection('Usuarios')
+          .doc(userId)
+          .get();
+      Map<String, dynamic> userData =
+          userProfileSnapshot.data() as Map<String, dynamic>;
+      UserProfile userProfile = UserProfile(
+          uid: userId, role: userData['Rol'], name: userData['Nombre']);
 
-        // Imprime la UID, el rol y la URL de la imagen en la consola
-        print('Objeto UID: ${_userProfile?.uid}');
-        print('Objeto Rol: ${_userProfile?.role}');
-        print('Objeto Name: ${_userProfile?.name}');
-        print('Objeto ProfileImageURL: ${_userProfile?.profileImageURL}');
-        return _userProfile;
+      String? profileImageName =
+          await getProfileImageName(userId, userData['Rol']);
+
+      if (profileImageName != null) {
+        String imageURL =
+            await getImageURLByName(profileImageName, userData['Rol']);
+
+        // Actualiza el UserProfile con la nueva URL de la imagen si se encuentra
+        userProfile = userProfile.copyWith(profileImageURL: imageURL);
       }
+
+      // Imprime la UID, el rol y la URL de la imagen en la consola
+      print('Objeto UID: ${userProfile.uid}');
+      print('Objeto Rol: ${userProfile.role}');
+      print('Objeto Name: ${userProfile.name}');
+      print('Objeto ProfileImageURL: ${userProfile.profileImageURL}');
+
+      return userProfile;
     } catch (e) {
       print('Error fetching user profile: $e');
     }
+
     return null;
   }
 
