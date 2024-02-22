@@ -1,9 +1,8 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  const Search({Key? key});
 
   @override
   State<Search> createState() => _SearchState();
@@ -43,10 +42,22 @@ class _SearchState extends State<Search> {
         ),
       ),
       body: ListView(
-        children: collections
-            .map((collection) => _buildSearchResult(context, collection))
-            .toList(),
+        children: [
+          _buildSearchResult(context, 'Visitantes'),
+          _buildDivider(),
+          _buildSearchResult(context, 'Promotoras'),
+          _buildDivider(),
+          _buildSearchResult(context, 'Creadores'),
+        ],
       ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 20,
+      color: Colors.grey[300],
+      margin: const EdgeInsets.symmetric(vertical: 10),
     );
   }
 
@@ -65,11 +76,16 @@ class _SearchState extends State<Search> {
       children: [
         const SizedBox(height: 10),
         StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection(collection).where(
-            field1,
-            isEqualTo: searchController.text,
-          ).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          stream: FirebaseFirestore.instance
+              .collection(collection)
+              .where(
+                field1,
+                isGreaterThanOrEqualTo: searchController.text,
+                isLessThan: searchController.text + 'z',
+              )
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return const Text("No se encontró nada");
             }
@@ -87,7 +103,7 @@ class _SearchState extends State<Search> {
                 String title = doc[field1] ?? '';
                 return GestureDetector(
                   onTap: () {
-                    _showPopup(context); 
+                    _showPopup(context);
                   },
                   child: Card(
                     child: ListTile(
@@ -102,6 +118,7 @@ class _SearchState extends State<Search> {
       ],
     );
   }
+
   void _showPopup(BuildContext context) {
     showDialog(
       context: context,
