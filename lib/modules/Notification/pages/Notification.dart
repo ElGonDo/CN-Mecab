@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,7 +21,7 @@ class _NotificacionState extends State<Notificacion> {
         future: FirebaseFirestore.instance.collection('Notificaciones').get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -29,17 +31,17 @@ class _NotificacionState extends State<Notificacion> {
               itemBuilder: (context, index) {
                 var notificacion = notificaciones[index];
                 if (notificacionesOcultas.contains(notificacion)) {
-                  return SizedBox.shrink(); // Ocultar la notificación
+                  return const SizedBox.shrink(); // Ocultar la notificación
                 }
                 String titulo = notificacion['titulo'];
                 String descripcion = notificacion['descripcion'];
                 return Card(
-                  margin: EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
                   child: ListTile(
                     title: Text('Nueva publicación - $titulo'),
                     subtitle: Text(descripcion),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       onPressed: () {
                         setState(() {
                           notificacionesOcultas.add(notificacion);
