@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, unused_local_variable
+// ignore_for_file: file_names, avoid_function_literals_in_foreach_calls
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +10,8 @@ class Publicacion {
   final String titulo;
   final String uid; // La UID del usuario
   final String pubID; // La ID de cada mapa dentro del documento
-  final bool esResenable; // Cambio de "esReseñable" a "esResenable"
+  final bool esResenable;
+  int likes;
 
   Publicacion({
     required this.categoria,
@@ -19,8 +20,11 @@ class Publicacion {
     required this.titulo,
     required this.uid,
     required this.pubID,
-    required this.esResenable, // Cambio de "esReseñable" a "esResenable"
+    required this.esResenable,
+    required this.likes,
   });
+
+  get usuariosQueDieronLike => null;
 }
 
 void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
@@ -52,18 +56,32 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
         uid: uid, // Asignar la UID del usuario
         pubID: pubID,
         esResenable: esResenable,
+        likes: 0,
       );
       publicacionesList.add(nuevaPublicacion);
     });
   }
+  for (Publicacion publicacion in publicacionesList) {
+    DocumentSnapshot reaccionesDoc = await firestoreInstance
+        .collection('Reacciones')
+        .doc(publicacion.pubID)
+        .get();
+    if (reaccionesDoc.exists) {
+      Map<String, dynamic> reaccionesData =
+          reaccionesDoc.data() as Map<String, dynamic>;
+      if (reaccionesData.containsKey('likes')) {
+        publicacion.likes = reaccionesData['likes'] as int;
+      }
+    }
+  }
   onDataFetched(publicacionesList); // Llama a la función con los datos
-  for (var publicacion in publicacionesList) {
-    // Muestra en la consola cada UID del usuario y la ID de cada mapa
+
+  // Mostrar datos en consola
+  publicacionesList.forEach((publicacion) {
     if (kDebugMode) {
-      //print("UID del usuario: ${publicacion.uid}");
+      print("UID del usuario: ${publicacion.uid}");
+      print("ID del mapa: ${publicacion.pubID}");
+      print("Likes: ${publicacion.likes}");
     }
-    if (kDebugMode) {
-      //print("ID del mapa: ${publicacion.pubID}");
-    }
-  } // Llama a la función con los datos
+  }); // Llama a la función con los datos
 }

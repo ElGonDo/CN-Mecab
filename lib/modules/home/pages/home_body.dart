@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, unnecessary_null_comparison, prefer_const_constructors, use_key_in_widget_constructors, use_build_context_synchronously
+// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
@@ -8,25 +8,25 @@ import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-//import 'package:cnmecab/services/firebase_services.dart';
 import 'package:flutter/material.dart';
-// Importa la clase FilterBody
+
 import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
 
 class BodyPage extends StatefulWidget {
-  const BodyPage({super.key});
+  const BodyPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _PaginahomeState createState() => _PaginahomeState();
+  _BodyPageState createState() => _BodyPageState();
 }
 
-class _PaginahomeState extends State<BodyPage> {
+class _BodyPageState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
   TextEditingController comentarioController = TextEditingController(text: "");
+  int likes = 0;
+
   @override
   void initState() {
     super.initState();
@@ -42,11 +42,10 @@ class _PaginahomeState extends State<BodyPage> {
     });
   }
 
-  void actualizarLikes(String pubId) async {
+  Future<int> actualizarLikes(String pubId) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Obtén la referencia del documento en la colección de Reacciones
       final reaccionesDocumentReference =
           db.collection('Reacciones').doc(pubId);
       final reaccionesDocument = await reaccionesDocumentReference.get();
@@ -57,39 +56,79 @@ class _PaginahomeState extends State<BodyPage> {
         reaccionesData = reaccionesDocument.data() as Map<String, dynamic>;
       }
 
-      // Asegúrate de que reaccionesData y pubId no sean nulos
       if (reaccionesData != null && pubId != null) {
-        // Obtén el número actual de likes o establece 0 si no existe
         int likes = reaccionesData['likes'] ?? 0;
 
-        // Obtén la lista actual de usuarios que dieron like o establece una lista vacía si no existe
         List<dynamic> usuariosQueDieronLikeDynamic =
             reaccionesData['usuarios_que_dieron_like'] ?? [];
 
-        // Convierte la lista de dinámica a una lista de cadenas
         List<String> usuariosQueDieronLike =
             usuariosQueDieronLikeDynamic.cast<String>();
 
-        // Verifica si el usuario ya dio like
-        if (!usuariosQueDieronLike.contains(user.uid)) {
-          // Incrementa el contador de likes
+        if (usuariosQueDieronLike.contains(user.uid)) {
+          // El usuario ya dio like, entonces se quitará
+          likes--;
+          usuariosQueDieronLike.remove(user.uid);
+        } else {
+          // El usuario no había dado like, entonces se agregará
           likes++;
-
-          // Agrega la UID del usuario a la lista
           usuariosQueDieronLike.add(user.uid);
-
-          // Actualiza los datos en la base de datos
-          reaccionesData = {
-            'likes': likes,
-            'usuarios_que_dieron_like': usuariosQueDieronLike,
-          };
-
-          await reaccionesDocumentReference.set(
-              reaccionesData, SetOptions(merge: true));
         }
+
+        reaccionesData = {
+          'likes': likes,
+          'usuarios_que_dieron_like': usuariosQueDieronLike,
+        };
+
+        await reaccionesDocumentReference.set(
+            reaccionesData, SetOptions(merge: true));
+
+        return likes; // Devuelve el nuevo contador de likes
       }
     }
+    return likes; // Devuelve el contador actual de likes si no se realizó ningún cambio
   }
+
+  /*void actualizarRating(String pubId, double rating) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final reseniasDocumentReference =
+          FirebaseFirestore.instance.collection('Reseñas').doc(pubId);
+      final reseniasDocument = await reseniasDocumentReference.get();
+      Map<String, dynamic> reseniasData;
+      if (!reseniasDocument.exists) {
+        reseniasData = {
+          'calificaciones': {
+            user.uid: rating,
+          },
+          'numero_calificaciones': 1,
+        };
+      } else {
+        reseniasData = reseniasDocument.data() as Map<String, dynamic>;
+        reseniasData['calificaciones'][user.uid] = rating;
+        reseniasData['numero_calificaciones'] =
+            (reseniasData['numero_calificaciones'] ?? 0) + 1;
+      }
+
+      double totalRating = 0;
+      reseniasData['calificaciones'].forEach((_, value) {
+        totalRating += value;
+      });
+      double promedioRating =
+          totalRating / (reseniasData['numero_calificaciones'] ?? 1);
+
+      await reseniasDocumentReference.set({
+        'calificaciones': reseniasData['calificaciones'],
+        'numero_calificaciones': reseniasData['numero_calificaciones'],
+        'promedio_rating': promedioRating,
+      });
+    } else {
+      if (kDebugMode) {
+        print('El usuario no está autenticado.');
+      }
+    }
+  }*/
 
   void actualizarRating(String pubId, double rating) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -158,53 +197,26 @@ class _PaginahomeState extends State<BodyPage> {
                   ? publicacionesList.length + publicacionesListR.length
                   : publicacionesListR.length,
               itemBuilder: (context, index) {
-                // Agrega aquí el contenido específico para cada página
                 if (currentPage == 'Para ti') {
                   if (index < publicacionesList.length) {
-                    // Esto es para mostrar el contenido de publicacionesList
-                    String titulo = publicacionesList[index].titulo;
-                    String descripcion = publicacionesList[index].descripcion;
-                    String pubId = publicacionesList[index].pubID;
-                    return buildCardWidget2(
-                        titulo, descripcion, pubId, '$pubId.jpg');
+                    return buildCardWidget(publicacionesList[index]);
                   } else {
-                    // Esto es para mostrar el contenido de publicacionesListR
                     int rIndex = index - publicacionesList.length;
                     String rtitulo = publicacionesListR[rIndex].rtitulo;
                     String rdescripcion =
                         publicacionesListR[rIndex].rdescripcion;
                     String pubId = publicacionesListR[rIndex].rpubID;
-                    return buildCardWidget(
+                    return buildCardWidget2(
                         rtitulo, rdescripcion, pubId, '$pubId.jpg');
                   }
                 } else if (currentPage == 'Películas') {
-                  // Código para la página de películas
-                  String rtitulo = publicacionesListR[index].rtitulo;
-                  String rdescripcion = publicacionesListR[index].rdescripcion;
-                  String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(
-                      rtitulo, rdescripcion, pubId, '$pubId.jpg');
+                  return buildPeliculasWidget(index);
                 } else if (currentPage == 'Series') {
-                  // Código para la página de series
-                  String rtitulo = publicacionesListR[index].rtitulo;
-                  String rdescripcion = publicacionesListR[index].rdescripcion;
-                  String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(
-                      rtitulo, rdescripcion, pubId, '$pubId.jpg');
+                  return buildSeriesWidget(index);
                 } else if (currentPage == 'Libros') {
-                  // Código para la página de libros
-                  String rtitulo = publicacionesListR[index].rtitulo;
-                  String rdescripcion = publicacionesListR[index].rdescripcion;
-                  String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(
-                      rtitulo, rdescripcion, pubId, '$pubId.jpg');
+                  return buildLibrosWidget(index);
                 } else if (currentPage == 'Animes') {
-                  // Código para la página de animes
-                  String rtitulo = publicacionesListR[index].rtitulo;
-                  String rdescripcion = publicacionesListR[index].rdescripcion;
-                  String pubId = publicacionesListR[index].rpubID;
-                  return buildCardWidget(
-                      rtitulo, rdescripcion, pubId, '$pubId.jpg');
+                  return buildAnimesWidget(index);
                 } else {
                   return Container();
                 }
@@ -216,17 +228,75 @@ class _PaginahomeState extends State<BodyPage> {
     );
   }
 
-  Widget buildCardWidget(
-      String title, String description, String pubId, String imageName) {
+  Widget buildPeliculasWidget(int index) {
+    if (index >= publicacionesListR.length) {
+      return Container();
+    }
+    String rtitulo = publicacionesListR[index].rtitulo;
+    String rdescripcion = publicacionesListR[index].rdescripcion;
+    String pubId = publicacionesListR[index].rpubID;
+    // Verificar si es una película
+    if (publicacionesListR[index].rcategoria == 'Películas') {
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildSeriesWidget(int index) {
+    if (index >= publicacionesListR.length) {
+      return Container();
+    }
+    String rtitulo = publicacionesListR[index].rtitulo;
+    String rdescripcion = publicacionesListR[index].rdescripcion;
+    String pubId = publicacionesListR[index].rpubID;
+    // Verificar si es una serie
+    if (publicacionesListR[index].rcategoria == 'Series') {
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildLibrosWidget(int index) {
+    if (index >= publicacionesListR.length) {
+      return Container();
+    }
+    String rtitulo = publicacionesListR[index].rtitulo;
+    String rdescripcion = publicacionesListR[index].rdescripcion;
+    String pubId = publicacionesListR[index].rpubID;
+    // Verificar si es un libro
+    if (publicacionesListR[index].rcategoria == 'Libros') {
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildAnimesWidget(int index) {
+    if (index >= publicacionesListR.length) {
+      return Container();
+    }
+    String rtitulo = publicacionesListR[index].rtitulo;
+    String rdescripcion = publicacionesListR[index].rdescripcion;
+    String pubId = publicacionesListR[index].rpubID;
+    // Verificar si es un anime
+    if (publicacionesListR[index].rcategoria == 'Animes') {
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildCardWidget(Publicacion publicacion) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Agregar el Text con la ID del mapa
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'ID de la publicación: $pubId',
+              'ID de la publicación: ${publicacion.pubID}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 0, 0, 0),
@@ -238,19 +308,18 @@ class _PaginahomeState extends State<BodyPage> {
               radius: 20.0,
               backgroundImage: NetworkImage('https://via.placeholder.com/180'),
             ),
-            title: Text(title),
-            subtitle: Text(description),
+            title: Text(publicacion.titulo),
+            subtitle: Text(publicacion.descripcion),
           ),
           FutureBuilder<String>(
-            future: getImageUrl(imageName),
+            future: getImageUrl('${publicacion.pubID}.jpg'),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la URL de la imagen
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError ||
                   !snapshot.hasData ||
                   snapshot.data!.isEmpty) {
-                return Text(
-                    'Error cargando la imagen'); // Muestra un mensaje si hay un error
+                return const Text('Error cargando la imagen');
               } else {
                 return Image.network(snapshot.data!);
               }
@@ -261,15 +330,19 @@ class _PaginahomeState extends State<BodyPage> {
             children: [
               IconButton(
                 onPressed: () {
-                  // Llama a la función para actualizar el contador de likes
-                  actualizarLikes(pubId);
+                  actualizarLikes(publicacion.pubID).then((value) {
+                    setState(() {
+                      publicacion.likes = value;
+                    });
+                  });
                 },
                 icon: const Icon(Icons.thumb_up),
               ),
+              Text('Likes: ${publicacion.likes}'),
               IconButton(
                 onPressed: () {
-                  mostrarModalComentarios(context, pubId,
-                      comentarioController); // Llama a la función para mostrar el modal de comentarios
+                  mostrarModalComentarios(
+                      context, publicacion.pubID, comentarioController);
                 },
                 icon: const Icon(Icons.comment),
               ),
@@ -286,17 +359,12 @@ class _PaginahomeState extends State<BodyPage> {
   }
 
   Widget buildCardWidget2(
-    String title,
-    String description,
-    String pubId,
-    String imageName,
-  ) {
-    double currentRating = 1.0; // Calificación inicial
+      String title, String description, String pubId, String imageName) {
+    double currentRating = 4.0;
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Agregar el Text con la ID del mapa
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -319,12 +387,11 @@ class _PaginahomeState extends State<BodyPage> {
             future: getImageUrl(imageName),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la URL de la imagen
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError ||
                   !snapshot.hasData ||
                   snapshot.data!.isEmpty) {
-                return Text(
-                    'Error cargando la imagen'); // Muestra un mensaje si hay un error
+                return const Text('Error cargando la imagen');
               } else {
                 return Image.network(snapshot.data!);
               }
@@ -339,16 +406,15 @@ class _PaginahomeState extends State<BodyPage> {
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
-                itemSize: 20.0, // Tamaño del ícono de la calificación
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => Icon(
+                itemSize: 20.0,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => const Icon(
                   Icons.star,
                   color: Color.fromARGB(255, 255, 0, 0),
                 ),
                 onRatingUpdate: (rating) {
                   currentRating = rating;
-                  actualizarRating(pubId,
-                      rating); // Llama a la función para actualizar el rating
+                  actualizarRating(pubId, rating);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Calificación actualizada: $rating')),
@@ -359,21 +425,22 @@ class _PaginahomeState extends State<BodyPage> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // Aquí puedes agregar la lógica para comentarios
+                      mostrarModalComentarios(
+                          context, pubId, comentarioController);
                     },
-                    icon: Icon(Icons.comment),
+                    icon: const Icon(Icons.comment),
                   ),
                   IconButton(
                     onPressed: () {
                       // Aquí puedes agregar la lógica para guardar
                     },
-                    icon: Icon(Icons.bookmark),
+                    icon: const Icon(Icons.bookmark),
                   ),
                   IconButton(
                     onPressed: () {
                       // Aquí puedes agregar la lógica para guardar
                     },
-                    icon: Icon(Icons.share),
+                    icon: const Icon(Icons.share),
                   ),
                 ],
               ),
