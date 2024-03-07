@@ -1,15 +1,15 @@
-// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print
+// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
 
 class BodyPage extends StatefulWidget {
@@ -22,6 +22,7 @@ class BodyPage extends StatefulWidget {
 class _BodyPageState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
+  String URlString = '';
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
   TextEditingController comentarioController = TextEditingController(text: "");
@@ -38,6 +39,11 @@ class _BodyPageState extends State<BodyPage> {
     obtenerDatosR((data) {
       setState(() {
         publicacionesListR = data;
+      });
+    });
+    UserProfileSingleton().initializeUserProfile().then((profile) {
+      setState(() {
+        URlString = profile?.profileImageURL ?? '';
       });
     });
   }
@@ -178,52 +184,74 @@ class _BodyPageState extends State<BodyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 20.0),
-          FilterBody(
-            currentPage: currentPage,
-            onPageChanged: (newPage) {
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            obtenerDatos((data) {
               setState(() {
-                currentPage = newPage;
+                publicacionesList = data;
               });
-            },
-          ),
-          const SizedBox(height: 20.0),
-          Expanded(
-            child: ListView.builder(
-              itemCount: currentPage == 'Para ti'
-                  ? publicacionesList.length + publicacionesListR.length
-                  : publicacionesListR.length,
-              itemBuilder: (context, index) {
-                if (currentPage == 'Para ti') {
-                  if (index < publicacionesList.length) {
-                    return buildCardWidget(publicacionesList[index]);
-                  } else {
-                    int rIndex = index - publicacionesList.length;
-                    String rtitulo = publicacionesListR[rIndex].rtitulo;
-                    String rdescripcion =
-                        publicacionesListR[rIndex].rdescripcion;
-                    String pubId = publicacionesListR[rIndex].rpubID;
-                    return buildCardWidget2(
-                        rtitulo, rdescripcion, pubId, '$pubId.jpg');
-                  }
-                } else if (currentPage == 'Películas') {
-                  return buildPeliculasWidget(index);
-                } else if (currentPage == 'Series') {
-                  return buildSeriesWidget(index);
-                } else if (currentPage == 'Libros') {
-                  return buildLibrosWidget(index);
-                } else if (currentPage == 'Animes') {
-                  return buildAnimesWidget(index);
-                } else {
-                  return Container();
-                }
+            });
+            obtenerDatosR((data) {
+              setState(() {
+                publicacionesListR = data;
+              });
+            });
+            UserProfileSingleton().initializeUserProfile().then((profile) {
+              setState(() {
+                URlString = profile?.profileImageURL ?? '';
+              });
+            });
+          });
+          // Retraso simulado durante 2 segundos antes de completar el refresh
+          await Future<void>.delayed(const Duration(seconds: 2));
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            FilterBody(
+              currentPage: currentPage,
+              onPageChanged: (newPage) {
+                setState(() {
+                  currentPage = newPage;
+                });
               },
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView.builder(
+                itemCount: currentPage == 'Para ti'
+                    ? publicacionesList.length + publicacionesListR.length
+                    : publicacionesListR.length,
+                itemBuilder: (context, index) {
+                  if (currentPage == 'Para ti') {
+                    if (index < publicacionesList.length) {
+                      return buildCardWidget(publicacionesList[index]);
+                    } else {
+                      int rIndex = index - publicacionesList.length;
+                      String rtitulo = publicacionesListR[rIndex].rtitulo;
+                      String rdescripcion =
+                          publicacionesListR[rIndex].rdescripcion;
+                      String pubId = publicacionesListR[rIndex].rpubID;
+                      String ruid = publicacionesListR[rIndex].ruid;
+                      return buildCardWidget2(
+                          rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid);
+                    }
+                  } else if (currentPage == 'Películas') {
+                    return buildPeliculasWidget(index);
+                  } else if (currentPage == 'Series') {
+                    return buildSeriesWidget(index);
+                  } else if (currentPage == 'Libros') {
+                    return buildLibrosWidget(index);
+                  } else if (currentPage == 'Animes') {
+                    return buildAnimesWidget(index);
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -235,9 +263,10 @@ class _BodyPageState extends State<BodyPage> {
     String rtitulo = publicacionesListR[index].rtitulo;
     String rdescripcion = publicacionesListR[index].rdescripcion;
     String pubId = publicacionesListR[index].rpubID;
+    String ruid = publicacionesListR[index].ruid;
     // Verificar si es una película
     if (publicacionesListR[index].rcategoria == 'Películas') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid);
     } else {
       return Container();
     }
@@ -250,9 +279,10 @@ class _BodyPageState extends State<BodyPage> {
     String rtitulo = publicacionesListR[index].rtitulo;
     String rdescripcion = publicacionesListR[index].rdescripcion;
     String pubId = publicacionesListR[index].rpubID;
+    String ruid = publicacionesListR[index].ruid;
     // Verificar si es una serie
     if (publicacionesListR[index].rcategoria == 'Series') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid);
     } else {
       return Container();
     }
@@ -265,9 +295,10 @@ class _BodyPageState extends State<BodyPage> {
     String rtitulo = publicacionesListR[index].rtitulo;
     String rdescripcion = publicacionesListR[index].rdescripcion;
     String pubId = publicacionesListR[index].rpubID;
+    String ruid = publicacionesListR[index].ruid;
     // Verificar si es un libro
     if (publicacionesListR[index].rcategoria == 'Libros') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid);
     } else {
       return Container();
     }
@@ -280,9 +311,10 @@ class _BodyPageState extends State<BodyPage> {
     String rtitulo = publicacionesListR[index].rtitulo;
     String rdescripcion = publicacionesListR[index].rdescripcion;
     String pubId = publicacionesListR[index].rpubID;
+    String ruid = publicacionesListR[index].ruid;
     // Verificar si es un anime
     if (publicacionesListR[index].rcategoria == 'Animes') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg');
+      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid);
     } else {
       return Container();
     }
@@ -293,20 +325,25 @@ class _BodyPageState extends State<BodyPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'ID de la publicación: ${publicacion.pubID}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-          ),
           ListTile(
-            leading: const CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+            leading: FutureBuilder<NetworkImage?>(
+              future: obtenerImagenUrlUsuarios(publicacion.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError || snapshot.data == null) {
+                  return const CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage:
+                        NetworkImage('https://via.placeholder.com/180'),
+                  );
+                } else {
+                  return CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: snapshot.data!,
+                  );
+                }
+              },
             ),
             title: Text(publicacion.titulo),
             subtitle: Text(publicacion.descripcion),
@@ -341,8 +378,8 @@ class _BodyPageState extends State<BodyPage> {
               Text('Likes: ${publicacion.likes}'),
               IconButton(
                 onPressed: () {
-                  mostrarModalComentarios(
-                      context, publicacion.pubID, comentarioController);
+                  mostrarModalComentarios(context, publicacion.pubID,
+                      comentarioController, URlString);
                 },
                 icon: const Icon(Icons.comment),
               ),
@@ -358,27 +395,32 @@ class _BodyPageState extends State<BodyPage> {
     );
   }
 
-  Widget buildCardWidget2(
-      String title, String description, String pubId, String imageName) {
+  Widget buildCardWidget2(String title, String description, String pubId,
+      String imageName, String ruid) {
     double currentRating = 4.0;
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'ID de la publicación: $pubId',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-          ),
           ListTile(
-            leading: const CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage('https://via.placeholder.com/180'),
+            leading: FutureBuilder<NetworkImage?>(
+              future: obtenerImagenUrlUsuarios(ruid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError || snapshot.data == null) {
+                  return const CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage:
+                        NetworkImage('https://via.placeholder.com/180'),
+                  );
+                } else {
+                  return CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: snapshot.data!,
+                  );
+                }
+              },
             ),
             title: Text(title),
             subtitle: Text(description),
@@ -426,7 +468,7 @@ class _BodyPageState extends State<BodyPage> {
                   IconButton(
                     onPressed: () {
                       mostrarModalComentarios(
-                          context, pubId, comentarioController);
+                          context, pubId, comentarioController, URlString);
                     },
                     icon: const Icon(Icons.comment),
                   ),
@@ -449,5 +491,38 @@ class _BodyPageState extends State<BodyPage> {
         ],
       ),
     );
+  }
+}
+
+Future<NetworkImage?> obtenerImagenUrlUsuarios(String uid) async {
+  try {
+    // Obtener el documento del usuario
+    DocumentSnapshot userDocument =
+        await FirebaseFirestore.instance.collection('Usuarios').doc(uid).get();
+
+    // Verificar si el documento existe y si contiene datos
+    if (userDocument.exists && userDocument.data() != null) {
+      // Obtener el nombre del usuario
+      Map<String, dynamic> userData =
+          userDocument.data() as Map<String, dynamic>;
+      String? profileImageName = await UserProfileSingleton()
+          .getProfileImageName(uid, userData['Rol']);
+      String? imageURL;
+      if (profileImageName != null) {
+        imageURL = await UserProfileSingleton()
+            .getImageURLByName(profileImageName, userData['Rol']);
+      }
+
+      return NetworkImage(imageURL!);
+    } else {
+      // Si el documento no existe o no contiene datos, retornar null
+      return null;
+    }
+  } catch (e) {
+    // Manejar cualquier error y retornar null
+    if (kDebugMode) {
+      print('Error al obtener el nombre del usuario: $e');
+    }
+    return null;
   }
 }

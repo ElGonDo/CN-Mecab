@@ -1,75 +1,41 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, use_build_context_synchronously, avoid_function_literals_in_foreach_calls
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, use_build_context_synchronously, avoid_function_literals_in_foreach_calls, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 void mostrarModalComentarios(BuildContext context, String pubId,
-    TextEditingController comentarioController) {
+    TextEditingController comentarioController, String urlString) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
       return ComentariosModal(
-          pubId: pubId, comentarioController: comentarioController);
+        pubId: pubId,
+        comentarioController: comentarioController,
+        urlString: urlString,
+      );
     },
-  );  
+  );
 }
 
-Future<void> agregarComentario(String pubId, String comentario) async {
-  final user = FirebaseAuth.instance.currentUser;
+class UserData {
+  final String? nombre;
+  final String? imageURL;
 
-  if (user != null) {
-    final comentariosDocumentReference =
-        FirebaseFirestore.instance.collection('Comentarios').doc(pubId);
-    final comentariosDocument = await comentariosDocumentReference.get();
-
-    if (!comentariosDocument.exists) {
-      await comentariosDocumentReference.set({
-        'comentarios': {
-          user.uid: [comentario]
-        }
-      });
-    } else {
-      comentariosDocumentReference.update({
-        'comentarios.${user.uid}': FieldValue.arrayUnion([comentario])
-      });
-    }
-  }
-}
-
-Future<String?> obtenerNombreUsuario(String uid) async {
-  try {
-    // Obtener el documento del usuario
-    DocumentSnapshot userDocument =
-        await FirebaseFirestore.instance.collection('Usuarios').doc(uid).get();
-
-    // Verificar si el documento existe y si contiene datos
-    if (userDocument.exists && userDocument.data() != null) {
-      // Obtener el nombre del usuario
-      String? nombre =
-          (userDocument.data() as Map<String, dynamic>?)?['Nombre'];
-
-      return nombre;
-    } else {
-      // Si el documento no existe o no contiene datos, retornar null
-      return null;
-    }
-  } catch (e) {
-    // Manejar cualquier error y retornar null
-    if (kDebugMode) {
-      print('Error al obtener el nombre del usuario: $e');
-    }
-    return null;
-  }
+  UserData({this.nombre, this.imageURL});
 }
 
 class ComentariosModal extends StatelessWidget {
   final String pubId;
+  final String urlString;
   final TextEditingController comentarioController;
 
   const ComentariosModal(
-      {required this.pubId, required this.comentarioController});
+      {required this.pubId,
+      required this.comentarioController,
+      required this.urlString});
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +90,7 @@ class ComentariosModal extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24.0,
-                  backgroundImage:
-                      NetworkImage('https://via.placeholder.com/180'),
+                  backgroundImage: NetworkImage(urlString),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -161,70 +126,73 @@ class ComentariosModal extends StatelessWidget {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return FutureBuilder<String?>(
+                      return FutureBuilder<UserData?>(
                         future:
                             obtenerNombreUsuario(snapshot.data![index]['uid']!),
-                        builder: (context, nombreSnapshot) {
-                          if (nombreSnapshot.connectionState ==
+                        builder: (context, userDataSnapshot) {
+                          if (userDataSnapshot.connectionState ==
                               ConnectionState.waiting) {
                             return CircularProgressIndicator();
-                          } else if (nombreSnapshot.hasError) {
-                            return Text('Error: ${nombreSnapshot.error}');
+                          } else if (userDataSnapshot.hasError) {
+                            return Text('Error: ${userDataSnapshot.error}');
                           } else {
-                            return ListTile(
-                              leading: CircleAvatar(
-                                radius: 20.0,
-                                backgroundImage: NetworkImage(
-                                    'https://via.placeholder.com/180'),
-                              ),
-                              title: Text(nombreSnapshot.data ??
-                                  'Nombre del Usuario'), // Mostrar el nombre del usuario
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(snapshot.data![index]['comentario']!),
-                                  if (snapshot.data![index]['replyTo'] !=
-                                      null) // Verificar si es una respuesta
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Text(
-                                        'Respuesta a: ${snapshot.data![index]['replyTo']}',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey,
+                            final UserData? userData = userDataSnapshot.data;
+                            if (userData != null) {
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  radius: 20.0,
+                                  backgroundImage:
+                                      NetworkImage(userData.imageURL ?? ''),
+                                ),
+                                title: Text(
+                                    userData.nombre ?? 'Nombre del Usuario'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(snapshot.data![index]['comentario']!),
+                                    if (snapshot.data![index]['replyTo'] !=
+                                        null)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          'Respuesta a: ${snapshot.data![index]['replyTo']}',
+                                          style: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                       ),
+                                  ],
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        String nombreUsuario =
+                                            userData.nombre ?? 'Usuario';
+                                        String textoRespuesta =
+                                            'respuesta a: @$nombreUsuario ';
+                                        comentarioController.text =
+                                            textoRespuesta +
+                                                comentarioController.text;
+                                        comentarioController.selection =
+                                            TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset: comentarioController
+                                                  .text.length),
+                                        );
+                                      },
+                                      icon: Icon(Icons.comment),
+                                      color: Color.fromARGB(255, 243, 33, 33),
                                     ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      // Obtener el nombre del usuario al que se está respondiendo
-                                      String? nombreUsuario =
-                                          nombreSnapshot.data ?? 'Usuario';
-                                      // Construir el texto de respuesta con el nombre
-                                      String textoRespuesta =
-                                          'respuesta a: @$nombreUsuario ';
-                                      // Añadir el texto de respuesta al principio del cuadro de texto
-                                      comentarioController.text =
-                                          textoRespuesta +
-                                              comentarioController.text;
-                                      // Mover el cursor al final del texto
-                                      comentarioController.selection =
-                                          TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: comentarioController
-                                                      .text.length));
-                                    },
-                                    icon: Icon(Icons.comment),
-                                    color: Color.fromARGB(255, 243, 33, 33),
-                                  ),
-                                ],
-                              ),
-                            );
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Text('Usuario no encontrado');
+                            }
                           }
                         },
                       );
@@ -275,41 +243,58 @@ Future<List<Map<String, String>>> obtenerComentarios(String pubId) async {
   return comentarios;
 }
 
-Widget buildComentariosListWidget(List<Map<String, String>> comentarios) {
-  return ListView.builder(
-    shrinkWrap: true,
-    itemCount: comentarios.length,
-    itemBuilder: (context, index) {
-      String comentario = comentarios[index]['comentario']!;
-      String nombreUsuario =
-          comentarios[index]['nombre'] ?? 'Nombre del Usuario';
-      return ListTile(
-        leading: CircleAvatar(
-          radius: 20.0,
-          backgroundImage: NetworkImage('https://via.placeholder.com/180'),
-        ),
-        title: Text(nombreUsuario),
-        subtitle: Text(comentario),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              onPressed: () {
-                // Acción al presionar el botón de responder comentario
-              },
-              icon: Icon(Icons.comment),
-              color: Color.fromARGB(255, 243, 33, 33),
-            ),
-            IconButton(
-              onPressed: () {
-                // Acción al presionar el botón de reaccionar comentario
-              },
-              icon: Icon(Icons.thumb_up),
-              color: Color.fromARGB(255, 243, 33, 33),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+Future<void> agregarComentario(String pubId, String comentario) async {
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    final comentariosDocumentReference =
+        FirebaseFirestore.instance.collection('Comentarios').doc(pubId);
+    final comentariosDocument = await comentariosDocumentReference.get();
+
+    if (!comentariosDocument.exists) {
+      await comentariosDocumentReference.set({
+        'comentarios': {
+          user.uid: [comentario]
+        }
+      });
+    } else {
+      comentariosDocumentReference.update({
+        'comentarios.${user.uid}': FieldValue.arrayUnion([comentario])
+      });
+    }
+  }
+}
+
+Future<UserData?> obtenerNombreUsuario(String uid) async {
+  try {
+    // Obtener el documento del usuario
+    DocumentSnapshot userDocument =
+        await FirebaseFirestore.instance.collection('Usuarios').doc(uid).get();
+
+    // Verificar si el documento existe y si contiene datos
+    if (userDocument.exists && userDocument.data() != null) {
+      // Obtener el nombre del usuario
+      Map<String, dynamic> userData =
+          userDocument.data() as Map<String, dynamic>;
+      String? nombre = userData['Nombre'];
+      String? profileImageName = await UserProfileSingleton()
+          .getProfileImageName(uid, userData['Rol']);
+      String? imageURL;
+      if (profileImageName != null) {
+        imageURL = await UserProfileSingleton()
+            .getImageURLByName(profileImageName, userData['Rol']);
+      }
+
+      return UserData(nombre: nombre, imageURL: imageURL);
+    } else {
+      // Si el documento no existe o no contiene datos, retornar null
+      return null;
+    }
+  } catch (e) {
+    // Manejar cualquier error y retornar null
+    if (kDebugMode) {
+      print('Error al obtener el nombre del usuario: $e');
+    }
+    return null;
+  }
 }

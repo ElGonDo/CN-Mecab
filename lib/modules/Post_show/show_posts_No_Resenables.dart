@@ -79,9 +79,9 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
   // Mostrar datos en consola
   publicacionesList.forEach((publicacion) {
     if (kDebugMode) {
-      print("UID del usuario: ${publicacion.uid}");
-      print("ID del mapa: ${publicacion.pubID}");
-      print("Likes: ${publicacion.likes}");
+      //print("UID del usuario: ${publicacion.uid}");
+      //print("ID del mapa: ${publicacion.pubID}");
+      //print("Likes: ${publicacion.likes}");
     }
   }); // Llama a la función con los datos
 }
