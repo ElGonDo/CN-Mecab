@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:cnmecab/modules/home/pages/comments.dart';
 import 'package:cnmecab/modules/home/pages/filter_body.dart';
+import 'package:cnmecab/modules/profile/pages/filterProfileServicesSaved.dart';
+import 'package:cnmecab/modules/profile/pages/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 import 'package:cnmecab/services/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +24,7 @@ class BodyPage extends StatefulWidget {
 class _BodyPageState extends State<BodyPage> {
   String currentPage = 'Para ti';
   bool isDarkModeEnabled = false;
+  User? user = FirebaseAuth.instance.currentUser;
   String URlString = '';
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
@@ -385,7 +388,10 @@ class _BodyPageState extends State<BodyPage> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  compartirPublicacion(
+                      context, publicacion.uid, publicacion.pubID, user!.uid);
+                },
                 icon: const Icon(Icons.share),
               ),
             ],
@@ -474,13 +480,13 @@ class _BodyPageState extends State<BodyPage> {
                   ),
                   IconButton(
                     onPressed: () {
-                      // Aquí puedes agregar la lógica para guardar
+                      guardarPublicacion(context, ruid, pubId, user!.uid);
                     },
                     icon: const Icon(Icons.bookmark),
                   ),
                   IconButton(
                     onPressed: () {
-                      // Aquí puedes agregar la lógica para guardar
+                      compartirPublicacion(context, ruid, pubId, user!.uid);
                     },
                     icon: const Icon(Icons.share),
                   ),
