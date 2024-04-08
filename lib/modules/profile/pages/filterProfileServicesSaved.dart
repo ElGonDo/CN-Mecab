@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:flutter/material.dart';
 
 void guardarPublicacion(BuildContext context, String uidCreador,
@@ -51,4 +52,29 @@ void guardarPublicacion(BuildContext context, String uidCreador,
       ));
     }
   });
+}
+
+Future<List<PublicacionR>> obtenerPublicacionesGuardadas(
+    String uidUsuarioActual, List<PublicacionR> publicacionesR) async {
+  List<PublicacionR> newPublicacionesGuardadasR = [];
+
+  DocumentSnapshot document = await FirebaseFirestore.instance
+      .collection("Publicaciones_Guardadas")
+      .doc(uidUsuarioActual)
+      .get();
+  if (document.exists) {
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+    data.forEach((uidCreador, idsPublicaciones) {
+      List<String> ids = List<String>.from(idsPublicaciones);
+      for (var idPublicacion in ids) {
+        for (PublicacionR publicacionR in publicacionesR) {
+          if (publicacionR.ruid == uidCreador &&
+              publicacionR.rpubID == idPublicacion) {
+            newPublicacionesGuardadasR.add(publicacionR);
+          }
+        }
+      }
+    });
+  }
+  return newPublicacionesGuardadasR;
 }

@@ -6,9 +6,9 @@ class FilterProfile extends StatelessWidget {
   final Function(String) onPageChanged;
   final List<String> visitorSections = ['Mis Guardados', 'Mis Compartidos'];
   final List<String> creatorSections = [
-    'Mis Publicaciones',
     'Mis Guardados',
-    'Mis Compartidos'
+    'Mis Compartidos',
+    'Mis Publicaciones',
   ];
 
   FilterProfile({

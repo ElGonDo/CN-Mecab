@@ -1,6 +1,9 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
 import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
 import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
+import 'package:cnmecab/modules/home/pages/buildersCards.dart';
+import 'package:cnmecab/modules/profile/pages/filterProfileServicesMyPublications.dart';
+import 'package:cnmecab/modules/profile/pages/filterProfileServicesSaved.dart';
 import 'package:cnmecab/modules/profile/pages/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/profile/pages/filterprofile.dart';
 import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
@@ -19,14 +22,17 @@ class ProfilePageState extends State<ProfilePage>
   UserProfile? userProfile;
   late int tabLength;
   late String URlString = "";
+  TextEditingController comentarioController = TextEditingController(text: "");
   List<Publicacion> newPublicacionesNR = [];
   List<PublicacionR> newPublicacionesR = [];
+  List<PublicacionR> newPublicacionesGuardadasR = [];
   List<Publicacion> publicacionesList = [];
   List<PublicacionR> publicacionesListR = [];
+  List<Publicacion> newMisPublicacionesNR = [];
+  List<PublicacionR> newMisPublicacionesR = [];
   User? user = FirebaseAuth.instance.currentUser;
-  late String currentPage = userProfile?.role == 'Visitante'
-      ? 'Mis Guardados'
-      : 'Mis Publicaciones'; // Variable para controlar la página actual
+  late String currentPage =
+      'Mis Guardados'; // Variable para controlar la página actual
 
   @override
   void initState() {
@@ -40,7 +46,6 @@ class ProfilePageState extends State<ProfilePage>
     Future.wait([obtenerDatos(), obtenerDatosR()]).then((List<dynamic> values) {
       publicacionesList = values[0] as List<Publicacion>;
       publicacionesListR = values[1] as List<PublicacionR>;
-
       obtenerPublicacionesCompartidas(
               user!.uid, publicacionesList, publicacionesListR)
           .then((Map<String, List<dynamic>> result) {
@@ -49,6 +54,29 @@ class ProfilePageState extends State<ProfilePage>
           newPublicacionesR = result["publicacionesR"] as List<PublicacionR>;
         });
       });
+      obtenerMisPublicaciones(user!.uid, publicacionesList, publicacionesListR)
+          .then((Map<String, List<dynamic>> result) {
+        setState(() {
+          newMisPublicacionesNR =
+              result["mispublicacionesNR"] as List<Publicacion>;
+          newMisPublicacionesR =
+              result["mispublicacionesR"] as List<PublicacionR>;
+          print('Contenido de Mis Publicaciones: $newMisPublicacionesR');
+          print('Contenido de Mis Publicaciones no : $newMisPublicacionesNR');
+        });
+      });
+      obtenerPublicacionesGuardadas(user!.uid, publicacionesListR)
+          .then((value) {
+        setState(() {
+          newPublicacionesGuardadasR = value;
+        });
+      });
+    });
+  }
+
+  void actualizarLikesEnPerfil(int nuevosLikes, Publicacion publicacion) {
+    setState(() {
+      publicacion.likes = nuevosLikes;
     });
   }
 
@@ -143,18 +171,66 @@ class ProfilePageState extends State<ProfilePage>
                   if (currentPage == 'Mis Compartidos')
                     Column(
                       children: [
-                        const Text('Publicaciones Reseñables Compartidas:'),
                         for (var publicacionR in newPublicacionesR)
-                          ListTile(
-                            title: Text(publicacionR.ruid),
-                            subtitle: Text(publicacionR.rpubID),
-                          ),
-                        const Text('Publicaciones No Reseñables Compartidas:'),
+                          buildCardWidget2(
+                              publicacionR.rtitulo,
+                              publicacionR.rdescripcion,
+                              publicacionR.rpubID,
+                              '${publicacionR.rpubID}.jpg',
+                              publicacionR.ruid,
+                              context,
+                              user!.uid,
+                              comentarioController,
+                              URlString),
                         for (var publicacionNR in newPublicacionesNR)
-                          ListTile(
-                            title: Text(publicacionNR.uid),
-                            subtitle: Text(publicacionNR.pubID),
-                          ),
+                          buildCardWidget(
+                              publicacionNR,
+                              context,
+                              user!.uid,
+                              comentarioController,
+                              URlString,
+                              actualizarLikesEnPerfil),
+                      ],
+                    ),
+                  if (currentPage == 'Mis Publicaciones')
+                    Column(
+                      children: [
+                        for (var publicacionR in newMisPublicacionesR)
+                          buildCardWidget2(
+                              publicacionR.rtitulo,
+                              publicacionR.rdescripcion,
+                              publicacionR.rpubID,
+                              '${publicacionR.rpubID}.jpg',
+                              publicacionR.ruid,
+                              context,
+                              user!.uid,
+                              comentarioController,
+                              URlString),
+                        for (var publicacionNR in newMisPublicacionesNR)
+                          buildCardWidget(
+                              publicacionNR,
+                              context,
+                              user!.uid,
+                              comentarioController,
+                              URlString,
+                              actualizarLikesEnPerfil),
+                      ],
+                    ),
+                  if (currentPage == 'Mis Guardados')
+                    Column(
+                      children: [
+                        for (var publicacionGuardada
+                            in newPublicacionesGuardadasR)
+                          buildCardWidget2(
+                              publicacionGuardada.rtitulo,
+                              publicacionGuardada.rdescripcion,
+                              publicacionGuardada.rpubID,
+                              '${publicacionGuardada.rpubID}.jpg',
+                              publicacionGuardada.ruid,
+                              context,
+                              user!.uid,
+                              comentarioController,
+                              URlString),
                       ],
                     ),
                 ],

@@ -62,7 +62,7 @@ Future<Map<String, List<dynamic>>> obtenerPublicacionesCompartidas(
   List<Publicacion> newPublicacionesNR = [];
   List<PublicacionR> newPublicacionesR = [];
 
-  // Buscar en la colección "Publicaciones_Guardadas" el documento del usuario actual
+  // Buscar en la colección "Publicaciones_Compartidas" el documento del usuario actual
   DocumentSnapshot document = await FirebaseFirestore.instance
       .collection("Publicaciones_Compartidas")
       .doc(uidUsuarioActual)
