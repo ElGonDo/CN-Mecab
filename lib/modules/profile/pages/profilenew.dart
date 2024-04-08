@@ -1,7 +1,10 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors
-
+// ignore_for_file: file_names, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
+import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
+import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
+import 'package:cnmecab/modules/profile/pages/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/profile/pages/filterprofile.dart';
 import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -16,7 +19,14 @@ class ProfilePageState extends State<ProfilePage>
   UserProfile? userProfile;
   late int tabLength;
   late String URlString = "";
-  late String currentPage = ''; // Variable para controlar la página actual
+  List<Publicacion> newPublicacionesNR = [];
+  List<PublicacionR> newPublicacionesR = [];
+  List<Publicacion> publicacionesList = [];
+  List<PublicacionR> publicacionesListR = [];
+  User? user = FirebaseAuth.instance.currentUser;
+  late String currentPage = userProfile?.role == 'Visitante'
+      ? 'Mis Guardados'
+      : 'Mis Publicaciones'; // Variable para controlar la página actual
 
   @override
   void initState() {
@@ -25,6 +35,19 @@ class ProfilePageState extends State<ProfilePage>
       setState(() {
         userProfile = profile;
         URlString = userProfile?.profileImageURL ?? '';
+      });
+    });
+    Future.wait([obtenerDatos(), obtenerDatosR()]).then((List<dynamic> values) {
+      publicacionesList = values[0] as List<Publicacion>;
+      publicacionesListR = values[1] as List<PublicacionR>;
+
+      obtenerPublicacionesCompartidas(
+              user!.uid, publicacionesList, publicacionesListR)
+          .then((Map<String, List<dynamic>> result) {
+        setState(() {
+          newPublicacionesNR = result["publicacionesNR"] as List<Publicacion>;
+          newPublicacionesR = result["publicacionesR"] as List<PublicacionR>;
+        });
       });
     });
   }
@@ -117,6 +140,23 @@ class ProfilePageState extends State<ProfilePage>
                       });
                     },
                   ),
+                  if (currentPage == 'Mis Compartidos')
+                    Column(
+                      children: [
+                        const Text('Publicaciones Reseñables Compartidas:'),
+                        for (var publicacionR in newPublicacionesR)
+                          ListTile(
+                            title: Text(publicacionR.ruid),
+                            subtitle: Text(publicacionR.rpubID),
+                          ),
+                        const Text('Publicaciones No Reseñables Compartidas:'),
+                        for (var publicacionNR in newPublicacionesNR)
+                          ListTile(
+                            title: Text(publicacionNR.uid),
+                            subtitle: Text(publicacionNR.pubID),
+                          ),
+                      ],
+                    ),
                 ],
               ),
             ),

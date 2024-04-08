@@ -15,7 +15,7 @@ import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageCreators.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageVisitor.dart';
-import 'package:cnmecab/modules/profile/pages/profilenew.dart';
+import 'package:cnmecab/modules/profile/pages/profileNew.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
 import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';

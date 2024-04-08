@@ -21,7 +21,7 @@ class PublicacionR {
   });
 }
 
-void obtenerDatosR(Function(List<PublicacionR>) onDataFetched) async {
+Future<List<PublicacionR>> obtenerDatosR() async {
   final firestoreInstance = FirebaseFirestore.instance;
   List<PublicacionR> publicacionesListR = [];
 
@@ -29,7 +29,7 @@ void obtenerDatosR(Function(List<PublicacionR>) onDataFetched) async {
       await firestoreInstance.collection('Publicaciones_Reseñables').get();
 
   for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-    String uid = doc.id; // Obtener la UID del usuario
+    String uid = doc.id;
     Map<String, dynamic> publicacionesR = doc.data() as Map<String, dynamic>;
 
     publicacionesR.forEach((pubID, value) {
@@ -40,20 +40,17 @@ void obtenerDatosR(Function(List<PublicacionR>) onDataFetched) async {
       String rgenero = publicacionR['Genero'];
       String rtitulo = publicacionR['Titulo'];
 
-      // Crear una instancia de Publicacion y agregarla a la lista
       PublicacionR nuevaPublicacionR = PublicacionR(
         rcategoria: rcategoria,
         rdescripcion: rdescripcion,
         rgenero: rgenero,
         rtitulo: rtitulo,
-        ruid: uid, // Asignar la UID del usuario
-        rpubID: pubID, // Asignar la ID de cada mapa
+        ruid: uid,
+        rpubID: pubID,
       );
       publicacionesListR.add(nuevaPublicacionR);
     });
-  }
-
-  onDataFetched(publicacionesListR); // Llama a la función con los datos
+  } // Llama a la función con los datos
   publicacionesListR.forEach((publicacion) {
     // Muestra en la consola cada UID del usuario y la ID de cada mapa
     if (kDebugMode) {
@@ -63,4 +60,5 @@ void obtenerDatosR(Function(List<PublicacionR>) onDataFetched) async {
       //print("ID del mapa: ${publicacion.rpubID}");
     }
   });
+  return publicacionesListR;
 }

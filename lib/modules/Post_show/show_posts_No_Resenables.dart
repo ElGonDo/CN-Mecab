@@ -27,7 +27,7 @@ class Publicacion {
   get usuariosQueDieronLike => null;
 }
 
-void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
+Future<List<Publicacion>> obtenerDatos() async {
   final firestoreInstance = FirebaseFirestore.instance;
   List<Publicacion> publicacionesList = [];
 
@@ -47,13 +47,12 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
       String titulo = publicacion['Titulo'];
       bool esResenable = publicacion['Reseñable'] ?? false;
 
-      // Crear una instancia de Publicacion y agregarla a la lista
       Publicacion nuevaPublicacion = Publicacion(
         categoria: categoria,
         descripcion: descripcion,
         genero: genero,
         titulo: titulo,
-        uid: uid, // Asignar la UID del usuario
+        uid: uid,
         pubID: pubID,
         esResenable: esResenable,
         likes: 0,
@@ -74,8 +73,6 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
       }
     }
   }
-  onDataFetched(publicacionesList); // Llama a la función con los datos
-
   // Mostrar datos en consola
   publicacionesList.forEach((publicacion) {
     if (kDebugMode) {
@@ -84,4 +81,5 @@ void obtenerDatos(Function(List<Publicacion>) onDataFetched) async {
       //print("Likes: ${publicacion.likes}");
     }
   }); // Llama a la función con los datos
+  return publicacionesList; // Llama a la función con los datos
 }

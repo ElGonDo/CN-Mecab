@@ -34,12 +34,13 @@ class _BodyPageState extends State<BodyPage> {
   @override
   void initState() {
     super.initState();
-    obtenerDatos((data) {
+    obtenerDatos().then((data) {
       setState(() {
         publicacionesList = data;
       });
     });
-    obtenerDatosR((data) {
+
+    obtenerDatosR().then((data) {
       setState(() {
         publicacionesListR = data;
       });
@@ -190,12 +191,13 @@ class _BodyPageState extends State<BodyPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
-            obtenerDatos((data) {
+            obtenerDatos().then((data) {
               setState(() {
                 publicacionesList = data;
               });
             });
-            obtenerDatosR((data) {
+
+            obtenerDatosR().then((data) {
               setState(() {
                 publicacionesListR = data;
               });
