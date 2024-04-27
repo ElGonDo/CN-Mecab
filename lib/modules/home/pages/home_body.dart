@@ -1,14 +1,14 @@
 // ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
-import 'package:cnmecab/modules/home/pages/buildersCards.dart';
-import 'package:cnmecab/modules/home/pages/filter_body.dart';
-import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
+import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
+import 'package:cnmecab/modules/home/components/buildersCards.dart';
+import 'package:cnmecab/modules/home/components/filter_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
 
 class BodyPage extends StatefulWidget {
   const BodyPage({Key? key}) : super(key: key);

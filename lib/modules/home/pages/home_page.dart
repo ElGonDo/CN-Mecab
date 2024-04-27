@@ -1,16 +1,18 @@
 // ignore_for_file: unnecessary_import, implementation_imports, prefer_const_constructors, sort_child_properties_last, sized_box_for_whitespace, file_names, use_build_context_synchronously, prefer_const_literals_to_create_immutables, avoid_print, prefer_typing_uninitialized_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cnmecab/modules/Notification/pages/Notification.dart';
-import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
+import 'package:cnmecab/modules/auth/services/authChangeEmail.dart';
+import 'package:cnmecab/modules/auth/services/authRequest.dart';
+import 'package:cnmecab/modules/notifications/pages/notifications.dart';
 import 'package:cnmecab/modules/home/pages/home_body.dart';
+import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter/src/material/icons.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class Paginahome extends StatefulWidget {
   const Paginahome({super.key});
@@ -21,158 +23,6 @@ class Paginahome extends StatefulWidget {
 }
 
 class _PaginahomeState extends State<Paginahome> {
-  Future<bool> solicitarAutenticacion() async {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    try {
-      // Mostrar el diálogo emergente para ingresar el correo y contraseña
-      var result = await showPlatformDialog(
-        context: context,
-        builder: (_) => BasicDialogAlert(
-          title: Text('Ingrese sus credenciales'),
-          content: Column(
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Correo electrónico'),
-                keyboardType: TextInputType.emailAddress,
-                controller: emailController,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    emailController.text = newValue ?? '';
-                  });
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Contraseña'),
-                obscureText: true,
-                controller: passwordController,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    passwordController.text = newValue ?? '';
-                  });
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            BasicDialogAction(
-              title: Text('Aceptar'),
-              onPressed: () {
-                // Cerrar el diálogo emergente y continuar con la autenticación
-                Navigator.pop(context, true);
-              },
-            ),
-            BasicDialogAction(
-              title: Text('Cancelar'),
-              onPressed: () {
-                // Cerrar el diálogo emergente sin realizar la autenticación
-                Navigator.pop(context, false);
-              },
-            ),
-          ],
-        ),
-      );
-
-      // Verificar si el usuario aceptó el diálogo emergente
-      if (result == true) {
-        // Obtener los datos ingresados por el usuario
-        String email = emailController.text;
-        String password = passwordController.text;
-
-        // Autenticar al usuario nuevamente
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        // La autenticación fue exitosa
-        return true;
-      } else {
-        // El usuario canceló el diálogo emergente
-        return false;
-      }
-    } catch (error) {
-      // Ocurrió un error durante la autenticación
-      print('Error de autenticación: $error');
-      // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
-
-      return false;
-    }
-  }
-
-  Future<bool> cambiarCorreo(BuildContext context) async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final TextEditingController emailController = TextEditingController();
-    final user = auth.currentUser!;
-    String currentEmail =
-        user.email ?? ''; // Obtener el correo actual del usuario
-    try {
-      // Mostrar el diálogo emergente para ingresar el correo y contraseña
-      var result = await showPlatformDialog(
-        context: context,
-        builder: (_) => BasicDialogAlert(
-          title: Text('Cambiar de correo: '),
-          content: Column(
-            children: [
-              Text('Correo actual: $currentEmail'), // Mostrar el correo actual
-              TextField(
-                decoration:
-                    InputDecoration(labelText: 'Nuevo correo electrónico'),
-                keyboardType: TextInputType.emailAddress,
-                controller: emailController,
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            BasicDialogAction(
-              title: Text('Aceptar'),
-              onPressed: () {
-                // Cerrar el diálogo emergente y continuar con el cambio de correo
-                Navigator.pop(context, true);
-              },
-            ),
-            BasicDialogAction(
-              title: Text('Cancelar'),
-              onPressed: () {
-                // Cerrar el diálogo emergente sin realizar el cambio de correo
-                Navigator.pop(context, false);
-              },
-            ),
-          ],
-        ),
-      );
-
-      // Verificar si el usuario aceptó el diálogo emergente
-      if (result == true) {
-        // Obtener los datos ingresados por el usuario
-        String newEmail = emailController.text;
-        try {
-          await user.updateEmail(newEmail);
-          Fluttertoast.showToast(msg: 'Correo actualizado exitosamente');
-          await FirebaseAuth.instance.signOut();
-          Navigator.of(context).pushReplacementNamed(
-              '/welcome'); // Cerrar sesión automáticamente después de cambiar el correo
-          return true;
-        } catch (error) {
-          print('Error al actualizar el correo electrónico: $error');
-          Fluttertoast.showToast(
-              msg: 'Error al actualizar el correo electrónico');
-        }
-        // El Cambio de correo fue exitoso
-        return true;
-      } else {
-        // El usuario canceló el diálogo emergente
-        return false;
-      }
-    } catch (error) {
-      // Ocurrió un error durante el cambio de correo
-      print('Error de autenticación: $error');
-      // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
-
-      return false;
-    }
-  }
-
   Future<bool> cambiaContrasena(BuildContext context) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final TextEditingController passwordController = TextEditingController();
@@ -371,12 +221,6 @@ class _PaginahomeState extends State<Paginahome> {
               },
             ),
             ListTile(
-              title: Text('Guardados', style: TextStyle(color: Colors.black)),
-              onTap: () {
-                Navigator.of(context).pushNamed('/saved');
-              },
-            ),
-            ListTile(
               title:
                   Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
               onTap: () async {
@@ -389,7 +233,7 @@ class _PaginahomeState extends State<Paginahome> {
                   Text('Borrar Cuenta', style: TextStyle(color: Colors.black)),
               onTap: () async {
                 // Invocar al método para solicitar autenticación nuevamente
-                bool success = await solicitarAutenticacion();
+                bool success = await solicitarAutenticacion(context);
 
                 if (success) {
                   final currentUser = FirebaseAuth.instance.currentUser;

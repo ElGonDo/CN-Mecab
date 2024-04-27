@@ -1,12 +1,12 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
-import 'package:cnmecab/modules/Post_show/show_post_Resenables.dart';
-import 'package:cnmecab/modules/Post_show/show_posts_No_Resenables.dart';
-import 'package:cnmecab/modules/home/pages/buildersCards.dart';
-import 'package:cnmecab/modules/profile/pages/filterProfileServicesMyPublications.dart';
-import 'package:cnmecab/modules/profile/pages/filterProfileServicesSaved.dart';
-import 'package:cnmecab/modules/profile/pages/filterProfileServicesShared.dart';
-import 'package:cnmecab/modules/profile/pages/filterprofile.dart';
-import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
+import 'package:cnmecab/modules/profile/filterProfileServicesMyPublications.dart';
+import 'package:cnmecab/modules/profile/filterProfileServicesSaved.dart';
+import 'package:cnmecab/modules/profile/filterProfileServicesShared.dart';
+import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
+import 'package:cnmecab/modules/home/components/buildersCards.dart';
+import 'package:cnmecab/modules/profile/components/filterprofile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -125,7 +125,7 @@ class ProfilePageState extends State<ProfilePage>
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
-                                currentPage == 'Visitante'
+                                userProfile?.role == 'Visitante'
                                     ? "/imagesprofileVisitor"
                                     : "/imagesprofileCreators",
                               );

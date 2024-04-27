@@ -1,23 +1,22 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
-import 'package:cnmecab/modules/Notification/pages/Notification.dart';
-import 'package:cnmecab/modules/Search/Search.dart';
-import 'package:cnmecab/modules/forms/pages/FormC.dart';
-import 'package:cnmecab/modules/forms/pages/FormP.dart';
-import 'package:cnmecab/modules/forms/pages/FormV.dart';
+import 'package:cnmecab/modules/auth/register/pages/register_page.dart';
+import 'package:cnmecab/modules/auth/login/pages/login_page.dart';
+import 'package:cnmecab/modules/notifications/pages/notifications.dart';
+import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
+import 'package:cnmecab/modules/search/Search.dart';
+import 'package:cnmecab/modules/forms/pages/formCreator.dart';
+import 'package:cnmecab/modules/forms/pages/formPromoter.dart';
+import 'package:cnmecab/modules/forms/pages/formVisitor.dart';
 import 'package:cnmecab/modules/Home/pages/home_page.dart';
-import 'package:cnmecab/modules/Login/pages/login_page.dart';
-import 'package:cnmecab/modules/Register/pages/register_page.dart';
 import 'package:cnmecab/modules/home/pages/home_body.dart';
 import 'package:cnmecab/modules/politics/pages/politics.dart';
 import 'package:cnmecab/modules/politics/pages/Terms.dart';
-import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageCreators.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageVisitor.dart';
 import 'package:cnmecab/modules/profile/pages/profileNew.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
-import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,8 +35,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => ProfilePage());
     case '/politics':
       return MaterialPageRoute(builder: (_) => politics());
-    case '/saved':
-      return MaterialPageRoute(builder: (_) => Guardados());
     case '/terms':
       return MaterialPageRoute(builder: (_) => Terminos());
     case '/home':

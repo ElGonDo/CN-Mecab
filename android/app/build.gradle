@@ -53,6 +53,11 @@ android {
         multiDexEnabled true
     }
 
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Cn Mecab_v${variant.versionName}.apk"
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
