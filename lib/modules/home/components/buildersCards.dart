@@ -1,10 +1,10 @@
 // ignore_for_file: file_names
 
-import 'package:cnmecab/modules/profile/filterProfileServicesSaved.dart';
-import 'package:cnmecab/modules/profile/filterProfileServicesShared.dart';
+import 'package:cnmecab/modules/home/pages/homeBody.dart';
+import 'package:cnmecab/modules/profile/services/filterProfileServicesSaved.dart';
+import 'package:cnmecab/modules/profile/services/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
 import 'package:cnmecab/modules/home/components/comments.dart';
-import 'package:cnmecab/modules/home/pages/home_body.dart';
 import 'package:cnmecab/modules/home/updateLikesAndRating.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/firebase_services.dart';
 import 'package:flutter/material.dart';

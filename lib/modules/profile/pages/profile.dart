@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, must_be_immutable, avoid_print, non_constant_identifier_names
 import 'dart:io';
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';

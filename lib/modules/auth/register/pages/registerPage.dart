@@ -1,5 +1,6 @@
-// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers, file_names
 
+import 'package:cnmecab/modules/auth/components/PasswordField.dart';
 import 'package:cnmecab/modules/auth/services/authService.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmpasswordController =
+      TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? _selectedRole;
   @override
@@ -61,14 +64,12 @@ class _RegisterPageState extends State<RegisterPage> {
               controller: _emailController,
             ),
             const SizedBox(height: 10),
-            TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Contraseña',
-              ),
-              obscureText: true,
-              controller: _passwordController,
-            ),
+            PasswordField(
+                controller: _passwordController, labelText: 'Contraseña'),
+            const SizedBox(height: 10),
+            PasswordField(
+                controller: _confirmpasswordController,
+                labelText: 'Confirmar Contraseña'),
             const SizedBox(height: 20),
             DropdownButton<String>(
               value: _selectedRole,
@@ -95,35 +96,37 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () async {
                 final String email = _emailController.text;
                 final String password = _passwordController.text;
+                final String confirmPassword = _confirmpasswordController.text;
+                if (password == confirmPassword) {
+                  AuthService _authService = AuthService();
+                  UserCredential? userCredential =
+                      await _authService.register(email, password, context);
 
-                AuthService _authService = AuthService();
-                UserCredential? userCredential =
-                    await _authService.register(email, password);
-
-                if (userCredential != null) {
-                  // Guardar el rol y la fecha de registro en Firestore
-                  final user = userCredential.user;
-                  await FirebaseFirestore.instance
-                      .collection('Usuarios')
-                      .doc(user!.uid)
-                      .set({
-                    'Rol': _selectedRole,
-                    'Fecha_Registro': DateTime.now(),
-                  });
-                  // Redirigir al usuario según el rol seleccionado
-                  switch (_selectedRole) {
-                    case 'Visitante':
-                      Navigator.of(context).pushNamed('/FormV');
-                      break;
-                    case 'Creador':
-                      Navigator.of(context).pushNamed('/FormC');
-                      break;
-                    case 'Promotora':
-                      Navigator.of(context).pushNamed('/FormP');
-                      break;
-                    default:
-                      // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
-                      break;
+                  if (userCredential != null) {
+                    // Guardar el rol y la fecha de registro en Firestore
+                    final user = userCredential.user;
+                    await FirebaseFirestore.instance
+                        .collection('Usuarios')
+                        .doc(user!.uid)
+                        .set({
+                      'Rol': _selectedRole,
+                      'Fecha_Registro': DateTime.now(),
+                    });
+                    // Redirigir al usuario según el rol seleccionado
+                    switch (_selectedRole) {
+                      case 'Visitante':
+                        Navigator.of(context).pushNamed('/FormV');
+                        break;
+                      case 'Creador':
+                        Navigator.of(context).pushNamed('/FormC');
+                        break;
+                      case 'Promotora':
+                        Navigator.of(context).pushNamed('/FormP');
+                        break;
+                      default:
+                        // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
+                        break;
+                    }
                   }
                 } else {
                   showDialog(
@@ -132,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return AlertDialog(
                         title: const Text('Error al registrarse'),
                         content: const Text(
-                            'Ocurrió un error al intentar registrarse.'),
+                            'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {

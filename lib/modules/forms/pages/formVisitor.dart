@@ -1,5 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, file_names, unused_field, constant_identifier_names, non_constant_identifier_names
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

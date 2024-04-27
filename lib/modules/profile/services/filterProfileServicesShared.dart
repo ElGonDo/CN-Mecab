@@ -17,7 +17,17 @@ void compartirPublicacion(BuildContext context, String uidCreador,
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
       if (data.containsKey(uidCreador)) {
-        if (!data[uidCreador].contains(idPublicacion)) {
+        if (data[uidCreador].contains(idPublicacion)) {
+          data[uidCreador].remove(idPublicacion);
+          firestore
+              .collection('Publicaciones_Compartidas')
+              .doc(uidUsuarioActual)
+              .set(data);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('¡Publicación Eliminada De Tus Compartidos!'),
+            duration: Duration(seconds: 2),
+          ));
+        } else {
           data[uidCreador].add(idPublicacion);
           firestore
               .collection('Publicaciones_Compartidas')

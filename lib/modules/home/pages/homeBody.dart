@@ -1,7 +1,7 @@
-// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
+// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api, avoid_print, non_constant_identifier_names, file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
 import 'package:cnmecab/modules/home/components/buildersCards.dart';

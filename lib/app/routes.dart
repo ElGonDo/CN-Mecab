@@ -1,15 +1,15 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
-import 'package:cnmecab/modules/auth/register/pages/register_page.dart';
-import 'package:cnmecab/modules/auth/login/pages/login_page.dart';
+import 'package:cnmecab/modules/auth/register/pages/registerPage.dart';
+import 'package:cnmecab/modules/auth/login/pages/loginPage.dart';
+import 'package:cnmecab/modules/home/pages/homePage.dart';
 import 'package:cnmecab/modules/notifications/pages/notifications.dart';
 import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
 import 'package:cnmecab/modules/search/Search.dart';
 import 'package:cnmecab/modules/forms/pages/formCreator.dart';
 import 'package:cnmecab/modules/forms/pages/formPromoter.dart';
 import 'package:cnmecab/modules/forms/pages/formVisitor.dart';
-import 'package:cnmecab/modules/Home/pages/home_page.dart';
-import 'package:cnmecab/modules/home/pages/home_body.dart';
+import 'package:cnmecab/modules/home/pages/homeBody.dart';
 import 'package:cnmecab/modules/politics/pages/politics.dart';
 import 'package:cnmecab/modules/politics/pages/Terms.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';

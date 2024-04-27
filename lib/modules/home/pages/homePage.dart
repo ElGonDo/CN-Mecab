@@ -3,9 +3,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnmecab/modules/auth/services/authChangeEmail.dart';
 import 'package:cnmecab/modules/auth/services/authRequest.dart';
+import 'package:cnmecab/modules/home/pages/homeBody.dart';
 import 'package:cnmecab/modules/notifications/pages/notifications.dart';
-import 'package:cnmecab/modules/home/pages/home_body.dart';
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

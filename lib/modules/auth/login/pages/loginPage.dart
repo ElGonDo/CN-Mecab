@@ -1,7 +1,8 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, no_leading_underscores_for_local_identifiers
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, file_names
 
+import 'package:cnmecab/modules/auth/components/PasswordField.dart';
 import 'package:cnmecab/modules/auth/services/authService.dart';
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
+  bool obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +68,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Contraseña',
-              ),
-              obscureText: true,
-            ),
+            PasswordField(
+                controller: _passwordController, labelText: 'Contraseña'),
             const SizedBox(height: 10),
             // Nuevo código para la opción "Olvidaste la contraseña"
             TextButton(
@@ -99,31 +95,12 @@ class _LoginPageState extends State<LoginPage> {
 
                 AuthService _authService = AuthService();
                 UserCredential? userCredential =
-                    await _authService.login(email, password);
+                    await _authService.login(email, password, context);
 
                 if (userCredential != null) {
                   // Si el usuario está autenticado, llama a initializeUserProfile
                   UserProfileSingleton().initializeUserProfile();
                   Navigator.of(context).pushNamed('/home');
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Error al iniciar sesión'),
-                        content: const Text(
-                            'Ocurrió un error al intentar iniciar sesión.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cerrar'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
                 }
               },
             ),

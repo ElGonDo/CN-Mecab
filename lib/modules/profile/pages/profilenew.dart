@@ -1,8 +1,8 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
 import 'package:cnmecab/modules/profile/filterProfileServicesMyPublications.dart';
-import 'package:cnmecab/modules/profile/filterProfileServicesSaved.dart';
-import 'package:cnmecab/modules/profile/filterProfileServicesShared.dart';
-import 'package:cnmecab/modules/profile/objectUser.dart';
+import 'package:cnmecab/modules/profile/services/filterProfileServicesSaved.dart';
+import 'package:cnmecab/modules/profile/services/filterProfileServicesShared.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
 import 'package:cnmecab/modules/home/components/buildersCards.dart';
@@ -37,46 +37,53 @@ class ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    UserProfileSingleton().initializeUserProfile().then((profile) {
-      setState(() {
-        userProfile = profile;
-        URlString = userProfile?.profileImageURL ?? '';
-      });
-    });
-    Future.wait([obtenerDatos(), obtenerDatosR()]).then((List<dynamic> values) {
-      publicacionesList = values[0] as List<Publicacion>;
-      publicacionesListR = values[1] as List<PublicacionR>;
-      obtenerPublicacionesCompartidas(
-              user!.uid, publicacionesList, publicacionesListR)
-          .then((Map<String, List<dynamic>> result) {
-        setState(() {
-          newPublicacionesNR = result["publicacionesNR"] as List<Publicacion>;
-          newPublicacionesR = result["publicacionesR"] as List<PublicacionR>;
-        });
-      });
-      obtenerMisPublicaciones(user!.uid, publicacionesList, publicacionesListR)
-          .then((Map<String, List<dynamic>> result) {
-        setState(() {
-          newMisPublicacionesNR =
-              result["mispublicacionesNR"] as List<Publicacion>;
-          newMisPublicacionesR =
-              result["mispublicacionesR"] as List<PublicacionR>;
-          print('Contenido de Mis Publicaciones: $newMisPublicacionesR');
-          print('Contenido de Mis Publicaciones no : $newMisPublicacionesNR');
-        });
-      });
-      obtenerPublicacionesGuardadas(user!.uid, publicacionesListR)
-          .then((value) {
-        setState(() {
-          newPublicacionesGuardadasR = value;
-        });
-      });
-    });
+    refreshProfileData();
   }
 
   void actualizarLikesEnPerfil(int nuevosLikes, Publicacion publicacion) {
     setState(() {
       publicacion.likes = nuevosLikes;
+    });
+  }
+
+  Future<void> refreshProfileData() async {
+    UserProfile? updatedProfile =
+        await UserProfileSingleton().initializeUserProfile();
+    setState(() {
+      userProfile = updatedProfile;
+      URlString = userProfile?.profileImageURL ?? '';
+    });
+
+    List<dynamic> values = await Future.wait([obtenerDatos(), obtenerDatosR()]);
+    publicacionesList = values[0] as List<Publicacion>;
+    publicacionesListR = values[1] as List<PublicacionR>;
+
+    Map<String, List<dynamic>> resultCompartidas =
+        await obtenerPublicacionesCompartidas(
+            user!.uid, publicacionesList, publicacionesListR);
+    setState(() {
+      newPublicacionesNR =
+          resultCompartidas["publicacionesNR"] as List<Publicacion>;
+      newPublicacionesR =
+          resultCompartidas["publicacionesR"] as List<PublicacionR>;
+    });
+
+    Map<String, List<dynamic>> resultMisPublicaciones =
+        await obtenerMisPublicaciones(
+            user!.uid, publicacionesList, publicacionesListR);
+    setState(() {
+      newMisPublicacionesNR =
+          resultMisPublicaciones["mispublicacionesNR"] as List<Publicacion>;
+      newMisPublicacionesR =
+          resultMisPublicaciones["mispublicacionesR"] as List<PublicacionR>;
+      print('Contenido de Mis Publicaciones: $newMisPublicacionesR');
+      print('Contenido de Mis Publicaciones no : $newMisPublicacionesNR');
+    });
+
+    List<PublicacionR> valueGuardadas =
+        await obtenerPublicacionesGuardadas(user!.uid, publicacionesListR);
+    setState(() {
+      newPublicacionesGuardadasR = valueGuardadas;
     });
   }
 
@@ -96,12 +103,7 @@ class ProfilePageState extends State<ProfilePage>
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          UserProfile? updatedProfile =
-              await UserProfileSingleton().initializeUserProfile();
-          setState(() {
-            userProfile = updatedProfile;
-            URlString = userProfile?.profileImageURL ?? '';
-          });
+          refreshProfileData();
           return Future<void>.delayed(const Duration(seconds: 2));
         },
         displacement: 50,
