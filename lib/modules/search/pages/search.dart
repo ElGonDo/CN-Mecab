@@ -1,0 +1,93 @@
+// ignore_for_file: use_key_in_widget_constructors, file_names, prefer_interpolation_to_compose_strings
+
+import 'package:cnmecab/modules/search/services/displayProfileDataSearch.dart';
+import 'package:cnmecab/modules/search/services/searchService.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Search extends StatefulWidget {
+  const Search({Key? key});
+
+  @override
+  State<Search> createState() => SearchState();
+}
+
+class SearchState extends State<Search> {
+  TextEditingController searchController = TextEditingController();
+  SearchService searchService =
+      SearchService(); // Instancia del servicio de búsqueda
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Container(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 10,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextField(
+            controller: searchController,
+            style: const TextStyle(color: Colors.black),
+            decoration: const InputDecoration(
+              hintText: 'Busqueda',
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none,
+              icon: Icon(Icons.search, color: Colors.black),
+            ),
+            onChanged: (value) {
+              setState(() {
+                // Agrega un pequeño retraso (debounce) para mejorar la eficiencia
+                searchService.searchUsersByName(value);
+              });
+            },
+          ),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: searchService.searchUsersByName(searchController.text),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text("No se encontró nada");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              height: 56,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return ListView(
+            children: snapshot.data!.docs
+                .where((doc) => doc['Nombre']
+                    .toString()
+                    .toLowerCase()
+                    .contains(searchController.text.toLowerCase()))
+                .map((QueryDocumentSnapshot doc) {
+              String name = doc['Nombre'] ?? '';
+              String role = doc['Rol'] ?? '';
+              String uid = doc.id;
+              return GestureDetector(
+                onTap: () {
+                  showPopupProfileDataSearch(context, name, role, uid);
+                },
+                child: Card(
+                  child: ListTile(
+                    title: Text(name),
+                    subtitle: Text(role),
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}

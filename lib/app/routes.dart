@@ -1,17 +1,17 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
-import 'package:cnmecab/modules/auth/register/pages/registerPage.dart';
-import 'package:cnmecab/modules/auth/login/pages/loginPage.dart';
+import 'package:cnmecab/modules/auth/pages/registerPage.dart';
+import 'package:cnmecab/modules/auth/pages/loginPage.dart';
 import 'package:cnmecab/modules/home/pages/homePage.dart';
 import 'package:cnmecab/modules/notifications/pages/notifications.dart';
 import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
-import 'package:cnmecab/modules/search/Search.dart';
-import 'package:cnmecab/modules/forms/pages/formCreator.dart';
-import 'package:cnmecab/modules/forms/pages/formPromoter.dart';
-import 'package:cnmecab/modules/forms/pages/formVisitor.dart';
+import 'package:cnmecab/modules/search/pages/search.dart';
+import 'package:cnmecab/modules/auth/pages/formCreatorPage.dart';
+import 'package:cnmecab/modules/auth/pages/formPromoterPage.dart';
+import 'package:cnmecab/modules/auth/pages/formVisitorPage.dart';
 import 'package:cnmecab/modules/home/pages/homeBody.dart';
-import 'package:cnmecab/modules/politics/pages/politics.dart';
-import 'package:cnmecab/modules/politics/pages/Terms.dart';
+import 'package:cnmecab/modules/home/pages/politics.dart';
+import 'package:cnmecab/modules/home/pages/terms.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageCreators.dart';
 import 'package:cnmecab/modules/profile/pages/profileimageVisitor.dart';
