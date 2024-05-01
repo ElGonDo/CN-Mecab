@@ -1,5 +1,8 @@
-// ignore_for_file: use_key_in_widget_constructors, file_names, prefer_interpolation_to_compose_strings
+// ignore_for_file: use_key_in_widget_constructors, file_names, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names
 
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
 import 'package:cnmecab/modules/search/services/displayProfileDataSearch.dart';
 import 'package:cnmecab/modules/search/services/searchService.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +17,30 @@ class Search extends StatefulWidget {
 
 class SearchState extends State<Search> {
   TextEditingController searchController = TextEditingController();
-  SearchService searchService =
-      SearchService(); // Instancia del servicio de búsqueda
+  SearchService searchService = SearchService();
+  List<Publicacion> publicacionesList = [];
+  List<PublicacionR> publicacionesListR = [];
+  String URlString = "";
+  UserProfile? userProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeSearch();
+  }
+
+  Future<void> initializeSearch() async {
+    UserProfile? updatedProfile =
+        await UserProfileSingleton().initializeUserProfile();
+    setState(() {
+      userProfile = updatedProfile;
+      URlString = userProfile?.profileImageURL ?? '';
+    });
+
+    List<dynamic> values = await Future.wait([obtenerDatos(), obtenerDatosR()]);
+    publicacionesList = values[0] as List<Publicacion>;
+    publicacionesListR = values[1] as List<PublicacionR>;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +100,15 @@ class SearchState extends State<Search> {
               String uid = doc.id;
               return GestureDetector(
                 onTap: () {
-                  showPopupProfileDataSearch(context, name, role, uid);
+                  showPopupProfileDataSearch(
+                      context,
+                      name,
+                      role,
+                      uid,
+                      URlString,
+                      userProfile!.uid,
+                      publicacionesList,
+                      publicacionesListR);
                 },
                 child: Card(
                   child: ListTile(
