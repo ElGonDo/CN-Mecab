@@ -156,7 +156,7 @@ Widget buildCardWidget2(
               allowHalfRating: true,
               itemCount: 5,
               itemSize: 20.0,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
               itemBuilder: (context, _) => const Icon(
                 Icons.star,
                 color: Color.fromARGB(255, 255, 0, 0),
