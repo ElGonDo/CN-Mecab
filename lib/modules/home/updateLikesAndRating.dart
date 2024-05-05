@@ -75,13 +75,12 @@ void actualizarRating(String pubId, double rating) async {
       reseniasData['calificaciones'][user.uid] = rating;
     }
 
-    // Calcular el promedio de las calificaciones
-    double sumaCalificaciones = reseniasData['calificaciones']
-        .values
-        .reduce((value, element) => value + element);
+double sumaCalificaciones = reseniasData['calificaciones']
+    .values
+    .map((value) => value.toDouble()) 
+    .reduce((value, element) => value + element);
     int cantidadCalificaciones = reseniasData['calificaciones'].length;
     double promedioCalificaciones = sumaCalificaciones / cantidadCalificaciones;
-
     // Actualizamos el mapa con el promedio de las calificaciones
     reseniasData['promedio'] = promedioCalificaciones;
 
