@@ -175,15 +175,17 @@ class ProfilePageState extends State<ProfilePage>
                       children: [
                         for (var publicacionR in newPublicacionesR)
                           buildCardWidget2(
-                              publicacionR.rtitulo,
-                              publicacionR.rdescripcion,
-                              publicacionR.rpubID,
-                              '${publicacionR.rpubID}.jpg',
-                              publicacionR.ruid,
-                              context,
-                              user!.uid,
-                              comentarioController,
-                              URlString),
+                            publicacionR.rtitulo,
+                            publicacionR.rdescripcion,
+                            publicacionR.rpubID,
+                            '${publicacionR.rpubID}.jpg',
+                            publicacionR.ruid,
+                            context,
+                            user!.uid,
+                            comentarioController,
+                            URlString,
+                            publicacionR,
+                          ),
                         for (var publicacionNR in newPublicacionesNR)
                           buildCardWidget(
                               publicacionNR,
@@ -199,15 +201,17 @@ class ProfilePageState extends State<ProfilePage>
                       children: [
                         for (var publicacionR in newMisPublicacionesR)
                           buildCardWidget2(
-                              publicacionR.rtitulo,
-                              publicacionR.rdescripcion,
-                              publicacionR.rpubID,
-                              '${publicacionR.rpubID}.jpg',
-                              publicacionR.ruid,
-                              context,
-                              user!.uid,
-                              comentarioController,
-                              URlString),
+                            publicacionR.rtitulo,
+                            publicacionR.rdescripcion,
+                            publicacionR.rpubID,
+                            '${publicacionR.rpubID}.jpg',
+                            publicacionR.ruid,
+                            context,
+                            user!.uid,
+                            comentarioController,
+                            URlString,
+                            publicacionR,
+                          ),
                         for (var publicacionNR in newMisPublicacionesNR)
                           buildCardWidget(
                               publicacionNR,
@@ -224,15 +228,17 @@ class ProfilePageState extends State<ProfilePage>
                         for (var publicacionGuardada
                             in newPublicacionesGuardadasR)
                           buildCardWidget2(
-                              publicacionGuardada.rtitulo,
-                              publicacionGuardada.rdescripcion,
-                              publicacionGuardada.rpubID,
-                              '${publicacionGuardada.rpubID}.jpg',
-                              publicacionGuardada.ruid,
-                              context,
-                              user!.uid,
-                              comentarioController,
-                              URlString),
+                            publicacionGuardada.rtitulo,
+                            publicacionGuardada.rdescripcion,
+                            publicacionGuardada.rpubID,
+                            '${publicacionGuardada.rpubID}.jpg',
+                            publicacionGuardada.ruid,
+                            context,
+                            user!.uid,
+                            comentarioController,
+                            URlString,
+                            publicacionGuardada,
+                          ),
                       ],
                     ),
                 ],

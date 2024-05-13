@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names, file_names
-
 import 'dart:io';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/uploadImage.dart';
@@ -9,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Publicar extends StatefulWidget {
-  const Publicar({super.key});
+  const Publicar({Key? key});
 
   @override
   State<Publicar> createState() => _PublicarState();
@@ -20,20 +19,64 @@ class Publicar extends StatefulWidget {
 class _PublicarState extends State<Publicar> {
   TextEditingController tituloController = TextEditingController(text: "");
   TextEditingController descripcionController = TextEditingController(text: "");
+  TextEditingController directorController = TextEditingController(text: "");
+  TextEditingController productorController = TextEditingController(text: "");
+  TextEditingController guionistaController = TextEditingController(text: "");
+  TextEditingController distriController = TextEditingController(text: "");
+  TextEditingController companiaController = TextEditingController(text: "");
+  TextEditingController clasificacionController =
+      TextEditingController(text: "");
+  TextEditingController idiomaController = TextEditingController(text: "");
+  TextEditingController fechaEstrenoController =
+      TextEditingController(text: "");
+  TextEditingController duracionController = TextEditingController(text: "");
+
+  // ignore: non_constant_identifier_names
   File? image_to_upload;
-  String? _selectedGenero = '';
-  String _selectedCategory = '';
+  final List<String> _selectedGeneros = [];
+  String? _selectedCategory;
   String? _tipoPubli;
   List<String> categoriasSeleccionadas = [];
   String? collectionName;
 
-  void _onCategorySelected(String category) {
+  final List<String> generosPeliculas = [
+    'Acción',
+    'Aventuras',
+    'Ciencia Ficción',
+    'Comedia',
+    'No-Ficción / Documental',
+    'Drama',
+    'Fantasía',
+    'Musical',
+    'Suspense',
+    'Terror',
+  ];
+
+  final List<String> generosCineFormato = [
+    'Cinema sonoro',
+    'Cine 2D',
+    'Películas 3D',
+    'Animación',
+  ];
+
+  final List<String> generosAmbientacion = [
+    'Religiosas',
+    'Futuristas',
+    'Policíacas',
+    'Crimen',
+    'Bélicas',
+    'Históricas',
+    'Deportivas',
+    'Western',
+  ];
+
+  void _onCategorySelected(String? category) {
     setState(() {
       _selectedCategory = category;
     });
   }
 
-  void _onTypePubli(String tipoPubli) {
+  void _onTypePubli(String? tipoPubli) {
     setState(() {
       _tipoPubli = tipoPubli;
     });
@@ -42,14 +85,17 @@ class _PublicarState extends State<Publicar> {
     } else if (tipoPubli == 'No reseñable') {
       collectionName = "Publicaciones_No_Reseñables";
     } else {
-      // Handle default case if necessary
       return;
     }
   }
 
-  void _onGeneroSelected(String genero) {
+  void _onGeneroSelected(String? genero) {
     setState(() {
-      _selectedGenero = genero;
+      if (_selectedGeneros.contains(genero)) {
+        _selectedGeneros.remove(genero);
+      } else {
+        _selectedGeneros.add(genero!);
+      }
     });
   }
 
@@ -117,8 +163,231 @@ class _PublicarState extends State<Publicar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 20),
+            const Text(
+              'Titulo Publicación:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: tituloController,
+              decoration: const InputDecoration(
+                labelText: 'Titulo de la publicación',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Descripción de la Publicación:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: descripcionController,
+              decoration: const InputDecoration(
+                labelText: 'Descripción de la publicación',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Director:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: directorController,
+              decoration: const InputDecoration(
+                labelText: 'Director de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Productor:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: productorController,
+              decoration: const InputDecoration(
+                labelText: 'Productor de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Guionista:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: guionistaController,
+              decoration: const InputDecoration(
+                labelText: 'Guionista de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Distribuidor:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: distriController,
+              decoration: const InputDecoration(
+                labelText: 'Distribuidor de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Compañía de producción:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: companiaController,
+              decoration: const InputDecoration(
+                labelText: 'Compañía de producción de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Clasificación:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: clasificacionController,
+              decoration: const InputDecoration(
+                labelText: 'Clasificación de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Idioma original:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: idiomaController,
+              decoration: const InputDecoration(
+                labelText: 'Idioma original de la película',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Fecha de estreno (cines):',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextFormField(
+              controller: fechaEstrenoController,
+              decoration: InputDecoration(
+                labelText: 'Fecha de estreno (cines):',
+                suffixIcon: InkWell(
+                  onTap: () async {
+                    final DateTime? selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime(2100),
+                    );
+                    if (selectedDate != null) {
+                      setState(() {
+                        fechaEstrenoController.text =
+                            DateFormat('dd/MM/yyyy').format(selectedDate);
+                      });
+                    }
+                  },
+                  child: const Icon(Icons.calendar_today),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Duración:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: duracionController,
+              decoration: const InputDecoration(
+                labelText: 'Duración de la película (en minutos)',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Categoría de tu publicación',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
+              items: ['Películas', 'Series', 'Libros', 'Animes']
+                  .map((String category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                _onCategorySelected(newValue);
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Seleccionar Géneros"),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ...generosPeliculas.map((genero) {
+                              return CheckboxListTile(
+                                title: Text(genero),
+                                value: _selectedGeneros.contains(genero),
+                                onChanged: (bool? value) {
+                                  _onGeneroSelected(genero);
+                                },
+                              );
+                            }).toList(),
+                            ...generosCineFormato.map((genero) {
+                              return CheckboxListTile(
+                                title: Text(genero),
+                                value: _selectedGeneros.contains(genero),
+                                onChanged: (bool? value) {
+                                  _onGeneroSelected(genero);
+                                },
+                              );
+                            }).toList(),
+                            ...generosAmbientacion.map((genero) {
+                              return CheckboxListTile(
+                                title: Text(genero),
+                                value: _selectedGeneros.contains(genero),
+                                onChanged: (bool? value) {
+                                  _onGeneroSelected(genero);
+                                },
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          child: const Text("Cerrar"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+              ),
+              child: const Text("Seleccionar Géneros"),
+            ),
             const SizedBox(height: 20),
             const Text(
               'Tipo de publicación:',
@@ -144,99 +413,6 @@ class _PublicarState extends State<Publicar> {
                 ),
               ],
             ),
-            TextField(
-              controller: tituloController,
-              decoration: const InputDecoration(
-                labelText: 'Titulo de la publicación',
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: descripcionController,
-              decoration: const InputDecoration(
-                labelText: 'Descripción de la publicación',
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Categoría de tu publicación',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ListTile(
-              title: const Text('Películas'),
-              leading: Radio(
-                value: 'Películas',
-                groupValue: _selectedCategory,
-                onChanged: (value) {
-                  _onCategorySelected('Películas');
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Series'),
-              leading: Radio(
-                value: 'Series',
-                groupValue: _selectedCategory,
-                onChanged: (value) {
-                  _onCategorySelected('Series');
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Libros'),
-              leading: Radio(
-                value: 'Libros',
-                groupValue: _selectedCategory,
-                onChanged: (value) {
-                  _onCategorySelected('Libros');
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Animes'),
-              leading: Radio(
-                value: 'Animes',
-                groupValue: _selectedCategory,
-                onChanged: (value) {
-                  _onCategorySelected('Animes');
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Género:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              children: [
-                ChoiceChip(
-                  label: const Text('Acción'),
-                  selected: _selectedGenero == 'Acción',
-                  onSelected: (selected) {
-                    _onGeneroSelected('Acción');
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text('Comedia'),
-                  selected: _selectedGenero == 'Comedia',
-                  onSelected: (selected) {
-                    _onGeneroSelected('Comedia');
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text('Drama'),
-                  selected: _selectedGenero == 'Drama',
-                  onSelected: (selected) {
-                    _onGeneroSelected('Drama');
-                  },
-                ),
-              ],
-            ),
             const SizedBox(height: 20),
             image_to_upload != null
                 ? Image.file(image_to_upload!)
@@ -244,7 +420,7 @@ class _PublicarState extends State<Publicar> {
                     margin: const EdgeInsets.all(10),
                     height: 200,
                     width: double.infinity,
-                    color: Colors.red,
+                    color: const Color.fromARGB(255, 151, 151, 151),
                   ),
             ElevatedButton(
                 onPressed: () async {
@@ -259,9 +435,18 @@ class _PublicarState extends State<Publicar> {
                   final postId = await addTitle(
                       tituloController.text,
                       descripcionController.text,
-                      _selectedCategory,
-                      _selectedGenero,
-                      collectionName);
+                      directorController.text,
+                      productorController.text,
+                      guionistaController.text,
+                      distriController.text,
+                      companiaController.text,
+                      clasificacionController.text,
+                      idiomaController.text,
+                      fechaEstrenoController.text,
+                      duracionController.text,
+                      _selectedCategory ?? '',
+                      _selectedGeneros.join(', '),
+                      collectionName ?? '');
                   if (image_to_upload == null) {
                     return;
                   }
@@ -281,7 +466,7 @@ class _PublicarState extends State<Publicar> {
                   await enviarANotificaciones(
                       tituloController.text,
                       descripcionController.text,
-                      _selectedCategory,
+                      _selectedCategory ?? '',
                       FirebaseAuth.instance.currentUser?.uid ?? '');
                 },
                 child: const Text("Subir Publicacion y Notificar"))

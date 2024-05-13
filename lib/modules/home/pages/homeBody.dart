@@ -113,15 +113,18 @@ class _BodyPageState extends State<BodyPage> {
                       String pubId = publicacionesListR[rIndex].rpubID;
                       String ruid = publicacionesListR[rIndex].ruid;
                       return buildCardWidget2(
-                          rtitulo,
-                          rdescripcion,
-                          pubId,
-                          '$pubId.jpg',
-                          ruid,
-                          context,
-                          user!.uid,
-                          comentarioController,
-                          URlString);
+                        rtitulo,
+                        rdescripcion,
+                        pubId,
+                        '$pubId.jpg',
+                        ruid,
+                        context,
+                        user!.uid,
+                        comentarioController,
+                        URlString,
+                        publicacionesListR[
+                            rIndex], // Cambia 'mostrar' por 'publicacionesListR[rIndex]'
+                      );
                     }
                   } else if (currentPage == 'Películas') {
                     return buildPeliculasWidget(index);
@@ -153,8 +156,18 @@ class _BodyPageState extends State<BodyPage> {
     String ruid = publicacionesListR[index].ruid;
     // Verificar si es una película
     if (publicacionesListR[index].rcategoria == 'Películas') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid,
-          context, user!.uid, comentarioController, URlString);
+      return buildCardWidget2(
+        rtitulo,
+        rdescripcion,
+        pubId,
+        '$pubId.jpg',
+        ruid,
+        context,
+        user!.uid,
+        comentarioController,
+        URlString,
+        publicacionesListR[index],
+      );
     } else {
       return Container();
     }
@@ -170,8 +183,18 @@ class _BodyPageState extends State<BodyPage> {
     String ruid = publicacionesListR[index].ruid;
     // Verificar si es una serie
     if (publicacionesListR[index].rcategoria == 'Series') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid,
-          context, user!.uid, comentarioController, URlString);
+      return buildCardWidget2(
+        rtitulo,
+        rdescripcion,
+        pubId,
+        '$pubId.jpg',
+        ruid,
+        context,
+        user!.uid,
+        comentarioController,
+        URlString,
+        publicacionesListR[index],
+      );
     } else {
       return Container();
     }
@@ -187,8 +210,18 @@ class _BodyPageState extends State<BodyPage> {
     String ruid = publicacionesListR[index].ruid;
     // Verificar si es un libro
     if (publicacionesListR[index].rcategoria == 'Libros') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid,
-          context, user!.uid, comentarioController, URlString);
+      return buildCardWidget2(
+        rtitulo,
+        rdescripcion,
+        pubId,
+        '$pubId.jpg',
+        ruid,
+        context,
+        user!.uid,
+        comentarioController,
+        URlString,
+        publicacionesListR[index],
+      );
     } else {
       return Container();
     }
@@ -204,8 +237,18 @@ class _BodyPageState extends State<BodyPage> {
     String ruid = publicacionesListR[index].ruid;
     // Verificar si es un anime
     if (publicacionesListR[index].rcategoria == 'Animes') {
-      return buildCardWidget2(rtitulo, rdescripcion, pubId, '$pubId.jpg', ruid,
-          context, user!.uid, comentarioController, URlString);
+      return buildCardWidget2(
+        rtitulo,
+        rdescripcion,
+        pubId,
+        '$pubId.jpg',
+        ruid,
+        context,
+        user!.uid,
+        comentarioController,
+        URlString,
+        publicacionesListR[index],
+      );
     } else {
       return Container();
     }
