@@ -169,6 +169,31 @@ class _PublicarState extends State<Publicar> {
           children: [
             const SizedBox(height: 20),
             const Text(
+              'Tipo de publicación:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              children: [
+                ChoiceChip(
+                  label: const Text('Reseñable'),
+                  selected: _tipoPubli == 'Reseñable',
+                  onSelected: (selected) {
+                    _onTypePubli('Reseñable');
+                  },
+                ),
+                ChoiceChip(
+                  label: const Text('No reseñable'),
+                  selected: _tipoPubli == 'No reseñable',
+                  onSelected: (selected) {
+                    _onTypePubli('No reseñable');
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Text(
               'Titulo Publicación:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
@@ -199,6 +224,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Director de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -210,6 +236,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Productor de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -221,6 +248,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Guionista de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -232,6 +260,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Distribuidor de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -243,6 +272,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Compañía de producción de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -254,6 +284,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Clasificación de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -265,6 +296,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Idioma original de la película',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -293,6 +325,7 @@ class _PublicarState extends State<Publicar> {
                   child: const Icon(Icons.calendar_today),
                 ),
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -304,6 +337,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Duración de la película (en minutos)',
               ),
+              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -389,31 +423,6 @@ class _PublicarState extends State<Publicar> {
               child: const Text("Seleccionar Géneros"),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Tipo de publicación:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              children: [
-                ChoiceChip(
-                  label: const Text('Reseñable'),
-                  selected: _tipoPubli == 'Reseñable',
-                  onSelected: (selected) {
-                    _onTypePubli('Reseñable');
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text('No reseñable'),
-                  selected: _tipoPubli == 'No reseñable',
-                  onSelected: (selected) {
-                    _onTypePubli('No reseñable');
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
             image_to_upload != null
                 ? Image.file(image_to_upload!)
                 : Container(
@@ -469,7 +478,7 @@ class _PublicarState extends State<Publicar> {
                       _selectedCategory ?? '',
                       FirebaseAuth.instance.currentUser?.uid ?? '');
                 },
-                child: const Text("Subir Publicacion y Notificar"))
+                child: const Text("Subir Publicacion"))
           ],
         ),
       ),

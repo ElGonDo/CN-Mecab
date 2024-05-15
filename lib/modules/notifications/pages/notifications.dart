@@ -1,7 +1,6 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Notificacion extends StatefulWidget {
   const Notificacion({Key? key}) : super(key: key);
@@ -41,10 +40,24 @@ class _NotificacionState extends State<Notificacion> {
                     title: Text('Nueva publicación - $titulo'),
                     subtitle: Text(descripcion),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
+                      icon: const Icon(Icons.remove_red_eye),
+                      onPressed: () async {
+                        // Ocultar la notificación
                         setState(() {
                           notificacionesOcultas.add(notificacion);
+                        });
+
+                        // Obtener el usuario actual
+                        User? currentUser = FirebaseAuth.instance.currentUser;
+
+                        // Actualizar la colección de notificaciones para ocultar esta notificación para el usuario actual
+                        await FirebaseFirestore.instance
+                            .collection('Notificaciones')
+                            .doc(notificacion.id)
+                            .collection('Ocultas')
+                            .doc(currentUser?.uid)
+                            .set({
+                          'hidden': true,
                         });
                       },
                     ),
