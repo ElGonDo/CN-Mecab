@@ -134,6 +134,7 @@ class _FormVPageState extends State<FormVPage> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 30),
                 InkWell(
                   onTap: () => _selectDate(context),
                   child: InputDecorator(

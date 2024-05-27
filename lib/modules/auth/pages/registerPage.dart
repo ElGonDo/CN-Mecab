@@ -1,7 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers, file_names
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers, file_names, library_private_types_in_public_api, unnecessary_null_comparison, unused_local_variable, avoid_print, prefer_const_constructors
 
 import 'package:cnmecab/modules/auth/components/PasswordField.dart';
 import 'package:cnmecab/modules/auth/services/authService.dart';
+import 'package:cnmecab/modules/auth/services/validationFunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,17 +11,21 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController =
       TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  String? _selectedRole;
+  String? selectedRole;
+  bool emailIsValid = false;
+  final formKey = GlobalKey<FormState>();
+  final List<String> roles = ['Visitante', 'Creador', 'Promotora'];
+  final AuthService _authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,126 +36,110 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'CN',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'CN',
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        ' MECAB',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  ' MECAB',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Correo Electrónico',
+                    ),
+                    controller: emailController,
+                    validator: (value) => validateEmail(value!),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Correo Electrónico',
-              ),
-              controller: _emailController,
-            ),
-            const SizedBox(height: 10),
-            PasswordField(
-                controller: _passwordController, labelText: 'Contraseña'),
-            const SizedBox(height: 10),
-            PasswordField(
-                controller: _confirmpasswordController,
-                labelText: 'Confirmar Contraseña'),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: _selectedRole,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedRole = newValue;
-                });
-              },
-              items: <String>['Visitante', 'Creador', 'Promotora']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const Text('Selecciona Un Rol'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                // ignore: deprecated_member_use
-                primary: Colors.red,
-              ),
-              child: const Text('Registrarse'),
-              onPressed: () async {
-                final String email = _emailController.text;
-                final String password = _passwordController.text;
-                final String confirmPassword = _confirmpasswordController.text;
-                if (password == confirmPassword) {
-                  AuthService _authService = AuthService();
-                  UserCredential? userCredential =
-                      await _authService.register(email, password, context);
-
-                  if (userCredential != null) {
-                    // Guardar el rol y la fecha de registro en Firestore
-                    final user = userCredential.user;
-                    await FirebaseFirestore.instance
-                        .collection('Usuarios')
-                        .doc(user!.uid)
-                        .set({
-                      'Rol': _selectedRole,
-                      'Fecha_Registro': DateTime.now(),
-                    });
-                    // Redirigir al usuario según el rol seleccionado
-                    switch (_selectedRole) {
-                      case 'Visitante':
-                        Navigator.of(context).pushNamed('/FormV');
-                        break;
-                      case 'Creador':
-                        Navigator.of(context).pushNamed('/FormC');
-                        break;
-                      case 'Promotora':
-                        Navigator.of(context).pushNamed('/FormP');
-                        break;
-                      default:
-                        // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
-                        break;
-                    }
-                  }
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Error al registrarse'),
-                        content: const Text(
-                            'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cerrar'),
-                          ),
-                        ],
+                  const SizedBox(height: 10),
+                  PasswordField(
+                    controller: passwordController,
+                    labelText: 'Contraseña',
+                    validator: (value) => validatePassword(value!),
+                  ),
+                  const SizedBox(height: 10),
+                  PasswordField(
+                    controller: confirmpasswordController,
+                    labelText: 'Confirmar Contraseña',
+                    validator: (value) => validateConfirmPassword(
+                      value!,
+                      passwordController.text,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    value: selectedRole,
+                    items: roles.map((role) {
+                      return DropdownMenuItem(
+                        value: role,
+                        child: Text(role),
                       );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedRole = newValue;
+                      });
                     },
-                  );
-                }
-              },
+                    validator: (value) => validateRole(value),
+                    hint: const Text('Selecciona Un Rol'),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Registrarse'),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        final String email = emailController.text;
+                        final String password = passwordController.text;
+                        if (selectedRole != null) {
+                          UserCredential? userCredential =
+                              await _authService.register(
+                                  email, password, context, selectedRole!);
+                          if (userCredential != null) {
+                            // Redirigir al usuario según el rol seleccionado
+                            switch (selectedRole) {
+                              case 'Visitante':
+                                Navigator.of(context).pushNamed('/FormV');
+                                break;
+                              case 'Creador':
+                                Navigator.of(context).pushNamed('/FormC');
+                                break;
+                              case 'Promotora':
+                                Navigator.of(context).pushNamed('/FormP');
+                                break;
+                            }
+                          }
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );

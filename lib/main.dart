@@ -1,9 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
 import 'package:cnmecab/app/routes.dart';
 import 'package:cnmecab/modules/home/pages/homePage.dart';
 import 'package:cnmecab/modules/notifications/push_notifications.dart';
 import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotification().initNotifications();
+  await FirebaseAppCheck.instance
+      .activate(androidProvider: AndroidProvider.debug);
   runApp(MyApp());
 }
 

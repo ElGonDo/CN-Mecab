@@ -46,9 +46,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   ];
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
-  //final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _creationDateController = TextEditingController();
-  //final TextEditingController _typeController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
 
@@ -179,7 +177,10 @@ class ProfileScreenState extends State<ProfileScreen> {
       'Apodo': apodo,
       'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento)
     }).then((value) {
-      print('Datos del visitante guardados en Firestore');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('¡Datos Actualizados Correctamente!'),
+        duration: Duration(seconds: 2),
+      ));
     }).catchError((error) {
       print('Error al guardar los datos del visitante: $error');
     });
@@ -208,7 +209,10 @@ class ProfileScreenState extends State<ProfileScreen> {
         'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
         'Tipo Creador': tipoCreadorSeleccionado, // Usar la lista actualizada
       }).then((value) {
-        print('Datos del creador guardados en Firestore');
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('¡Datos Actualizados Correctamente!'),
+          duration: Duration(seconds: 2),
+        ));
       }).catchError((error) {
         print('Error al guardar los datos del creador: $error');
       });
@@ -245,7 +249,10 @@ class ProfileScreenState extends State<ProfileScreen> {
         'Categoria': categoriasSeleccionadas,
         'Tipo_Promotora': tipoPromotoraSeleccionadas,
       }).then((value) {
-        print('Datos de la promotora guardados en Firestore');
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('¡Datos Actualizados Correctamente!'),
+          duration: Duration(seconds: 2),
+        ));
       }).catchError((error) {
         print('Error al guardar los datos de la promotora: $error');
       });
