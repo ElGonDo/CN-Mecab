@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:io';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/uploadImage.dart';
@@ -10,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class Publicar extends StatefulWidget {
-  const Publicar({Key? key});
+  const Publicar({super.key});
 
   @override
   State<Publicar> createState() => _PublicarState();

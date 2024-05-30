@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -99,14 +101,14 @@ Future<List<PublicacionR>> obtenerDatosR() async {
   }
 
   // Muestra en la consola cada UID del usuario y la ID de cada mapa
-  publicacionesListR.forEach((publicacion) {
+  for (var publicacion in publicacionesListR) {
     if (kDebugMode) {
       print("UID del usuario: ${publicacion.ruid}");
     }
     if (kDebugMode) {
       print("ID del mapa: ${publicacion.rpubID}");
     }
-  });
+  }
 
   return publicacionesListR;
 }
