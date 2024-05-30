@@ -24,7 +24,6 @@ Future<int> actualizarLikes(String pubId) async {
 
       List<dynamic> usuariosQueDieronLikeDynamic =
           reaccionesData['usuarios_que_dieron_like'] ?? [];
-
       List<String> usuariosQueDieronLike =
           usuariosQueDieronLikeDynamic.cast<String>();
 
@@ -75,10 +74,10 @@ void actualizarRating(String pubId, double rating) async {
       reseniasData['calificaciones'][user.uid] = rating;
     }
 
-double sumaCalificaciones = reseniasData['calificaciones']
-    .values
-    .map((value) => value.toDouble()) 
-    .reduce((value, element) => value + element);
+    double sumaCalificaciones = reseniasData['calificaciones']
+        .values
+        .map((value) => value.toDouble())
+        .reduce((value, element) => value + element);
     int cantidadCalificaciones = reseniasData['calificaciones'].length;
     double promedioCalificaciones = sumaCalificaciones / cantidadCalificaciones;
     // Actualizamos el mapa con el promedio de las calificaciones

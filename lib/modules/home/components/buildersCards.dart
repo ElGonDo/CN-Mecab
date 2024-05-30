@@ -170,7 +170,7 @@ Widget buildCardWidget2(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Cerrar'),
+                          child: const Text('Cerrar'),
                         ),
                       ],
                     );

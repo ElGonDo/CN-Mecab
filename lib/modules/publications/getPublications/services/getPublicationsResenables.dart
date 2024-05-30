@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 class PublicacionR {
   final String rcategoria;
   final String rdescripcion;
-  final String rgenero;
+  final List<String> rgenero;
   final String rtitulo;
   final String ruid; // La UID del usuario
   final String rpubID; // La ID de cada mapa dentro del documento
@@ -55,7 +55,7 @@ Future<List<PublicacionR>> obtenerDatosR() async {
 
       String rcategoria = publicacionR['Categoria'];
       String rdescripcion = publicacionR['Descripcion'];
-      String rgenero = publicacionR['Genero'];
+      List<String> rgenero = List<String>.from(publicacionR['generos']);
       String rtitulo = publicacionR['Titulo'];
       String clasificacion = publicacionR['Clasificacion'];
       String compania = publicacionR['Compania'];

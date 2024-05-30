@@ -50,16 +50,10 @@ class _PublicarState extends State<Publicar> {
     'Musical',
     'Suspense',
     'Terror',
-  ];
-
-  final List<String> generosCineFormato = [
     'Cinema sonoro',
     'Cine 2D',
     'Películas 3D',
     'Animación',
-  ];
-
-  final List<String> generosAmbientacion = [
     'Religiosas',
     'Futuristas',
     'Policíacas',
@@ -79,22 +73,22 @@ class _PublicarState extends State<Publicar> {
   void _onTypePubli(String? tipoPubli) {
     setState(() {
       _tipoPubli = tipoPubli;
+      if (tipoPubli == 'Reseñable') {
+        collectionName = "Publicaciones_Reseñables";
+      } else if (tipoPubli == 'No reseñable') {
+        collectionName = "Publicaciones_No_Reseñables";
+      } else {
+        return;
+      }
     });
-    if (tipoPubli == 'Reseñable') {
-      collectionName = "Publicaciones_Reseñables";
-    } else if (tipoPubli == 'No reseñable') {
-      collectionName = "Publicaciones_No_Reseñables";
-    } else {
-      return;
-    }
   }
 
-  void _onGeneroSelected(String? genero) {
+  void _onGeneroSelected(String genero, bool isSelected) {
     setState(() {
-      if (_selectedGeneros.contains(genero)) {
-        _selectedGeneros.remove(genero);
+      if (isSelected) {
+        _selectedGeneros.add(genero);
       } else {
-        _selectedGeneros.add(genero!);
+        _selectedGeneros.remove(genero);
       }
     });
   }
@@ -129,32 +123,23 @@ class _PublicarState extends State<Publicar> {
   Future<void> enviarANotificaciones(
       String titulo, String descripcion, String category, String userId) async {
     try {
-      // Obtener la referencia a la colección de notificaciones
       CollectionReference notificacionesRef =
           FirebaseFirestore.instance.collection('Notificaciones');
 
-      // Obtener el nombre del usuario que crea la publicación
       User? user = FirebaseAuth.instance.currentUser;
       String nombreUsuario = user?.displayName ?? 'Usuario Desconocido';
 
-      // Crear un documento para la notificación
       await notificacionesRef.add({
         'titulo': titulo,
         'descripcion': descripcion,
         'categoria': category,
         'nombreUsuario': nombreUsuario,
-        'userId':
-            userId, // Si es necesario, puedes almacenar también el ID de usuario
-        'timestamp': FieldValue
-            .serverTimestamp(), // Marcar la fecha y hora de la notificación
+        'userId': userId,
+        'timestamp': FieldValue.serverTimestamp(),
       });
 
-      // Éxito al enviar la notificación
-      // ignore: avoid_print
       print('Notificación enviada correctamente');
     } catch (error) {
-      // Manejar cualquier error que ocurra durante el envío de la notificación
-      // ignore: avoid_print
       print('Error al enviar la notificación: $error');
     }
   }
@@ -224,7 +209,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Director de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -236,7 +221,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Productor de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -248,7 +233,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Guionista de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -260,7 +245,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Distribuidor de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -272,7 +257,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Compañía de producción de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -284,7 +269,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Clasificación de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -296,7 +281,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Idioma original de la película',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -325,7 +310,7 @@ class _PublicarState extends State<Publicar> {
                   child: const Icon(Icons.calendar_today),
                 ),
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -337,7 +322,7 @@ class _PublicarState extends State<Publicar> {
               decoration: const InputDecoration(
                 labelText: 'Duración de la película (en minutos)',
               ),
-              enabled: _tipoPubli == 'Reseñable' || _tipoPubli == null,
+              enabled: _tipoPubli == 'Reseñable',
             ),
             const SizedBox(height: 20),
             const Text(
@@ -366,53 +351,42 @@ class _PublicarState extends State<Publicar> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Seleccionar Géneros"),
-                      content: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ...generosPeliculas.map((genero) {
-                              return CheckboxListTile(
-                                title: Text(genero),
-                                value: _selectedGeneros.contains(genero),
-                                onChanged: (bool? value) {
-                                  _onGeneroSelected(genero);
-                                },
-                              );
-                            }).toList(),
-                            ...generosCineFormato.map((genero) {
-                              return CheckboxListTile(
-                                title: Text(genero),
-                                value: _selectedGeneros.contains(genero),
-                                onChanged: (bool? value) {
-                                  _onGeneroSelected(genero);
-                                },
-                              );
-                            }).toList(),
-                            ...generosAmbientacion.map((genero) {
-                              return CheckboxListTile(
-                                title: Text(genero),
-                                value: _selectedGeneros.contains(genero),
-                                onChanged: (bool? value) {
-                                  _onGeneroSelected(genero);
-                                },
-                              );
-                            }).toList(),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return AlertDialog(
+                          title: const Text("Seleccionar Géneros"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              children: generosPeliculas.map((genero) {
+                                final isSelected =
+                                    _selectedGeneros.contains(genero);
+                                return CheckboxListTile(
+                                  title: Text(genero),
+                                  value: isSelected,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _onGeneroSelected(genero, value!);
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
                           ),
-                          child: const Text("Cerrar"),
-                        ),
-                      ],
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.red),
+                              ),
+                              child: const Text("Cerrar"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
                 );
@@ -432,53 +406,98 @@ class _PublicarState extends State<Publicar> {
                     color: const Color.fromARGB(255, 151, 151, 151),
                   ),
             ElevatedButton(
-                onPressed: () async {
-                  final XFile? imagen = await getImage();
-                  setState(() {
-                    image_to_upload = File(imagen!.path);
-                  });
-                },
-                child: const Text("Seleccionar imagen")),
+              onPressed: () async {
+                final XFile? imagen = await getImage();
+                setState(() {
+                  image_to_upload = File(imagen!.path);
+                });
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+              ),
+              child: const Text("Seleccionar imagen"),
+            ),
             ElevatedButton(
-                onPressed: () async {
-                  final postId = await addTitle(
-                      tituloController.text,
-                      descripcionController.text,
-                      directorController.text,
-                      productorController.text,
-                      guionistaController.text,
-                      distriController.text,
-                      companiaController.text,
-                      clasificacionController.text,
-                      idiomaController.text,
-                      fechaEstrenoController.text,
-                      duracionController.text,
-                      _selectedCategory ?? '',
-                      _selectedGeneros.join(', '),
-                      collectionName ?? '');
-                  if (image_to_upload == null) {
-                    return;
-                  }
-                  final uploaded = await uploadImage(image_to_upload!, postId);
+              onPressed: _tipoPubli == 'Reseñable'
+                  ? () async {
+                      final postId = await Publicaciones_Resenables(
+                        tituloController.text,
+                        descripcionController.text,
+                        directorController.text,
+                        productorController.text,
+                        guionistaController.text,
+                        distriController.text,
+                        companiaController.text,
+                        clasificacionController.text,
+                        idiomaController.text,
+                        fechaEstrenoController.text,
+                        duracionController.text,
+                        _selectedCategory ?? '',
+                        _selectedGeneros,
+                        collectionName ?? '',
+                      );
+                      if (image_to_upload == null) {
+                        return;
+                      }
+                      final uploaded =
+                          await uploadImage(image_to_upload!, postId);
 
-                  if (uploaded) {
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Error al subir la imagen")));
-                  } else {
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Imagen subida correctamente")));
-                  }
+                      if (uploaded) {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Imagen subida correctamente")));
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Imagen Subida Correctamente")));
+                      }
 
-                  // Envía los datos a la colección de Notificaciones
-                  await enviarANotificaciones(
-                      tituloController.text,
-                      descripcionController.text,
-                      _selectedCategory ?? '',
-                      FirebaseAuth.instance.currentUser?.uid ?? '');
-                },
-                child: const Text("Subir Publicacion"))
+                      await enviarANotificaciones(
+                        tituloController.text,
+                        descripcionController.text,
+                        _selectedCategory ?? '',
+                        FirebaseAuth.instance.currentUser?.uid ?? '',
+                      );
+                    }
+                  : () async {
+                      final postId = await Publicaciones_No_Resenables(
+                        tituloController.text,
+                        descripcionController.text,
+                        _selectedCategory ?? '',
+                        _selectedGeneros,
+                      );
+                      if (image_to_upload == null) {
+                        return;
+                      }
+                      final uploaded =
+                          await uploadImage(image_to_upload!, postId);
+
+                      if (uploaded) {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Imagen subida correctamente")));
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Imagen Subida Correctamente")));
+                      }
+
+                      await enviarANotificaciones(
+                        tituloController.text,
+                        descripcionController.text,
+                        _selectedCategory ?? '',
+                        FirebaseAuth.instance.currentUser?.uid ?? '',
+                      );
+                    },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+              ),
+              child: const Text("Subir Publicacion"),
+            ),
           ],
         ),
       ),

@@ -6,17 +6,17 @@ import 'package:flutter/foundation.dart';
 class Publicacion {
   final String categoria;
   final String descripcion;
-  final String genero;
+  final List<String> rgenero;
   final String titulo;
-  final String uid; // La UID del usuario
-  final String pubID; // La ID de cada mapa dentro del documento
+  final String uid;
+  final String pubID;
   final bool esResenable;
   int likes;
 
   Publicacion({
     required this.categoria,
     required this.descripcion,
-    required this.genero,
+    required this.rgenero,
     required this.titulo,
     required this.uid,
     required this.pubID,
@@ -43,14 +43,14 @@ Future<List<Publicacion>> obtenerDatos() async {
 
       String categoria = publicacion['Categoria'];
       String descripcion = publicacion['Descripcion'];
-      String genero = publicacion['Genero'];
+      List<String> rgenero = List<String>.from(publicacion['generos']);
       String titulo = publicacion['Titulo'];
       bool esResenable = publicacion['Reseñable'] ?? false;
 
       Publicacion nuevaPublicacion = Publicacion(
         categoria: categoria,
         descripcion: descripcion,
-        genero: genero,
+        rgenero: rgenero,
         titulo: titulo,
         uid: uid,
         pubID: pubID,
