@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -72,6 +72,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         userProfile = UserProfile(
           uid: user.uid,
           role: userData['Rol'],
+          name: userData['Nombre'],
         );
 
         if (!_isDataLoaded) {
@@ -168,25 +169,32 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void guardarVisitante(
-      String nombre, String apellido, String apodo, DateTime fechaNacimiento) {
+  Future<void> guardarVisitante(String nombre, String apellido, String apodo,
+      DateTime fechaNacimiento) async {
     final CollectionReference visitantesCollection =
         FirebaseFirestore.instance.collection('Visitantes');
-    visitantesCollection.doc(userProfile?.uid).set({
+    visitantesCollection.doc(userProfile?.uid).update({
       'Nombre': nombre,
       'Apellido': apellido,
       'Apodo': apodo,
-      'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento),
+      'Fecha_Nacimiento': Timestamp.fromDate(fechaNacimiento)
     }).then((value) {
       print('Datos del visitante guardados en Firestore');
     }).catchError((error) {
       print('Error al guardar los datos del visitante: $error');
     });
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombre,
+    });
   }
 
 // Función para guardar los datos del creador en Firestore
-  void guardarCreador(String nombreCreador, DateTime fechaNacimiento,
-      List<String> tiposCreador) {
+  Future<void> guardarCreador(String nombreCreador, DateTime fechaNacimiento,
+      List<String> tiposCreador) async {
     try {
       // Eliminar los tipos de creador deseleccionados
       tipoCreadorSeleccionado
@@ -208,11 +216,18 @@ class ProfileScreenState extends State<ProfileScreen> {
       // Manejar cualquier error
       print(e.toString());
     }
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombreCreador,
+    });
   }
 
 // Función para guardar los datos de la promotora en Firestore
-  void guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
-      List<String> categoriasDisponibles, List<String> tipoPromotora) {
+  Future<void> guardarPromotora(String nombrePromotora, DateTime fechaCreacion,
+      List<String> categoriasDisponibles, List<String> tipoPromotora) async {
     try {
       // Eliminar las categorias deseleccionados
       categoriasSeleccionadas
@@ -238,6 +253,13 @@ class ProfileScreenState extends State<ProfileScreen> {
       // Manejar cualquier error
       print(e.toString());
     }
+    // Actualizar los datos del usuario en la colección "Usuarios"
+    await FirebaseFirestore.instance
+        .collection('Usuarios')
+        .doc(userProfile?.uid)
+        .update({
+      'Nombre': nombrePromotora,
+    });
   }
 
   @override

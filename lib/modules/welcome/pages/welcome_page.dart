@@ -16,7 +16,7 @@ class WelcomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/post%2FIMG-20230918-WA0003.jpg?alt=media&token=b32dfb0a-f985-4b98-8031-3f968d7c5b1d',
+              'https://firebasestorage.googleapis.com/v0/b/cn-mecab-3c43c.appspot.com/o/recursos%2FLogo%202.png?alt=media&token=fe4acb5b-9b27-48a2-b3b8-7313dad7ce40',
               width: 380,
               height: 340,
             ),

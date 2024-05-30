@@ -1,8 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors
-import 'package:cnmecab/modules/Notification/pages/push_notifications.dart';
 import 'package:cnmecab/app/routes.dart';
-import 'package:cnmecab/modules/home/pages/home_page.dart';
-import 'package:cnmecab/modules/profile/pages/objetoUsuario.dart';
+import 'package:cnmecab/modules/home/pages/homePage.dart';
+import 'package:cnmecab/modules/notifications/push_notifications.dart';
+import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

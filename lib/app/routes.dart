@@ -1,21 +1,22 @@
 // ignore_for_file: unused_import, prefer_const_constructors
 
-import 'package:cnmecab/modules/Notification/pages/Notification.dart';
-import 'package:cnmecab/modules/Search/Search.dart';
-import 'package:cnmecab/modules/forms/pages/FormC.dart';
-import 'package:cnmecab/modules/forms/pages/FormP.dart';
-import 'package:cnmecab/modules/forms/pages/FormV.dart';
-import 'package:cnmecab/modules/Home/pages/home_page.dart';
-import 'package:cnmecab/modules/Login/pages/login_page.dart';
-import 'package:cnmecab/modules/Register/pages/register_page.dart';
-import 'package:cnmecab/modules/home/pages/home_body.dart';
-import 'package:cnmecab/modules/politics/pages/politics.dart';
-import 'package:cnmecab/modules/politics/pages/Terms.dart';
-import 'package:cnmecab/modules/Saved/pages/saved_page.dart';
+import 'package:cnmecab/modules/auth/pages/registerPage.dart';
+import 'package:cnmecab/modules/auth/pages/loginPage.dart';
+import 'package:cnmecab/modules/home/pages/homePage.dart';
+import 'package:cnmecab/modules/notifications/pages/notifications.dart';
+import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
+import 'package:cnmecab/modules/search/pages/search.dart';
+import 'package:cnmecab/modules/auth/pages/formCreatorPage.dart';
+import 'package:cnmecab/modules/auth/pages/formPromoterPage.dart';
+import 'package:cnmecab/modules/auth/pages/formVisitorPage.dart';
+import 'package:cnmecab/modules/home/pages/homeBody.dart';
+import 'package:cnmecab/modules/home/pages/politics.dart';
+import 'package:cnmecab/modules/home/pages/terms.dart';
 import 'package:cnmecab/modules/profile/pages/profile.dart';
-import 'package:cnmecab/modules/profile/pages/profileimage.dart';
+import 'package:cnmecab/modules/profile/pages/profileimageCreators.dart';
+import 'package:cnmecab/modules/profile/pages/profileimageVisitor.dart';
+import 'package:cnmecab/modules/profile/pages/profileNew.dart';
 import 'package:cnmecab/modules/welcome/pages/welcome_page.dart';
-import 'package:cnmecab/modules/PostUp/pages/PostsUpload.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,10 +31,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => FormPPage());
     case '/Profile':
       return MaterialPageRoute(builder: (_) => ProfileScreen());
+    case '/ProfileNew':
+      return MaterialPageRoute(builder: (_) => ProfilePage());
     case '/politics':
       return MaterialPageRoute(builder: (_) => politics());
-    case '/saved':
-      return MaterialPageRoute(builder: (_) => Guardados());
     case '/terms':
       return MaterialPageRoute(builder: (_) => Terminos());
     case '/home':
@@ -50,8 +51,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => Search());
     case '/notificaciones':
       return MaterialPageRoute(builder: (_) => Notificacion());
-    case '/imagesprofile':
+    case '/imagesprofileVisitor':
       return MaterialPageRoute(builder: (_) => ImageListScreen());
+    case '/imagesprofileCreators':
+      return MaterialPageRoute(builder: (_) => PublicarCreators());
     default:
       return MaterialPageRoute(builder: (_) => WelcomePage());
   }
