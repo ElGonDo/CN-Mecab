@@ -106,7 +106,7 @@ Widget buildCardWidget2(
   String urlString,
   PublicacionR mostrar,
 ) {
-  double currentRating = 4.0;
+  double currentRating = mostrar.promedioResenas;
   return Card(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -231,6 +231,7 @@ Widget buildCardWidget2(
                 );
               },
             ),
+            Text(mostrar.promedioResenas.toStringAsFixed(1)),
             Row(
               children: [
                 IconButton(
