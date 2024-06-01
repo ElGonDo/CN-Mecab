@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_function_literals_in_foreach_calls, file_names
+// ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -6,11 +6,20 @@ import 'package:flutter/foundation.dart';
 class PublicacionR {
   final String rcategoria;
   final String rdescripcion;
-  final String rgenero;
+  final List<String> rgenero;
   final String rtitulo;
   final String ruid; // La UID del usuario
   final String rpubID; // La ID de cada mapa dentro del documento
   double promedioResenas;
+  final String clasificacion;
+  final String compania;
+  final String director;
+  final String distribuidor;
+  final String duracion;
+  final String fechaEstreno;
+  final String guionista;
+  final String idioma;
+  final String productor;
 
   PublicacionR({
     required this.rcategoria,
@@ -20,6 +29,15 @@ class PublicacionR {
     required this.ruid,
     required this.rpubID,
     required this.promedioResenas,
+    required this.clasificacion,
+    required this.compania,
+    required this.director,
+    required this.distribuidor,
+    required this.duracion,
+    required this.fechaEstreno,
+    required this.guionista,
+    required this.idioma,
+    required this.productor,
   });
 }
 
@@ -39,8 +57,17 @@ Future<List<PublicacionR>> obtenerDatosR() async {
 
       String rcategoria = publicacionR['Categoria'];
       String rdescripcion = publicacionR['Descripcion'];
-      String rgenero = publicacionR['Genero'];
+      List<String> rgenero = List<String>.from(publicacionR['generos']);
       String rtitulo = publicacionR['Titulo'];
+      String clasificacion = publicacionR['Clasificacion'];
+      String compania = publicacionR['Compania'];
+      String director = publicacionR['Director'];
+      String distribuidor = publicacionR['Distribuidor'];
+      String duracion = publicacionR['Duracion'];
+      String fechaEstreno = publicacionR['FechaEstreno'];
+      String guionista = publicacionR['Guionista'];
+      String idioma = publicacionR['Idioma'];
+      String productor = publicacionR['Productor'];
 
       // Obtiene el promedio de reseñas para cada publicación
       double promedioResenas = await obtenerPromedioResenas(pubID);
@@ -53,6 +80,15 @@ Future<List<PublicacionR>> obtenerDatosR() async {
         ruid: uid,
         rpubID: pubID,
         promedioResenas: promedioResenas,
+        clasificacion: clasificacion,
+        compania: compania,
+        director: director,
+        distribuidor: distribuidor,
+        duracion: duracion,
+        fechaEstreno: fechaEstreno,
+        guionista: guionista,
+        idioma: idioma,
+        productor: productor,
       );
       publicacionesListR.add(nuevaPublicacionR);
 
@@ -65,14 +101,14 @@ Future<List<PublicacionR>> obtenerDatosR() async {
   }
 
   // Muestra en la consola cada UID del usuario y la ID de cada mapa
-  publicacionesListR.forEach((publicacion) {
+  for (var publicacion in publicacionesListR) {
     if (kDebugMode) {
       print("UID del usuario: ${publicacion.ruid}");
     }
     if (kDebugMode) {
       print("ID del mapa: ${publicacion.rpubID}");
     }
-  });
+  }
 
   return publicacionesListR;
 }

@@ -4,6 +4,7 @@ import 'package:cnmecab/modules/home/pages/homeBody.dart';
 import 'package:cnmecab/modules/profile/services/filterProfileServicesSaved.dart';
 import 'package:cnmecab/modules/profile/services/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
+import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
 import 'package:cnmecab/modules/home/components/comments.dart';
 import 'package:cnmecab/modules/home/updateLikesAndRating.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/firebase_services.dart';
@@ -94,8 +95,8 @@ Widget buildCardWidget(
 }
 
 Widget buildCardWidget2(
-  String title,
-  String description,
+  String rtitle,
+  String rdescription,
   String pubId,
   String imageName,
   String ruid,
@@ -103,8 +104,9 @@ Widget buildCardWidget2(
   String uidUsuarioActual,
   TextEditingController comentarioController,
   String urlString,
+  PublicacionR mostrar,
 ) {
-  double currentRating = 4.0;
+  double currentRating = mostrar.promedioResenas;
   return Card(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -129,8 +131,68 @@ Widget buildCardWidget2(
               }
             },
           ),
-          title: Text(title),
-          subtitle: Text(description),
+          title: Text(rtitle),
+          subtitle: Text(rdescription),
+          trailing: PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'eliminar') {
+                // Agregar la lógica para eliminar aquí
+              } else if (value == 'editar') {
+                // Agregar la lógica para editar aquí
+              } else if (value == 'vermas') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(mostrar.rtitulo),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Categoría: ${mostrar.rcategoria}'),
+                            Text('Descripción: ${mostrar.rdescripcion}'),
+                            Text('Clasificación: ${mostrar.clasificacion}'),
+                            Text('Compañía: ${mostrar.compania}'),
+                            Text('Director: ${mostrar.director}'),
+                            Text('Distribuidor: ${mostrar.distribuidor}'),
+                            Text('Duración: ${mostrar.duracion}'),
+                            Text('Fecha de Estreno: ${mostrar.fechaEstreno}'),
+                            Text('Género: ${mostrar.rgenero}'),
+                            Text('Guionista: ${mostrar.guionista}'),
+                            Text('Idioma: ${mostrar.idioma}'),
+                            Text('Productor: ${mostrar.productor}'),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cerrar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'eliminar',
+                child: Text('Eliminar'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'editar',
+                child: Text('Editar'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'vermas',
+                child: Text('Ver más'),
+              ),
+            ],
+          ),
         ),
         FutureBuilder<String>(
           future: getImageUrl(imageName),
@@ -169,6 +231,7 @@ Widget buildCardWidget2(
                 );
               },
             ),
+            Text(mostrar.promedioResenas.toStringAsFixed(1)),
             Row(
               children: [
                 IconButton(

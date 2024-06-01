@@ -129,15 +129,17 @@ class ProfileDataDialogState extends State<ProfileDataDialog> {
                   children: [
                     for (var publicacionR in newPublicacionesR)
                       buildCardWidget2(
-                          publicacionR.rtitulo,
-                          publicacionR.rdescripcion,
-                          publicacionR.rpubID,
-                          '${publicacionR.rpubID}.jpg',
-                          publicacionR.ruid,
-                          context,
-                          widget.currentUser,
-                          comentarioController,
-                          widget.URlString),
+                        publicacionR.rtitulo,
+                        publicacionR.rdescripcion,
+                        publicacionR.rpubID,
+                        '${publicacionR.rpubID}.jpg',
+                        publicacionR.ruid,
+                        context,
+                        widget.currentUser,
+                        comentarioController,
+                        widget.URlString,
+                        publicacionR,
+                      ),
                     for (var publicacionNR in newPublicacionesNR)
                       buildCardWidget(
                           publicacionNR,
@@ -153,15 +155,17 @@ class ProfileDataDialogState extends State<ProfileDataDialog> {
                   children: [
                     for (var publicacionR in newMisPublicacionesR)
                       buildCardWidget2(
-                          publicacionR.rtitulo,
-                          publicacionR.rdescripcion,
-                          publicacionR.rpubID,
-                          '${publicacionR.rpubID}.jpg',
-                          publicacionR.ruid,
-                          context,
-                          widget.currentUser,
-                          comentarioController,
-                          widget.URlString),
+                        publicacionR.rtitulo,
+                        publicacionR.rdescripcion,
+                        publicacionR.rpubID,
+                        '${publicacionR.rpubID}.jpg',
+                        publicacionR.ruid,
+                        context,
+                        widget.currentUser,
+                        comentarioController,
+                        widget.URlString,
+                        publicacionR,
+                      ),
                     for (var publicacionNR in newMisPublicacionesNR)
                       buildCardWidget(
                           publicacionNR,

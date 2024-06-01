@@ -21,24 +21,75 @@ Future<String> getImageUrl(String imageName) async {
   }
 }
 
-Future<String> addTitle(
+// ignore: non_constant_identifier_names
+Future<String> Publicaciones_Resenables(
   String titulo,
   String descripcion,
+  String director,
+  String productor,
+  String guionista,
+  String distribuidor,
+  String compania,
+  String clasificacion,
+  String idioma,
+  String fechaEstreno,
+  String duracion,
   String selectedCategory,
-  String? selectedGenero,
+  List<String> generos,
   String? collectionName,
 ) async {
   final user = FirebaseAuth.instance.currentUser;
 
   if (user != null) {
     // Utiliza el UID del usuario como nombre de documento
-    final documentReference = db.collection(collectionName!).doc(user.uid);
+    final documentReference =
+        db.collection('Publicaciones_Reseñables').doc(user.uid);
+    final postId = DateTime.now().millisecondsSinceEpoch.toString();
+    final postData = {
+      "Titulo": titulo,
+      "Descripcion": descripcion,
+      "Director": director,
+      "Productor": productor,
+      "Guionista": guionista,
+      "Distribuidor": distribuidor,
+      "Compania": compania,
+      "Clasificacion": clasificacion,
+      "Idioma": idioma,
+      "FechaEstreno": fechaEstreno,
+      "Duracion": duracion,
+      "Categoria": selectedCategory,
+      'generos': generos,
+      "FechaHora": FieldValue.serverTimestamp(),
+    };
+    await documentReference.set(
+      {postId: postData},
+      SetOptions(merge: true),
+    );
+    return postId; // Devuelve la ID de la publicación
+  }
+
+  return ''; // Devuelve un valor por defecto en caso de error o si el usuario es nulo
+}
+
+// ignore: non_constant_identifier_names
+Future<String> Publicaciones_No_Resenables(
+  String titulo,
+  String descripcion,
+  String selectedCategory,
+  List<String> generos,
+) async {
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // Utiliza el UID del usuario como nombre de documento
+    final documentReference =
+        db.collection('Publicaciones_No_Reseñables').doc(user.uid);
     final postId = DateTime.now().millisecondsSinceEpoch.toString();
     final postData = {
       "Titulo": titulo,
       "Descripcion": descripcion,
       "Categoria": selectedCategory,
-      "Genero": selectedGenero,
+      'generos': generos,
       "FechaHora": FieldValue.serverTimestamp(),
     };
     await documentReference.set(
