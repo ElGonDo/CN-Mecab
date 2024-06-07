@@ -2,6 +2,7 @@
 
 import 'package:cnmecab/modules/auth/pages/registerPage.dart';
 import 'package:cnmecab/modules/auth/pages/loginPage.dart';
+import 'package:cnmecab/modules/home/pages/comunityNorms.dart';
 import 'package:cnmecab/modules/home/pages/homePage.dart';
 import 'package:cnmecab/modules/notifications/pages/notifications.dart';
 import 'package:cnmecab/modules/publications/postPublications/pages/postPublications.dart';
@@ -37,6 +38,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => politics());
     case '/terms':
       return MaterialPageRoute(builder: (_) => Terminos());
+    case '/comunityNorms':
+      return MaterialPageRoute(builder: (_) => comunity());
     case '/home':
       return MaterialPageRoute(builder: (_) => Paginahome());
     case '/login':

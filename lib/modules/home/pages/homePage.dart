@@ -193,7 +193,7 @@ class _PaginahomeState extends State<Paginahome> {
               },
             ),
             ListTile(
-              title: Text('Terminos y Políticas de Seguridad',
+              title: Text('Terminos, Normas y Políticas',
                   style: TextStyle(color: Colors.black)),
               onTap: () {
                 showAboutDialog(
@@ -215,6 +215,12 @@ class _PaginahomeState extends State<Paginahome> {
                         Navigator.of(context).pushNamed('/terms');
                       },
                       child: const Text('Terminos y condiciones'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/comunityNorms');
+                      },
+                      child: const Text('Normas de la Comunidad'),
                     ),
                   ],
                 );
