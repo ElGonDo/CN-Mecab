@@ -1,6 +1,8 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously, prefer_const_constructors
 
 import 'package:cnmecab/modules/home/pages/homeBody.dart';
+import 'package:cnmecab/modules/home/pages/homePage.dart';
+import 'package:cnmecab/modules/home/services/deletePublication.dart';
 import 'package:cnmecab/modules/profile/services/filterProfileServicesSaved.dart';
 import 'package:cnmecab/modules/profile/services/filterProfileServicesShared.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
@@ -45,6 +47,49 @@ Widget buildCardWidget(
           ),
           title: Text(publicacion.titulo),
           subtitle: Text(publicacion.descripcion),
+          trailing: publicacion.uid == uidUsuarioActual
+              ? PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (value) async {
+                    if (value == 'eliminar') {
+                      bool eliminacionExitosa =
+                          await eliminarPublicacionNoResenable(
+                              publicacion.uid, publicacion.pubID);
+                      if (eliminacionExitosa) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Tu publicación se borró correctamente')),
+                        );
+                        // Recargar la página para reflejar los cambios
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Paginahome()),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Error al eliminar la publicación')),
+                        );
+                      }
+                    } else if (value == 'editar') {
+                      // Agregar la lógica para editar aquí
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'eliminar',
+                      child: Text('Eliminar'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'editar',
+                      child: Text('Editar'),
+                    ),
+                  ],
+                )
+              : null,
         ),
         FutureBuilder<String>(
           future: getImageUrl('${publicacion.pubID}.jpg'),
@@ -135,9 +180,25 @@ Widget buildCardWidget2(
           subtitle: Text(rdescription),
           trailing: PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'eliminar') {
-                // Agregar la lógica para eliminar aquí
+                bool eliminacionExitosa =
+                    await eliminarPublicacion(ruid, pubId);
+                if (eliminacionExitosa) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('Tu publicación se borró correctamente')),
+                  );
+                  // Recargar la página para reflejar los cambios
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Paginahome()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error al eliminar la publicación')),
+                  );
+                }
               } else if (value == 'editar') {
                 // Agregar la lógica para editar aquí
               } else if (value == 'vermas') {
@@ -178,20 +239,31 @@ Widget buildCardWidget2(
                 );
               }
             },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'eliminar',
-                child: Text('Eliminar'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'editar',
-                child: Text('Editar'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'vermas',
-                child: Text('Ver más'),
-              ),
-            ],
+            itemBuilder: (BuildContext context) {
+              if (uidUsuarioActual == ruid) {
+                return <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'eliminar',
+                    child: Text('Eliminar'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'editar',
+                    child: Text('Editar'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'vermas',
+                    child: Text('Ver más'),
+                  ),
+                ];
+              } else {
+                return <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'vermas',
+                    child: Text('Ver más'),
+                  ),
+                ];
+              }
+            },
           ),
         ),
         FutureBuilder<String>(
