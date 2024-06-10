@@ -1,9 +1,11 @@
-// ignore_for_file: use_key_in_widget_constructors, file_names, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names
+// ignore_for_file: use_key_in_widget_constructors, file_names, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:cnmecab/modules/profile/services/objectUser.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsNoResenables.dart';
 import 'package:cnmecab/modules/publications/getPublications/services/getPublicationsResenables.dart';
+import 'package:cnmecab/modules/search/components/filterStars.dart';
 import 'package:cnmecab/modules/search/services/displayProfileDataSearch.dart';
+import 'package:cnmecab/modules/search/services/filterStarsData.dart';
 import 'package:cnmecab/modules/search/services/searchService.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,6 +24,7 @@ class SearchState extends State<Search> {
   List<PublicacionR> publicacionesListR = [];
   String URlString = "";
   UserProfile? userProfile;
+  int? selectedStarFilter;
 
   @override
   void initState() {
@@ -42,36 +45,55 @@ class SearchState extends State<Search> {
     publicacionesListR = values[1] as List<PublicacionR>;
   }
 
+  void applyStarFilter(int starCount) async {
+    List<PublicacionR> publicacionesFiltradas =
+        await obtenerPublicacionesPorEstrellas(starCount);
+    showFilteredResultsModal(context, publicacionesFiltradas, userProfile!.uid,
+        TextEditingController(), URlString);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Container(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 10,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: TextField(
-            controller: searchController,
-            style: const TextStyle(color: Colors.black),
-            decoration: const InputDecoration(
-              hintText: 'Busqueda',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: InputBorder.none,
-              icon: Icon(Icons.search, color: Colors.black),
+        title: Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    hintText: 'Busqueda',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                    icon: Icon(Icons.search, color: Colors.black),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchService.searchUsersByName(value);
+                    });
+                  },
+                ),
+              ),
             ),
-            onChanged: (value) {
-              setState(() {
-                // Agrega un pequeño retraso (debounce) para mejorar la eficiencia
-                searchService.searchUsersByName(value);
-              });
-            },
-          ),
+            IconButton(
+              icon: const Icon(Icons.filter_alt, color: Colors.white),
+              onPressed: () {
+                FilterStars(onFilterSelected: applyStarFilter)
+                    .showFilterModal(context);
+              },
+            ),
+          ],
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
