@@ -1,4 +1,7 @@
+// ignore_for_file: file_names
+
 import 'dart:io';
+import 'package:cnmecab/modules/publications/postPublications/components/alertPostPublication.dart';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/uploadImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/firebase_services.dart';
@@ -139,9 +142,13 @@ class _PublicarState extends State<Publicar> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      print('Notificación enviada correctamente');
+      if (kDebugMode) {
+        print('Notificación enviada correctamente');
+      }
     } catch (error) {
-      print('Error al enviar la notificación: $error');
+      if (kDebugMode) {
+        print('Error al enviar la notificación: $error');
+      }
     }
   }
 
@@ -496,53 +503,37 @@ class _PublicarState extends State<Publicar> {
             ),
             ElevatedButton(
               onPressed: () async {
+                // Primero valida los campos
                 if (!_validateFields()) {
                   _showAlert("Cn Mecab",
                       "Por favor complete todos los campos obligatorios.✋😉");
                   return;
                 }
 
-                String postId;
-                if (_tipoPubli == 'Reseñable') {
-                  postId = await Publicaciones_Resenables(
-                    tituloController.text,
-                    descripcionController.text,
-                    directorController.text,
-                    productorController.text,
-                    guionistaController.text,
-                    distriController.text,
-                    companiaController.text,
-                    clasificacionController.text,
-                    idiomaController.text,
-                    fechaEstrenoController.text,
-                    duracionController.text,
-                    _selectedCategory ?? '',
-                    _selectedGeneros,
-                    collectionName ?? '',
-                  );
-                } else {
-                  postId = await Publicaciones_No_Resenables(
-                    tituloController.text,
-                    descripcionController.text,
-                    _selectedCategory ?? '',
-                    _selectedGeneros,
-                  );
-                }
-
-                final uploaded = await uploadImage(imageToUpload!, postId);
-
-                if (!uploaded) {
-                  _showAlert("Éxito", "Imagen subida correctamente.");
-                  return;
-                } else {
-                  _showAlert("Error", "Error al subir la imagen..");
-                }
-
-                await enviarANotificaciones(
-                  tituloController.text,
-                  descripcionController.text,
-                  _selectedCategory ?? '',
-                  FirebaseAuth.instance.currentUser?.uid ?? '',
+                // Luego muestra el diálogo de confirmación
+                alertPostPublication(
+                  context,
+                  tituloController,
+                  descripcionController,
+                  directorController,
+                  productorController,
+                  guionistaController,
+                  distriController,
+                  companiaController,
+                  clasificacionController,
+                  idiomaController,
+                  fechaEstrenoController,
+                  duracionController,
+                  _selectedCategory,
+                  _selectedGeneros,
+                  collectionName,
+                  imageToUpload,
+                  _tipoPubli,
+                  enviarANotificaciones,
+                  Publicaciones_Resenables,
+                  Publicaciones_No_Resenables,
+                  uploadImage,
+                  _showAlert,
                 );
               },
               style: ButtonStyle(
