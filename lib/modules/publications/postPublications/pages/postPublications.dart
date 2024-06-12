@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, avoid_print
-
 import 'dart:io';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/uploadImage.dart';
@@ -33,13 +31,13 @@ class _PublicarState extends State<Publicar> {
       TextEditingController(text: "");
   TextEditingController duracionController = TextEditingController(text: "");
 
-  // ignore: non_constant_identifier_names
-  File? image_to_upload;
+  File? imageToUpload;
   final List<String> _selectedGeneros = [];
   String? _selectedCategory;
   String? _tipoPubli;
   List<String> categoriasSeleccionadas = [];
   String? collectionName;
+  Map<String, bool> _fieldErrors = {};
 
   final List<String> generosPeliculas = [
     'Acción',
@@ -98,6 +96,7 @@ class _PublicarState extends State<Publicar> {
   @override
   void initState() {
     super.initState();
+    _tipoPubli = 'Reseñable';
     initializeUserId();
   }
 
@@ -146,6 +145,115 @@ class _PublicarState extends State<Publicar> {
     }
   }
 
+  bool _validateFields() {
+    _fieldErrors.clear();
+    bool isValid = true;
+
+    if (_tipoPubli == null) {
+      _fieldErrors['Tipo de publicación'] = true;
+      isValid = false;
+    }
+    if (tituloController.text.isEmpty) {
+      _fieldErrors['Título de la publicación'] = true;
+      isValid = false;
+    }
+    if (descripcionController.text.isEmpty) {
+      _fieldErrors['Descripción de la publicación'] = true;
+      isValid = false;
+    }
+    if (_selectedCategory == null) {
+      _fieldErrors['Categoría de la publicación'] = true;
+      isValid = false;
+    }
+    if (_selectedGeneros.isEmpty) {
+      _fieldErrors['Géneros de la publicación'] = true;
+      isValid = false;
+    }
+    if (_tipoPubli == 'Reseñable') {
+      if (directorController.text.isEmpty) {
+        _fieldErrors['Director de la película'] = true;
+        isValid = false;
+      }
+      if (productorController.text.isEmpty) {
+        _fieldErrors['Productor de la película'] = true;
+        isValid = false;
+      }
+      if (guionistaController.text.isEmpty) {
+        _fieldErrors['Guionista de la película'] = true;
+        isValid = false;
+      }
+      if (distriController.text.isEmpty) {
+        _fieldErrors['Distribuidor de la película'] = true;
+        isValid = false;
+      }
+      if (companiaController.text.isEmpty) {
+        _fieldErrors['Compañía de producción de la película'] = true;
+        isValid = false;
+      }
+      if (clasificacionController.text.isEmpty) {
+        _fieldErrors['Clasificación de la película'] = true;
+        isValid = false;
+      }
+      if (idiomaController.text.isEmpty) {
+        _fieldErrors['Idioma original de la película'] = true;
+        isValid = false;
+      }
+      if (fechaEstrenoController.text.isEmpty) {
+        _fieldErrors['Fecha de estreno de la película'] = true;
+        isValid = false;
+      }
+      if (duracionController.text.isEmpty) {
+        _fieldErrors['Duración de la película'] = true;
+        isValid = false;
+      }
+    }
+    if (imageToUpload == null) {
+      _fieldErrors['Imagen de la publicación'] = true;
+      isValid = false;
+    }
+
+    setState(() {});
+    return isValid;
+  }
+
+  void _showAlert(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller, String label, String fieldName) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        errorText: _fieldErrors[fieldName] == true
+            ? 'Este campo es obligatorio'
+            : null,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: _fieldErrors[fieldName] == true ? Colors.red : Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,151 +289,107 @@ class _PublicarState extends State<Publicar> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Titulo Publicación:',
+              'Título Publicación:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            TextField(
-              controller: tituloController,
-              decoration: const InputDecoration(
-                labelText: 'Titulo de la publicación',
-              ),
-            ),
+            _buildTextField(tituloController, '', 'Título de la publicación'),
             const SizedBox(height: 20),
             const Text(
               'Descripción de la Publicación:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            TextField(
-              controller: descripcionController,
-              decoration: const InputDecoration(
-                labelText: 'Descripción de la publicación',
-              ),
-            ),
+            _buildTextField(
+                descripcionController, '', 'Descripción de la publicación'),
             const SizedBox(height: 20),
-            const Text(
-              'Director:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: directorController,
-              decoration: const InputDecoration(
-                labelText: 'Director de la película',
+            if (_tipoPubli == 'Reseñable') ...[
+              const Text(
+                'Director:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Productor:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: productorController,
-              decoration: const InputDecoration(
-                labelText: 'Productor de la película',
+              _buildTextField(
+                  directorController, '', 'Director de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Productor:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Guionista:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: guionistaController,
-              decoration: const InputDecoration(
-                labelText: 'Guionista de la película',
+              _buildTextField(
+                  productorController, '', 'Productor de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Guionista:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Distribuidor:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: distriController,
-              decoration: const InputDecoration(
-                labelText: 'Distribuidor de la película',
+              _buildTextField(
+                  guionistaController, '', 'Guionista de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Distribuidor:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Compañía de producción:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: companiaController,
-              decoration: const InputDecoration(
-                labelText: 'Compañía de producción de la película',
+              _buildTextField(
+                  distriController, '', 'Distribuidor de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Compañía de producción:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Clasificación:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: clasificacionController,
-              decoration: const InputDecoration(
-                labelText: 'Clasificación de la película',
+              _buildTextField(companiaController, '',
+                  'Compañía de producción de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Clasificación:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Idioma original:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: idiomaController,
-              decoration: const InputDecoration(
-                labelText: 'Idioma original de la película',
+              _buildTextField(
+                  clasificacionController, '', 'Clasificación de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Idioma original:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Fecha de estreno (cines):',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextFormField(
-              controller: fechaEstrenoController,
-              decoration: InputDecoration(
-                labelText: 'Fecha de estreno (cines):',
-                suffixIcon: InkWell(
-                  onTap: () async {
-                    final DateTime? selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100),
-                    );
-                    if (selectedDate != null) {
-                      setState(() {
-                        fechaEstrenoController.text =
-                            DateFormat('dd/MM/yyyy').format(selectedDate);
-                      });
-                    }
-                  },
-                  child: const Icon(Icons.calendar_today),
+              _buildTextField(
+                  idiomaController, '', 'Idioma original de la película'),
+              const SizedBox(height: 20),
+              const Text(
+                'Fecha de estreno (cines):',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              TextFormField(
+                controller: fechaEstrenoController,
+                decoration: InputDecoration(
+                  labelText: 'Fecha de estreno (cines):',
+                  errorText:
+                      _fieldErrors['Fecha de estreno de la película'] == true
+                          ? 'Este campo es obligatorio'
+                          : null,
+                  suffixIcon: InkWell(
+                    onTap: () async {
+                      final DateTime? selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                      );
+                      if (selectedDate != null) {
+                        setState(() {
+                          fechaEstrenoController.text =
+                              DateFormat('dd/MM/yyyy').format(selectedDate);
+                        });
+                      }
+                    },
+                    child: const Icon(Icons.calendar_today),
+                  ),
                 ),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Duración:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              controller: duracionController,
-              decoration: const InputDecoration(
-                labelText: 'Duración de la película (en minutos)',
+              const SizedBox(height: 20),
+              const Text(
+                'Duración:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              enabled: _tipoPubli == 'Reseñable',
-            ),
+              _buildTextField(duracionController, '',
+                  'Duración de la película (en minutos)'),
+            ],
             const SizedBox(height: 20),
             const Text(
               'Categoría de tu publicación',
@@ -346,6 +410,11 @@ class _PublicarState extends State<Publicar> {
               onChanged: (String? newValue) {
                 _onCategorySelected(newValue);
               },
+              decoration: InputDecoration(
+                errorText: _fieldErrors['Categoría de la publicación'] == true
+                    ? 'Este campo es obligatorio'
+                    : null,
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -399,19 +468,25 @@ class _PublicarState extends State<Publicar> {
               child: const Text("Seleccionar Géneros"),
             ),
             const SizedBox(height: 20),
-            image_to_upload != null
-                ? Image.file(image_to_upload!)
+            imageToUpload != null
+                ? Image.file(imageToUpload!)
                 : Container(
                     margin: const EdgeInsets.all(10),
                     height: 200,
                     width: double.infinity,
                     color: const Color.fromARGB(255, 151, 151, 151),
+                    child: const Center(
+                      child: Text(
+                        "No hay imagen seleccionada",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
             ElevatedButton(
               onPressed: () async {
                 final XFile? imagen = await getImage();
                 setState(() {
-                  image_to_upload = File(imagen!.path);
+                  imageToUpload = File(imagen!.path);
                 });
               },
               style: ButtonStyle(
@@ -420,85 +495,60 @@ class _PublicarState extends State<Publicar> {
               child: const Text("Seleccionar imagen"),
             ),
             ElevatedButton(
-              onPressed: _tipoPubli == 'Reseñable'
-                  ? () async {
-                      final postId = await Publicaciones_Resenables(
-                        tituloController.text,
-                        descripcionController.text,
-                        directorController.text,
-                        productorController.text,
-                        guionistaController.text,
-                        distriController.text,
-                        companiaController.text,
-                        clasificacionController.text,
-                        idiomaController.text,
-                        fechaEstrenoController.text,
-                        duracionController.text,
-                        _selectedCategory ?? '',
-                        _selectedGeneros,
-                        collectionName ?? '',
-                      );
-                      if (image_to_upload == null) {
-                        return;
-                      }
-                      final uploaded =
-                          await uploadImage(image_to_upload!, postId);
+              onPressed: () async {
+                if (!_validateFields()) {
+                  _showAlert("Cn Mecab",
+                      "Por favor complete todos los campos obligatorios.✋😉");
+                  return;
+                }
 
-                      if (uploaded) {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Imagen subida correctamente")));
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Imagen Subida Correctamente")));
-                      }
+                String postId;
+                if (_tipoPubli == 'Reseñable') {
+                  postId = await Publicaciones_Resenables(
+                    tituloController.text,
+                    descripcionController.text,
+                    directorController.text,
+                    productorController.text,
+                    guionistaController.text,
+                    distriController.text,
+                    companiaController.text,
+                    clasificacionController.text,
+                    idiomaController.text,
+                    fechaEstrenoController.text,
+                    duracionController.text,
+                    _selectedCategory ?? '',
+                    _selectedGeneros,
+                    collectionName ?? '',
+                  );
+                } else {
+                  postId = await Publicaciones_No_Resenables(
+                    tituloController.text,
+                    descripcionController.text,
+                    _selectedCategory ?? '',
+                    _selectedGeneros,
+                  );
+                }
 
-                      await enviarANotificaciones(
-                        tituloController.text,
-                        descripcionController.text,
-                        _selectedCategory ?? '',
-                        FirebaseAuth.instance.currentUser?.uid ?? '',
-                      );
-                    }
-                  : () async {
-                      final postId = await Publicaciones_No_Resenables(
-                        tituloController.text,
-                        descripcionController.text,
-                        _selectedCategory ?? '',
-                        _selectedGeneros,
-                      );
-                      if (image_to_upload == null) {
-                        return;
-                      }
-                      final uploaded =
-                          await uploadImage(image_to_upload!, postId);
+                final uploaded = await uploadImage(imageToUpload!, postId);
 
-                      if (uploaded) {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Imagen subida correctamente")));
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Imagen Subida Correctamente")));
-                      }
+                if (!uploaded) {
+                  _showAlert("Éxito", "Imagen subida correctamente.");
+                  return;
+                } else {
+                  _showAlert("Error", "Error al subir la imagen..");
+                }
 
-                      await enviarANotificaciones(
-                        tituloController.text,
-                        descripcionController.text,
-                        _selectedCategory ?? '',
-                        FirebaseAuth.instance.currentUser?.uid ?? '',
-                      );
-                    },
+                await enviarANotificaciones(
+                  tituloController.text,
+                  descripcionController.text,
+                  _selectedCategory ?? '',
+                  FirebaseAuth.instance.currentUser?.uid ?? '',
+                );
+              },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
               ),
-              child: const Text("Subir Publicacion"),
+              child: const Text("Subir Publicación"),
             ),
           ],
         ),
