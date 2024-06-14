@@ -31,126 +31,129 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'CN',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'CN',
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  ' MECAB',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    ' MECAB',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              TextField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Correo Electrónico',
                 ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Correo Electrónico',
+                controller: _emailController,
               ),
-              controller: _emailController,
-            ),
-            const SizedBox(height: 10),
-            PasswordField(
-                controller: _passwordController, labelText: 'Contraseña'),
-            const SizedBox(height: 10),
-            PasswordField(
-                controller: _confirmpasswordController,
-                labelText: 'Confirmar Contraseña'),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: _selectedRole,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedRole = newValue;
-                });
-              },
-              items: <String>['Visitante', 'Creador', 'Promotora']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const Text('Selecciona Un Rol'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                // ignore: deprecated_member_use
-                primary: Colors.red,
-              ),
-              child: const Text('Registrarse'),
-              onPressed: () async {
-                final String email = _emailController.text;
-                final String password = _passwordController.text;
-                final String confirmPassword = _confirmpasswordController.text;
-                if (password == confirmPassword) {
-                  AuthService _authService = AuthService();
-                  UserCredential? userCredential =
-                      await _authService.register(email, password, context);
-
-                  if (userCredential != null) {
-                    // Guardar el rol y la fecha de registro en Firestore
-                    final user = userCredential.user;
-                    await FirebaseFirestore.instance
-                        .collection('Usuarios')
-                        .doc(user!.uid)
-                        .set({
-                      'Rol': _selectedRole,
-                      'Fecha_Registro': DateTime.now(),
-                    });
-                    // Redirigir al usuario según el rol seleccionado
-                    switch (_selectedRole) {
-                      case 'Visitante':
-                        Navigator.of(context).pushNamed('/FormV');
-                        break;
-                      case 'Creador':
-                        Navigator.of(context).pushNamed('/FormC');
-                        break;
-                      case 'Promotora':
-                        Navigator.of(context).pushNamed('/FormP');
-                        break;
-                      default:
-                        // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
-                        break;
-                    }
-                  }
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Error al registrarse'),
-                        content: const Text(
-                            'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cerrar'),
-                          ),
-                        ],
-                      );
-                    },
+              const SizedBox(height: 10),
+              PasswordField(
+                  controller: _passwordController, labelText: 'Contraseña'),
+              const SizedBox(height: 10),
+              PasswordField(
+                  controller: _confirmpasswordController,
+                  labelText: 'Confirmar Contraseña'),
+              const SizedBox(height: 20),
+              DropdownButton<String>(
+                value: _selectedRole,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedRole = newValue;
+                  });
+                },
+                items: <String>['Visitante', 'Creador', 'Promotora']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
                   );
-                }
-              },
-            ),
-          ],
+                }).toList(),
+                hint: const Text('Selecciona Un Rol'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  // ignore: deprecated_member_use
+                  primary: Colors.red,
+                ),
+                child: const Text('Registrarse'),
+                onPressed: () async {
+                  final String email = _emailController.text;
+                  final String password = _passwordController.text;
+                  final String confirmPassword =
+                      _confirmpasswordController.text;
+                  if (password == confirmPassword) {
+                    AuthService _authService = AuthService();
+                    UserCredential? userCredential =
+                        await _authService.register(email, password, context);
+
+                    if (userCredential != null) {
+                      // Guardar el rol y la fecha de registro en Firestore
+                      final user = userCredential.user;
+                      await FirebaseFirestore.instance
+                          .collection('Usuarios')
+                          .doc(user!.uid)
+                          .set({
+                        'Rol': _selectedRole,
+                        'Fecha_Registro': DateTime.now(),
+                      });
+                      // Redirigir al usuario según el rol seleccionado
+                      switch (_selectedRole) {
+                        case 'Visitante':
+                          Navigator.of(context).pushNamed('/FormV');
+                          break;
+                        case 'Creador':
+                          Navigator.of(context).pushNamed('/FormC');
+                          break;
+                        case 'Promotora':
+                          Navigator.of(context).pushNamed('/FormP');
+                          break;
+                        default:
+                          // En caso de que no se haya seleccionado un rol válido, hacer algo aquí
+                          break;
+                      }
+                    }
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Error al registrarse'),
+                          content: const Text(
+                              'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cerrar'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

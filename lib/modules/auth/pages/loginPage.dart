@@ -35,76 +35,78 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'CN',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'CN',
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  ' MECAB',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    ' MECAB',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Correo Electrónico',
                 ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Correo Electrónico',
               ),
-            ),
-            const SizedBox(height: 10),
-            PasswordField(
-                controller: _passwordController, labelText: 'Contraseña'),
-            const SizedBox(height: 10),
-            // Nuevo código para la opción "Olvidaste la contraseña"
-            TextButton(
-              onPressed: () {
-                resetPassword(context); // Llamada a la función resetPassword
-              },
-              child: const Text(
-                '¿Olvidaste la contraseña?',
-                style: TextStyle(color: Colors.blue),
+              const SizedBox(height: 10),
+              PasswordField(
+                  controller: _passwordController, labelText: 'Contraseña'),
+              const SizedBox(height: 10),
+              // Nuevo código para la opción "Olvidaste la contraseña"
+              TextButton(
+                onPressed: () {
+                  resetPassword(context); // Llamada a la función resetPassword
+                },
+                child: const Text(
+                  '¿Olvidaste la contraseña?',
+                  style: TextStyle(color: Colors.blue),
+                ),
               ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              child: const Text(
-                'Iniciar Sesión',
-                style: TextStyle(fontSize: 18),
-              ),
-              onPressed: () async {
-                final String email = _emailController.text;
-                final String password = _passwordController.text;
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+                child: const Text(
+                  'Iniciar Sesión',
+                  style: TextStyle(fontSize: 18),
+                ),
+                onPressed: () async {
+                  final String email = _emailController.text;
+                  final String password = _passwordController.text;
 
-                AuthService _authService = AuthService();
-                UserCredential? userCredential =
-                    await _authService.login(email, password, context);
+                  AuthService _authService = AuthService();
+                  UserCredential? userCredential =
+                      await _authService.login(email, password, context);
 
-                if (userCredential != null) {
-                  // Si el usuario está autenticado, llama a initializeUserProfile
-                  UserProfileSingleton().initializeUserProfile();
-                  Navigator.of(context).pushNamed('/home');
-                }
-              },
-            ),
-          ],
+                  if (userCredential != null) {
+                    // Si el usuario está autenticado, llama a initializeUserProfile
+                    UserProfileSingleton().initializeUserProfile();
+                    Navigator.of(context).pushNamed('/home');
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
