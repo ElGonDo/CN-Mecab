@@ -24,13 +24,15 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: widget.key,
       controller: widget.controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         labelText: widget.labelText,
         suffixIcon: IconButton(
-          icon:
-              Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;

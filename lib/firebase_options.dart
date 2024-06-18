@@ -67,8 +67,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '731619838643',
     projectId: 'cn-mecab-3c43c',
     storageBucket: 'cn-mecab-3c43c.appspot.com',
-    iosClientId: '731619838643-7tdfcvmiaogv4q22sgrkgostj5m1ip4h.apps.googleusercontent.com',
-    iosBundleId: 'com.example.cnmecab',
+    iosClientId:
+        '731619838643-7tdfcvmiaogv4q22sgrkgostj5m1ip4h.apps.googleusercontent.com',
+    iosBundleId: 'com.agsysteminformation.cnmecab',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '731619838643',
     projectId: 'cn-mecab-3c43c',
     storageBucket: 'cn-mecab-3c43c.appspot.com',
-    iosClientId: '731619838643-1cpjrnogm73puqae8njjv810p4s8d936.apps.googleusercontent.com',
-    iosBundleId: 'com.example.cnmecab.RunnerTests',
+    iosClientId:
+        '731619838643-1cpjrnogm73puqae8njjv810p4s8d936.apps.googleusercontent.com',
+    iosBundleId: 'com.agsysteminformation.cnmecab.RunnerTests',
   );
 }

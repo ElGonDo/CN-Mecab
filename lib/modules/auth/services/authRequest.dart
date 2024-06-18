@@ -53,7 +53,7 @@ Future<bool> solicitarAutenticacion(BuildContext context) async {
       );
       return true;
     } catch (error) {
-      print('Error de autenticación: $error');
+      //print('Error de autenticación: $error');
       return false;
     }
   } else {

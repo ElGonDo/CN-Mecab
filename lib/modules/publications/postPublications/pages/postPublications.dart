@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cnmecab/modules/publications/postPublications/selectImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/uploadImage.dart';
 import 'package:cnmecab/modules/publications/postPublications/services/firebase_services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,28 +97,6 @@ class _PublicarState extends State<Publicar> {
   @override
   void initState() {
     super.initState();
-    initializeUserId();
-  }
-
-  Future<void> initializeUserId() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      if (user != null) {
-        String uid = user.uid;
-        if (kDebugMode) {
-          print('El UID del usuario es: $uid');
-        }
-      } else {
-        if (kDebugMode) {
-          print('No hay usuario autenticado.');
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching user profile: $e');
-      }
-    }
   }
 
   Future<void> enviarANotificaciones(
@@ -140,9 +117,9 @@ class _PublicarState extends State<Publicar> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      print('Notificación enviada correctamente');
+      //print('Notificación enviada correctamente');
     } catch (error) {
-      print('Error al enviar la notificación: $error');
+      //print('Error al enviar la notificación: $error');
     }
   }
 

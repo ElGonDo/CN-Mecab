@@ -88,7 +88,7 @@ void actualizarRating(String pubId, double rating) async {
   } else {
     // Si el usuario no está autenticado, muestra un mensaje o toma otra acción según tus necesidades
     if (kDebugMode) {
-      print('El usuario no está autenticado.');
+      //print('El usuario no está autenticado.');
     }
   }
 }

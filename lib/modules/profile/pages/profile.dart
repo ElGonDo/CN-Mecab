@@ -81,7 +81,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e) {
-      print('Error fetching user profile: $e');
+      //print('Error fetching user profile: $e');
     }
   }
 
@@ -163,7 +163,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             : '';
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      //print('Error fetching user data: $e');
     }
   }
 
@@ -182,7 +182,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         duration: Duration(seconds: 2),
       ));
     }).catchError((error) {
-      print('Error al guardar los datos del visitante: $error');
+      //print('Error al guardar los datos del visitante: $error');
     });
     // Actualizar los datos del usuario en la colección "Usuarios"
     await FirebaseFirestore.instance
@@ -214,11 +214,11 @@ class ProfileScreenState extends State<ProfileScreen> {
           duration: Duration(seconds: 2),
         ));
       }).catchError((error) {
-        print('Error al guardar los datos del creador: $error');
+        //print('Error al guardar los datos del creador: $error');
       });
     } catch (e) {
       // Manejar cualquier error
-      print(e.toString());
+      //print(e.toString());
     }
     // Actualizar los datos del usuario en la colección "Usuarios"
     await FirebaseFirestore.instance
@@ -254,11 +254,11 @@ class ProfileScreenState extends State<ProfileScreen> {
           duration: Duration(seconds: 2),
         ));
       }).catchError((error) {
-        print('Error al guardar los datos de la promotora: $error');
+        //print('Error al guardar los datos de la promotora: $error');
       });
     } catch (e) {
       // Manejar cualquier error
-      print(e.toString());
+      //print(e.toString());
     }
     // Actualizar los datos del usuario en la colección "Usuarios"
     await FirebaseFirestore.instance

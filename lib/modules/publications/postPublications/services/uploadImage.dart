@@ -21,7 +21,7 @@ Future<bool> uploadImage(File image, String pubId) async {
   } catch (e) {
     // Maneja cualquier error que pueda ocurrir durante la carga
     if (kDebugMode) {
-      print('Error al subir la imagen: $e');
+      //print('Error al subir la imagen: $e');
     }
     return true; // Indica que hubo un error
   }
