@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:731619838643:android:9243bf119e421bca177ec6",
+        "mobilesdk_app_id": "1:731619838643:android:37c99b55c8afcf25177ec6",
         "android_client_info": {
-          "package_name": "com.example.cnmecab"
+          "package_name": "com.agsysteminformation.cnmecab"
         }
       },
       "oauth_client": [
@@ -34,7 +34,43 @@
               "client_id": "731619838643-1cpjrnogm73puqae8njjv810p4s8d936.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.cnmecab.RunnerTests"
+                "bundle_id": "com.agsysteminformation.cnmecab.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731619838643:android:9243bf119e421bca177ec6",
+        "android_client_info": {
+          "package_name": "com.agsysteminformation.cnmecab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731619838643-np3stcnt4j86qnttp3gf84u57n0cls7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnXvZlQCgghlGU7ySlv2GDhkhwRPJAJNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731619838643-np3stcnt4j86qnttp3gf84u57n0cls7j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "731619838643-1cpjrnogm73puqae8njjv810p4s8d936.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.agsysteminformation.cnmecab.RunnerTests"
               }
             }
           ]
@@ -42,5 +78,5 @@
       }
     }
   ],
-  "configuration_version": "1"
+  "configuration_version": "2"
 }

@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotification().initNotifications();
   await FirebaseAppCheck.instance
-      .activate(androidProvider: AndroidProvider.debug);
+      .activate(androidProvider: AndroidProvider.playIntegrity);
   runApp(MyApp());
 }
 

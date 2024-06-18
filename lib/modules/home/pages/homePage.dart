@@ -85,14 +85,14 @@ class _PaginahomeState extends State<Paginahome> {
           Navigator.of(context).pushReplacementNamed('/welcome');
           return true;
         } catch (error) {
-          print('Error al actualizar la contraseña: $error');
+          //print('Error al actualizar la contraseña: $error');
           Fluttertoast.showToast(msg: 'Error al actualizar la contraseña');
         }
       }
 
       return false;
     } catch (error) {
-      print('Error durante el cambio de contraseña: $error');
+      //print('Error durante el cambio de contraseña: $error');
       return false;
     }
   }

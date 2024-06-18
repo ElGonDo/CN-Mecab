@@ -76,8 +76,8 @@ class ProfilePageState extends State<ProfilePage>
           resultMisPublicaciones["mispublicacionesNR"] as List<Publicacion>;
       newMisPublicacionesR =
           resultMisPublicaciones["mispublicacionesR"] as List<PublicacionR>;
-      print('Contenido de Mis Publicaciones: $newMisPublicacionesR');
-      print('Contenido de Mis Publicaciones no : $newMisPublicacionesNR');
+      /*print('Contenido de Mis Publicaciones: $newMisPublicacionesR');
+      print('Contenido de Mis Publicaciones no : $newMisPublicacionesNR');*/
     });
 
     List<PublicacionR> valueGuardadas =

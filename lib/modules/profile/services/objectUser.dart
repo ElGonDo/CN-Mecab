@@ -64,14 +64,14 @@ class UserProfileSingleton {
       }
 
       // Imprime la UID, el rol y la URL de la imagen en la consola
-      print('Objeto UID: ${userProfile.uid}');
+      /*print('Objeto UID: ${userProfile.uid}');
       print('Objeto Rol: ${userProfile.role}');
       print('Objeto Name: ${userProfile.name}');
-      print('Objeto ProfileImageURL: ${userProfile.profileImageURL}');
+      print('Objeto ProfileImageURL: ${userProfile.profileImageURL}');*/
 
       return userProfile;
     } catch (e) {
-      print('Error fetching user profile: $e');
+      //print('Error fetching user profile: $e');
     }
 
     return null;
@@ -111,7 +111,7 @@ class UserProfileSingleton {
     } catch (e) {
       // Manejar errores aquí, por ejemplo, la imagen no existe
       if (kDebugMode) {
-        print('Error obteniendo la URL de la imagen: $e');
+        //print('Error obteniendo la URL de la imagen: $e');
       }
       return ''; // Puedes devolver una URL predeterminada o nula
     }
@@ -130,7 +130,7 @@ class UserProfileSingleton {
       String? profileImageName = visitorData['ImagenPerfil'];
       return profileImageName;
     } catch (e) {
-      print('Error fetching visitor profile image: $e');
+      //print('Error fetching visitor profile image: $e');
       return null;
     }
   }

@@ -23,7 +23,7 @@ Future<Widget> _getImageWidget(String imageName) async {
     final url = await ref.getDownloadURL();
     return Image.network(url);
   } catch (e) {
-    print('Error al obtener la imagen: $e');
+    //print('Error al obtener la imagen: $e');
     return const Text('Error al cargar la imagen');
   }
 }
@@ -39,7 +39,7 @@ Future<void> updateVisitorProfileImage(
       'ImagenPerfil': selectedImage,
     });
   } catch (e) {
-    print('Error al actualizar la imagen del perfil del visitante: $e');
+    //print('Error al actualizar la imagen del perfil del visitante: $e');
     // Manejar el error según sea necesario
   }
 }
@@ -66,16 +66,16 @@ class _ImageListScreenState extends State<ImageListScreen> {
 
     if (userProfile != null) {
       // Verificar si el perfil del usuario está disponible y mostrar información
-      print('Imagen UID: ${userProfile?.uid}');
+      /*print('Imagen UID: ${userProfile?.uid}');
       print('Imagen Rol: ${userProfile?.role}');
-      print('Imagen name: ${userProfile?.name}');
+      print('Imagen name: ${userProfile?.name}');*/
     }
   }
 
   Future<void> _updateProfileImage() async {
     if (userProfile != null && selectedImage != null) {
       await updateVisitorProfileImage(userProfile!.uid, selectedImage!);
-      print('Imagen de perfil actualizada: $selectedImage');
+      //print('Imagen de perfil actualizada: $selectedImage');
 
       // Mostrar la notificación de foto de perfil actualizada
       ScaffoldMessenger.of(context).showSnackBar(

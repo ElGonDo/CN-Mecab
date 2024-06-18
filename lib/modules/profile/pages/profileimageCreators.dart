@@ -28,9 +28,9 @@ class CreatorsPage extends State<PublicarCreators> {
 
     if (userProfile != null) {
       // Verificar si el perfil del usuario está disponible y mostrar información
-      print('Imagen UID: ${userProfile?.uid}');
+      /*print('Imagen UID: ${userProfile?.uid}');
       print('Imagen Rol: ${userProfile?.role}');
-      print('Imagen name: ${userProfile?.name}');
+      print('Imagen name: ${userProfile?.name}');*/
     }
   }
 
@@ -46,7 +46,7 @@ class CreatorsPage extends State<PublicarCreators> {
       final UploadTask uploadTask = ref.putFile(imageFile);
       await uploadTask.whenComplete(() => true);
     } catch (e) {
-      print('Error al subir la imagen: $e');
+      //print('Error al subir la imagen: $e');
     }
   }
 

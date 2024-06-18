@@ -282,7 +282,7 @@ Future<NetworkImage?> obtenerImagenUrlUsuarios(String uid) async {
   } catch (e) {
     // Manejar cualquier error y retornar null
     if (kDebugMode) {
-      print('Error al obtener el nombre del usuario: $e');
+      //print('Error al obtener el nombre del usuario: $e');
     }
     return null;
   }

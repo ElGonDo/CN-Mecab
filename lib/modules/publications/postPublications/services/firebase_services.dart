@@ -15,7 +15,7 @@ Future<String> getImageUrl(String imageName) async {
   } catch (e) {
     // Manejar errores aquí, por ejemplo, la imagen no existe
     if (kDebugMode) {
-      print('Error obteniendo la URL de la imagen: $e');
+      //print('Error obteniendo la URL de la imagen: $e');
     }
     return ''; // Puedes devolver una URL predeterminada o nula
   }

@@ -58,7 +58,7 @@ Future<bool> cambiarCorreo(BuildContext context) async {
             '/welcome'); // Cerrar sesión automáticamente después de cambiar el correo
         return true;
       } catch (error) {
-        print('Error al actualizar el correo electrónico: $error');
+        //print('Error al actualizar el correo electrónico: $error');
         Fluttertoast.showToast(
             msg: 'Error al actualizar el correo electrónico');
       }
@@ -70,7 +70,7 @@ Future<bool> cambiarCorreo(BuildContext context) async {
     }
   } catch (error) {
     // Ocurrió un error durante el cambio de correo
-    print('Error de autenticación: $error');
+    //print('Error de autenticación: $error');
     // Puedes mostrar un mensaje de error al usuario o realizar alguna otra acción
 
     return false;

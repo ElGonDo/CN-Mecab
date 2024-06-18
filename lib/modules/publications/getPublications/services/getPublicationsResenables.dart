@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -94,8 +94,8 @@ Future<List<PublicacionR>> obtenerDatosR() async {
 
       // Imprime el promedio de reseñas para cada publicación
       if (kDebugMode) {
-        print(
-            "Promedio de reseñas para ${nuevaPublicacionR.rpubID}: $promedioResenas");
+        /*print(
+            "Promedio de reseñas para ${nuevaPublicacionR.rpubID}: $promedioResenas");*/
       }
     });
   }
@@ -103,10 +103,10 @@ Future<List<PublicacionR>> obtenerDatosR() async {
   // Muestra en la consola cada UID del usuario y la ID de cada mapa
   for (var publicacion in publicacionesListR) {
     if (kDebugMode) {
-      print("UID del usuario: ${publicacion.ruid}");
+      //print("UID del usuario: ${publicacion.ruid}");
     }
     if (kDebugMode) {
-      print("ID del mapa: ${publicacion.rpubID}");
+      //print("ID del mapa: ${publicacion.rpubID}");
     }
   }
 
