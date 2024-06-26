@@ -358,8 +358,7 @@ class _PublicarState extends State<Publicar> {
                               },
                               style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.red),
+                                    WidgetStateProperty.all<Color>(Colors.red),
                               ),
                               child: const Text("Cerrar"),
                             ),
@@ -371,7 +370,7 @@ class _PublicarState extends State<Publicar> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
               ),
               child: const Text("Seleccionar Géneros"),
             ),
@@ -392,7 +391,7 @@ class _PublicarState extends State<Publicar> {
                 });
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
               ),
               child: const Text("Seleccionar imagen"),
             ),
@@ -473,7 +472,7 @@ class _PublicarState extends State<Publicar> {
                       );
                     },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
               ),
               child: const Text("Subir Publicacion"),
             ),

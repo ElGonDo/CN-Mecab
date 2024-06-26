@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Notificacion extends StatefulWidget {
-  const Notificacion({Key? key}) : super(key: key);
+  const Notificacion({super.key});
 
   @override
   _NotificacionState createState() => _NotificacionState();

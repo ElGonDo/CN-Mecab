@@ -5,7 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
+      : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   Future<UserCredential?> register(String email, String password,
       BuildContext context, String selectedRole) async {
@@ -36,10 +41,7 @@ class AuthService {
 
       // Guardar en la base de datos después del registro en Authentication
       final user = userCredential.user;
-      await FirebaseFirestore.instance
-          .collection('Usuarios')
-          .doc(user!.uid)
-          .set({
+      await _firestore.collection('Usuarios').doc(user!.uid).set({
         'Rol': selectedRole,
         'Fecha_Registro': DateTime.now(),
       });
@@ -49,6 +51,7 @@ class AuthService {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
+        // Manejar contraseña débil
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -68,6 +71,7 @@ class AuthService {
           },
         );
       } else if (e.code == 'email-already-in-use') {
+        // Manejar correo electrónico ya en uso
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -87,14 +91,57 @@ class AuthService {
             );
           },
         );
+      } else if (e.code == 'operation-not-allowed') {
+        // Manejar operación no permitida (por ejemplo, la autenticación por correo y contraseña no está habilitada)
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text(
+                  'El registro mediante correo electrónico y contraseña no está habilitado.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Manejar otros errores desconocidos
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content:
+                  Text('Ocurrió un error durante el registro: ${e.message}'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
+      // Manejar cualquier otro tipo de error no relacionado con FirebaseAuthException
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text('Ocurrió un error: $e'),
+            content: Text('Ocurrió un error inesperado: $e'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -120,7 +167,7 @@ class AuthService {
       );
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      // Aquí puedes manejar diferentes errores, por ejemplo:
+      // Manejar errores específicos de FirebaseAuth
       if (e.code == 'user-not-found') {
         showDialog(
           context: context,
@@ -128,13 +175,13 @@ class AuthService {
             return AlertDialog(
               title: const Text('Error Al Iniciar Sesion'),
               content:
-                  const Text('Correo Electronico No Se Encuentra Registrado'),
+                  const Text('Correo Electrónico No Se Encuentra Registrado'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed('/register');
                   },
-                  child: const Text('¡Registrate Aqui!'),
+                  child: const Text('¡Regístrate Aquí!'),
                 ),
                 TextButton(
                   onPressed: () {
@@ -153,7 +200,45 @@ class AuthService {
             return AlertDialog(
               title: const Text('Error Al Iniciar Sesion'),
               content: const Text(
-                  'La contraseña Es Incorrecta, Por Favor Intentalo De Nuevo'),
+                  'La Contraseña Es Incorrecta, Por Favor Inténtalo De Nuevo'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (e.code == 'user-disabled') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error Al Iniciar Sesion'),
+              content:
+                  const Text('Esta Cuenta de Usuario Ha Sido Deshabilitada'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (e.code == 'too-many-requests') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error Al Iniciar Sesion'),
+              content: const Text(
+                  'Demasiados Intentos Fallidos. Intente Nuevamente Más Tarde.'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -167,7 +252,25 @@ class AuthService {
         );
       }
     } catch (e) {
-      //print(e);
+      // Manejar cualquier otro tipo de error no relacionado con FirebaseAuthException
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Ocurrió un error inesperado: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
     }
     return null;
   }

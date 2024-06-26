@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BodyPage extends StatefulWidget {
-  const BodyPage({Key? key}) : super(key: key);
+  const BodyPage({super.key});
 
   @override
   _BodyPageState createState() => _BodyPageState();

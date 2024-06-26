@@ -18,7 +18,7 @@ class ProfileDataDialog extends StatefulWidget {
   final List<PublicacionR> publicacionesR;
 
   const ProfileDataDialog({
-    Key? key,
+    super.key,
     required this.name,
     required this.role,
     required this.uid,
@@ -26,7 +26,7 @@ class ProfileDataDialog extends StatefulWidget {
     required this.currentUser,
     required this.publicacionesNR,
     required this.publicacionesR,
-  }) : super(key: key);
+  });
 
   @override
   ProfileDataDialogState createState() => ProfileDataDialogState();

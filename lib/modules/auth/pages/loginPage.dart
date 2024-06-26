@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 10),
                 PasswordField(
-                  key: const Key('passwordField'),
+                  key: const Key('passwordField2'),
                   controller: _passwordController,
                   labelText: 'Contraseña',
                 ),
@@ -87,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 ElevatedButton(
+                  key: const Key('loginButton'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),

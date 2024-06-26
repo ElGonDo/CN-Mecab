@@ -51,7 +51,7 @@ Future<bool> cambiarCorreo(BuildContext context) async {
       // Obtener los datos ingresados por el usuario
       String newEmail = emailController.text;
       try {
-        await user.updateEmail(newEmail);
+        await user.verifyBeforeUpdateEmail(newEmail);
         Fluttertoast.showToast(msg: 'Correo actualizado exitosamente');
         await FirebaseAuth.instance.signOut();
         Navigator.of(context).pushReplacementNamed(

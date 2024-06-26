@@ -8,12 +8,12 @@ class FilterProfileSearch extends StatelessWidget {
   final BuildContext context;
 
   const FilterProfileSearch({
-    Key? key,
+    super.key,
     required this.role,
     required this.onPageChanged,
     required this.currentPage,
     required this.context,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

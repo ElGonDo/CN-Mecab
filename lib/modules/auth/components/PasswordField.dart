@@ -8,11 +8,11 @@ class PasswordField extends StatefulWidget {
   final String? Function(String?)? validator;
 
   const PasswordField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.labelText,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();

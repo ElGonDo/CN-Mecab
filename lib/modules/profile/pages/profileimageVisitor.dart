@@ -45,7 +45,7 @@ Future<void> updateVisitorProfileImage(
 }
 
 class ImageListScreen extends StatefulWidget {
-  const ImageListScreen({Key? key}) : super(key: key);
+  const ImageListScreen({super.key});
 
   @override
   _ImageListScreenState createState() => _ImageListScreenState();

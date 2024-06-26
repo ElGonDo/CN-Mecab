@@ -12,11 +12,11 @@ class FilterProfile extends StatelessWidget {
   ];
 
   FilterProfile({
-    Key? key,
+    super.key,
     required this.currentPage,
     required this.userRole,
     required this.onPageChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
